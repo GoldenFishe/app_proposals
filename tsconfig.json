@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
+    "target": "es5",
     "module": "commonjs",
-    "target": "es6",
+    "lib": ["es6"],
+    "allowJs": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "strict": true,
     "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": false,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "outDir": "dist"
-  },
-  "extends": "@tsconfig/recommended/tsconfig.json",
-  "exclude": [
-    "node_modules"
-  ]
+    "resolveJsonModule": true
+  }
 }

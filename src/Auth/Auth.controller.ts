@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import UserService from "../services/User.service";
-import IUser from "../interfaces/User.interface";
+import UserService from "./Auth.service";
+import IUser from "./User.interface";
 
 class AuthController {
     async signIn(req: Request, res: Response): Promise<void> {

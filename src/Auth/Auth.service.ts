@@ -1,7 +1,7 @@
 import {query} from "../utils/db";
-import IUser from "../interfaces/User.interface";
+import IUser from "./User.interface";
 
-class UserService {
+class AuthService {
     async selectByLoginAndPassword(login: string, password: string): Promise<IUser> {
         const [user]: IUser[] = await query(`SELECT * FROM users WHERE login='${login}' AND password='${password}'`);
         return user;
@@ -13,4 +13,4 @@ class UserService {
     }
 }
 
-export default new UserService();
+export default new AuthService();

@@ -1,4 +1,4 @@
-import {query} from "../utils/db";
+import {query} from "../db";
 import IUser from "./User.interface";
 
 class AuthService {

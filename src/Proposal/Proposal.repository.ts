@@ -1,4 +1,4 @@
-import {query} from "../utils/db";
+import {query} from "../db";
 import {ProposalMapper} from "./Proposal.mapper";
 import {IProposalDTO} from "./Proposal.dto";
 

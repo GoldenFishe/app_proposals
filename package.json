@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build:server": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
     "start:dev": "nodemon"
   },

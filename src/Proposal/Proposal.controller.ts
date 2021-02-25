@@ -4,8 +4,8 @@ import {IProposalRepository} from "./Proposal.repository";
 export class ProposalController {
     proposalRepository: IProposalRepository;
 
-    constructor(proposalsService: IProposalRepository) {
-        this.proposalRepository = proposalsService;
+    constructor(proposalRepository: IProposalRepository) {
+        this.proposalRepository = proposalRepository;
     }
 
     async getAll(req: Request, res: Response) {

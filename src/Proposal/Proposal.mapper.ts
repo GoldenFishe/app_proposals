@@ -9,6 +9,7 @@ export class ProposalMapper {
             title: proposal.title,
             description: proposal.description,
             authorId: proposal.author_id,
+            topicId: proposal.topic_id,
             rating: proposal.rating,
             comments: comments
         }

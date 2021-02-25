@@ -5,6 +5,7 @@ export interface IProposalDTO {
     title: string;
     description: string;
     authorId: number;
+    topicId: number;
     rating: number;
     comments: ICommentDTO[]
 }

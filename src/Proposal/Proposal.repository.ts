@@ -9,6 +9,7 @@ export interface IProposal {
     title: string;
     description: string;
     author_id: number;
+    topic_id: number;
     rating: number;
 }
 

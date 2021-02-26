@@ -17,7 +17,9 @@ const Proposals: FC = () => {
                                   description={proposal.description}
                                   id={proposal.id}
                                   rating={proposal.rating}
-                                  title={proposal.title}/>
+                                  title={proposal.title}
+                                  comments={proposal.comments}
+                                  topicId={proposal.topicId}/>
                     </li>
                 ))}
             </ul>

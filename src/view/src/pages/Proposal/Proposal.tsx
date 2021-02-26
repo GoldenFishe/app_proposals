@@ -9,9 +9,19 @@ const Proposal: FC = () => {
     const proposal: IProposal | null = useFetch(`/api/proposals/${id}`);
     return (
         <div>
-
+            <div>
+                <h6>{proposal?.title}</h6>
+                <p>{proposal?.description}</p>
+            </div>
+            <ul>
+                {proposal?.comments.map(comment => {
+                    return (
+                        <li>{comment.comment}</li>
+                    )
+                })}
+            </ul>
         </div>
-    );
+    )
 };
 
 export default Proposal;

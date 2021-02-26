@@ -1,9 +1,13 @@
+import {IComment} from "./IComment";
+
 interface IProposal {
-    authorId: number,
-    description: string,
-    id: number,
-    rating: number,
-    title: string
+    id: number;
+    title: string;
+    description: string;
+    authorId: number;
+    topicId: number;
+    rating: number;
+    comments: IComment[]
 }
 
 export default IProposal;

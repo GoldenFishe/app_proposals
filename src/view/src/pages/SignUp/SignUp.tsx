@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {Form, Input, Button, Checkbox} from 'antd';
+import HttpClient from "../../httpClient";
 
 const layout = {
     labelCol: {span: 8},
@@ -10,6 +11,8 @@ const tailLayout = {
 };
 const SignUp: FC = () => {
     const onFinish = (values: any) => {
+        const {login, password} = values;
+        HttpClient.post('/api/user/sign-up', {login, password});
         console.log('Success:', values);
     };
 
@@ -26,9 +29,9 @@ const SignUp: FC = () => {
             onFinishFailed={onFinishFailed}
         >
             <Form.Item
-                label="Username"
-                name="username"
-                rules={[{required: true, message: 'Please input your username!'}]}
+                label="Login"
+                name="login"
+                rules={[{required: true, message: 'Please input your login!'}]}
             >
                 <Input/>
             </Form.Item>

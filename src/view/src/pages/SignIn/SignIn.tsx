@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {Form, Input, Button, Checkbox} from 'antd';
+import HttpClient from '../../httpClient';
 
 const layout = {
     labelCol: {span: 8},
@@ -10,6 +11,8 @@ const tailLayout = {
 };
 const SignIn: FC = () => {
     const onFinish = (values: any) => {
+        const {login, password} = values;
+        HttpClient.post('/api/user/sign-in', {login, password})
         console.log('Success:', values);
     };
 
@@ -18,33 +21,24 @@ const SignIn: FC = () => {
     };
 
     return (
-        <Form
-            {...layout}
-            name="basic"
-            initialValues={{remember: true}}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-        >
-            <Form.Item
-                label="Username"
-                name="username"
-                rules={[{required: true, message: 'Please input your username!'}]}
-            >
+        <Form{...layout}
+             name="basic"
+             initialValues={{remember: true}}
+             onFinish={onFinish}
+             onFinishFailed={onFinishFailed}>
+            <Form.Item label="Login"
+                       name="login"
+                       rules={[{required: true, message: 'Please input your login!'}]}>
                 <Input/>
             </Form.Item>
-
-            <Form.Item
-                label="Password"
-                name="password"
-                rules={[{required: true, message: 'Please input your password!'}]}
-            >
+            <Form.Item label="Password"
+                       name="password"
+                       rules={[{required: true, message: 'Please input your password!'}]}>
                 <Input.Password/>
             </Form.Item>
-
             <Form.Item {...tailLayout} name="remember" valuePropName="checked">
                 <Checkbox>Remember me</Checkbox>
             </Form.Item>
-
             <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
                     Submit

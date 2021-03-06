@@ -37,7 +37,7 @@ export default class HttpClient {
         let token = accessTokenController.getToken();
         let headers = {};
         if (withToken) headers = {...headers, 'Authorization': token};
-        return axios.get(url, headers).then((res: AxiosResponse) => res.data);
+        return axios.get(url, {headers}).then((res: AxiosResponse) => res.data);
     }
 
     static post(url: string, body: object, withToken: boolean = true) {

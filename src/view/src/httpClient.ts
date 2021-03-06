@@ -1,4 +1,16 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
+
+export const accessTokenController = (function () {
+    let accessToken = '';
+    return {
+        setToken: function (token: string) {
+            accessToken = token;
+        },
+        getToken: function () {
+            return accessToken;
+        }
+    }
+})();
 
 axios.interceptors.request.use(config => {
     console.log(config);
@@ -9,7 +21,11 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(response => {
-    console.log(response);
+    if (response.config.url) {
+        if (/sign-(in|up)/.test(response.config.url)) {
+            accessTokenController.setToken(response.data.accessToken);
+        }
+    }
     return response;
 }, error => {
     console.log(error);
@@ -17,11 +33,17 @@ axios.interceptors.response.use(response => {
 });
 
 export default class HttpClient {
-    static get(url: string) {
-        return axios.get(url);
+    static get(url: string, withToken: boolean = false) {
+        let token = accessTokenController.getToken();
+        let headers = {};
+        if (withToken) headers = {...headers, 'Authorization': token};
+        return axios.get(url, headers).then((res: AxiosResponse) => res.data);
     }
 
-    static post(url: string, body: object) {
-        return axios.post(url, body);
+    static post(url: string, body: object, withToken: boolean = true) {
+        let token = accessTokenController.getToken();
+        let headers = {};
+        if (withToken) headers = {...headers, 'Authorization': token};
+        return axios.post(url, body, {headers}).then((res: AxiosResponse) => res.data);
     }
 }

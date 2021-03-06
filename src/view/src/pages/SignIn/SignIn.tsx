@@ -1,51 +1,30 @@
-import React, {FC} from 'react';
-import {Form, Input, Button, Checkbox} from 'antd';
-import HttpClient from '../../httpClient';
+import React, {FC, FormEvent, useState} from 'react';
+import {useDispatch} from "react-redux";
+import {signIn} from "./actions";
 
-const layout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16},
-};
-const tailLayout = {
-    wrapperCol: {offset: 8, span: 16},
-};
 const SignIn: FC = () => {
-    const onFinish = (values: any) => {
-        const {login, password} = values;
-        HttpClient.post('/api/user/sign-in', {login, password})
-        console.log('Success:', values);
-    };
-
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
-
+    const dispatch = useDispatch();
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        if (login && password) dispatch(signIn(login, password))
+    }
     return (
-        <Form{...layout}
-             name="basic"
-             initialValues={{remember: true}}
-             onFinish={onFinish}
-             onFinishFailed={onFinishFailed}>
-            <Form.Item label="Login"
-                       name="login"
-                       rules={[{required: true, message: 'Please input your login!'}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item label="Password"
-                       name="password"
-                       rules={[{required: true, message: 'Please input your password!'}]}>
-                <Input.Password/>
-            </Form.Item>
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-                <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
-    );
+        <form onSubmit={handleSubmit}>
+            <label>Login</label>
+            <input type="text"
+                   value={login}
+                   required
+                   onChange={e => setLogin(e.target.value)}/>
+            <label>Password</label>
+            <input type="password"
+                   value={password}
+                   required
+                   onChange={e => setPassword(e.target.value)}/>
+            <button type="submit">Sign In</button>
+        </form>
+    )
 };
 
 export default SignIn;

@@ -1,12 +1,20 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 
-import {useFetch} from "../../hooks";
-import IProposal from "../../interfaces/IProposal";
 import Proposal from "./component/Proposal/Proposal";
+import {getProposals, resetProposals} from "./actions";
+import {RootState} from "../../rootReducer";
 import classNames from './style.module.css';
 
 const Proposals: FC = () => {
-    const proposals: Array<IProposal> = useFetch('/api/proposals') || [];
+    const dispatch = useDispatch();
+    const proposals = useSelector((state: RootState) => state.proposals.data);
+    useEffect(() => {
+        dispatch(getProposals());
+        return () => {
+            dispatch(resetProposals())
+        }
+    }, []);
     return (
         <div className={classNames.container}>
             <h1>Proposals</h1>

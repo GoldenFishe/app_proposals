@@ -1,9 +1,13 @@
 import {combineReducers} from "redux";
 
 import mainReducer from "./pages/Main/reducer";
+import {proposalsReducer} from "./pages/Proposals";
 
-const rootReducer = combineReducers(
-    {main: mainReducer}
+export const rootReducer = combineReducers(
+    {
+        main: mainReducer,
+        proposals: proposalsReducer
+    }
 );
 
-export default rootReducer;
+export type RootState = ReturnType<typeof rootReducer>;

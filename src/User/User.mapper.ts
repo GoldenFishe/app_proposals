@@ -6,7 +6,7 @@ export class UserMapper {
         return {
             id: user.id,
             login: user.login,
-            password: user.password
+            accessToken: user.access_token
         }
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux'
-import {applyMiddleware, createStore} from 'redux';
+import {applyMiddleware, createStore, compose} from 'redux';
 import thunk from 'redux-thunk'
 
 import {rootReducer} from "./rootReducer";
@@ -9,7 +9,8 @@ import Main from './pages/Main/Main';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const composeEnhancers = (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
+const store = createStore(rootReducer, composeEnhancers((applyMiddleware(thunk))));
 
 ReactDOM.render(
     <Provider store={store}>

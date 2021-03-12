@@ -5,7 +5,7 @@ import {IUserDTO} from "./User.dto";
 export interface IUser {
     id: number;
     login: string;
-    password: string;
+    access_token: string;
 }
 
 export interface IUserRepository {
@@ -13,12 +13,16 @@ export interface IUserRepository {
 
     getByLoginAndPassword(login: string, password: string): Promise<IUserDTO>;
 
-    createRefreshToken(userId: IUserDTO["id"], refreshToken: string): Promise<string>;
+    setRefreshToken(userId: IUserDTO["id"], refreshToken: string): Promise<string>;
+
+    getAccessToken(refreshToken: string): Promise<string>;
+
+    setAccessToken(accessToken: string, userId: IUserDTO["id"]): Promise<string>
 }
 
 export class UserRepository implements IUserRepository {
     async create(login: string, password: string): Promise<IUserDTO> {
-        const [user]: IUser[] = await query(`INSERT INTO users (login, password) VALUES ('${login}', '${password}') RETURNING *`);
+        const [user]: IUser[] = await query(`INSERT INTO users (login, password) VALUES ('${login}', '${password}') RETURNING id, login, access_token`);
         return UserMapper.toDTO(user);
     }
 
@@ -28,8 +32,18 @@ export class UserRepository implements IUserRepository {
         return UserMapper.toDTO(user);
     }
 
-    async createRefreshToken(userId: IUserDTO["id"], refreshToken: string): Promise<string> {
-        const [token]: string[] = await query(`INSERT INTO refresh_sessions (user_id, refresh_token, expires_in) VALUES (${userId}, '${refreshToken}', 123) RETURNING refresh_token`);
-        return token;
+    async setRefreshToken(userId: IUserDTO["id"], refreshToken: string): Promise<string> {
+        const [token]: Array<{ refresh_token: string }> = await query(`INSERT INTO refresh_sessions (user_id, refresh_token, expires_in) VALUES (${userId}, '${refreshToken}', 123) RETURNING refresh_token`);
+        return token.refresh_token;
+    }
+
+    async getAccessToken(refreshToken: string): Promise<string> {
+        const [token]: Array<{ access_token: string }> = await query(`SELECT access_token FROM users WHERE id = (SELECT user_id FROM refresh_sessions WHERE refresh_token = '${refreshToken}')`);
+        return token.access_token;
+    }
+
+    async setAccessToken(accessToken: string, userId: IUserDTO["id"]): Promise<string> {
+        const [user]: IUser[] = await query(`UPDATE users SET access_token = '${accessToken}' WHERE id = ${userId} RETURNING access_token`);
+        return user.access_token;
     }
 }

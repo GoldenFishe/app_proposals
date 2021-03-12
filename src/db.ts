@@ -1,12 +1,14 @@
-import {Pool} from 'pg';
-import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "./config";
+import {Pool} from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const pool = new Pool({
-    user: DB_USER,
-    host: DB_HOST,
-    database: DB_NAME,
-    password: DB_PASSWORD,
-    port: DB_PORT
+    user: process.env["DB_USER"],
+    host: process.env["DB_HOST"],
+    database: process.env["DB_NAME"],
+    password: process.env["DB_PASSWORD"],
+    port: Number(process.env["DB_PORT"]),
 });
 
 export const query = async (command: string, params?: string[]): Promise<any> => {

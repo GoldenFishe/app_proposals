@@ -1,4 +1,3 @@
-
 import {IProposal, IProposalDTO} from "./Proposal.types";
 import {ICommentDTO} from "../Comment/Comments.types";
 

@@ -1,5 +1,6 @@
-import {ICommentDTO} from "../Comment/Comment.dto";
+
 import {IUser} from "../User/User.types";
+import {ICommentDTO} from "../Comment/Comments.types";
 
 export interface IProposal {
     id: number;

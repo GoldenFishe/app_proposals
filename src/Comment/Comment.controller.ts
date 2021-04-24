@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
+
 import {ICommentsRepository} from "./Comment.repository";
 import {ICommentDTO} from "./Comments.types";
 
 export class CommentController {
-    commentRepository: ICommentsRepository;
+    private readonly commentRepository: ICommentsRepository;
 
     constructor(commentRepository: ICommentsRepository) {
         this.commentRepository = commentRepository;

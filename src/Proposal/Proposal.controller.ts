@@ -1,8 +1,9 @@
 import {Request, Response} from "express";
+
 import {IProposalRepository} from "./Proposal.repository";
 
 export class ProposalController {
-    proposalRepository: IProposalRepository;
+    private readonly proposalRepository: IProposalRepository;
 
     constructor(proposalRepository: IProposalRepository) {
         this.proposalRepository = proposalRepository;

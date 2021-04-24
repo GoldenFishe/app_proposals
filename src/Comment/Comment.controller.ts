@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {ICommentsRepository} from "./Comment.repository";
-import {ICommentDTO} from "./Comment.dto";
+import {ICommentDTO} from "./Comments.types";
 
 export class CommentController {
     commentRepository: ICommentsRepository;

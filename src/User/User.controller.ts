@@ -1,23 +1,26 @@
 import jwt, {Secret} from 'jsonwebtoken';
-import {NextFunction, Request, Response} from "express";
+import {CookieOptions, NextFunction, Request, Response} from "express";
 
 import {IUserRepository} from "./User.repository";
-import {IUserDTO} from "./User.dto";
+import {AuthTokens, IUserDTO} from "./User.types";
 
 export class UserController {
-    private userRepository: IUserRepository;
+    private readonly userRepository: IUserRepository;
+    private readonly refreshTokenCookieOptions: CookieOptions;
 
     constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository;
+        this.refreshTokenCookieOptions = {httpOnly: true, maxAge: Number(process.env["JWT_EXP"])};
     }
 
-    private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: string, accessToken: string }> {
-        const generatedAccessToken = jwt.sign({
-            data: {userId: userId},
-            exp: process.env["JWT_EXP"]
-        }, process.env["SECRET_JWT_KEY"] as Secret);
-        const refreshTokenPromise: Promise<string> = this.userRepository.setRefreshToken(userId, Date.now().toString());
-        const accessTokenPromise: Promise<string> = this.userRepository.setAccessToken(generatedAccessToken, userId);
+    private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: AuthTokens.RefreshToken, accessToken: AuthTokens.AccessToken }> {
+        const generatedAccessToken = jwt.sign(
+            {userId},
+            process.env["SECRET_JWT_KEY"] as Secret,
+            {expiresIn: process.env["JWT_EXP"]}
+        );
+        const refreshTokenPromise = this.userRepository.setRefreshToken(userId, Date.now().toString());
+        const accessTokenPromise = this.userRepository.setAccessToken(userId, generatedAccessToken);
         const [refreshToken, accessToken] = await Promise.all([refreshTokenPromise, accessTokenPromise]);
         return {refreshToken, accessToken};
     }
@@ -25,9 +28,9 @@ export class UserController {
     async signUp(req: Request, res: Response) {
         const {login, password}: { login: string, password: string } = req.body;
         if (login && password) {
-            const user: IUserDTO = await this.userRepository.create(login, password);
+            const user = await this.userRepository.create(login, password);
             const {refreshToken, accessToken} = await this.generateTokens(user.id);
-            res.cookie('refresh_token', refreshToken, {httpOnly: true}).send({...user, accessToken});
+            res.cookie('refresh_token', refreshToken, this.refreshTokenCookieOptions).send({...user, accessToken});
         }
         res.status(400).send({message: 'Login and password are required'});
     }
@@ -35,17 +38,17 @@ export class UserController {
     async signIn(req: Request, res: Response) {
         const {login, password}: { login: string, password: string } = req.body;
         if (login && password) {
-            const user: IUserDTO = await this.userRepository.getByLoginAndPassword(login, password);
+            const user = await this.userRepository.getByLoginAndPassword(login, password);
             const {refreshToken, accessToken} = await this.generateTokens(user.id);
-            res.cookie('refresh_token', refreshToken, {httpOnly: true}).send({...user, accessToken});
+            res.cookie('refresh_token', refreshToken, this.refreshTokenCookieOptions).send({...user, accessToken});
         } else {
-            res.status(404).send({message: 'Login and password are required'});
+            res.status(400).send({message: 'Login and password are required'});
         }
     }
 
     async getAccessToken(req: Request, res: Response) {
         const {refresh_token}: { refresh_token: string } = req.cookies;
-        let accessToken: string | null = null;
+        let accessToken: AuthTokens.AccessToken | null = null;
         if (refresh_token) accessToken = await this.userRepository.getAccessToken(refresh_token);
         res.send({accessToken});
     }

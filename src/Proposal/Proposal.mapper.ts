@@ -1,6 +1,6 @@
-import {IProposalDTO} from "./Proposal.dto";
-import {IProposal} from "./Proposal.repository";
-import {ICommentDTO} from "../Comment/Comment.dto";
+
+import {IProposal, IProposalDTO} from "./Proposal.types";
+import {ICommentDTO} from "../Comment/Comments.types";
 
 export class ProposalMapper {
     public static toDTO(proposal: IProposal, comments: ICommentDTO[]): IProposalDTO {

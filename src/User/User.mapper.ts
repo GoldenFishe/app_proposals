@@ -1,5 +1,4 @@
-import {IUserDTO} from "./User.dto";
-import {IUser} from "./User.repository";
+import {IUser, IUserDTO} from "./User.types";
 
 export class UserMapper {
     public static toDTO(user: IUser): IUserDTO {

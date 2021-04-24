@@ -29,7 +29,7 @@ app.post('/api/user/sign-in', (req: Request, res: Response) => userController.si
 app.post('/api/user/sign-up', (req: Request, res: Response) => userController.signUp(req, res));
 app.get('/api/user/access-token', (req: Request, res: Response) => userController.getAccessToken(req, res));
 
-app.get('/api/proposals', (req, res, next) => userController.checkAuthorize(req, res, next), (req: Request, res: Response) => proposalController.getAll(req, res));
+app.get('/api/proposals', (req: Request, res: Response) => proposalController.getAll(req, res));
 app.get('/api/proposals/:id', (req: Request, res: Response) => proposalController.getById(req, res));
 app.post('/api/proposals', (req: Request, res: Response) => proposalController.create(req, res));
 

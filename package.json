@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build:server": "rimraf ./build && tsc",
+    "build:docker": "docker build --tag privetanton/app-proposals .",
     "start": "npm run build && node build/index.js",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "start:container": "docker run -dp 8080:8080 privetanton/app-proposals"
   },
   "keywords": [],
   "author": "",

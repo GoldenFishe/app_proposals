@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+    - "8080:8080"
+    depends_on:
+      - postgresql
+  postgresql:
+    image: postgres:13.2
+    ports:
+    - "5432:5432"
+    environment:
+    - POSTGRES_PASSWORD=666666
+    - POSTGRES_USER=anton
+    - POSTGRES_DB=app_proposals
+    volumes:
+    - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:

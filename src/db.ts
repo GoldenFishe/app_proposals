@@ -12,6 +12,7 @@ const pool = new Pool({
 });
 
 export const query = async (command: string, params?: string[]): Promise<any> => {
+    console.log('connected');
     try {
         const client = await pool.connect();
         const startTime = Date.now();

@@ -1,6 +1,6 @@
 import {query} from "../db";
 import {CommentMapper} from "./Comment.mapper";
-import {IComment, ICommentDTO} from "./Comments.types";
+import {IComment, ICommentDTO} from "./Comment.types";
 
 export interface ICommentsRepository {
     create(commentText: string, authorId: number, proposalId: number): Promise<ICommentDTO>;

@@ -15,9 +15,13 @@ export class UserController {
 
     async signIn(req: Request, res: Response) {
         const {login, password}: { login: string, password: string } = req.body;
-        const user = await this.userRepository.getByLoginAndPassword(login, password);
-        const {refreshToken, accessToken} = await this.generateTokens(user.id);
-        res.cookie('refresh_token', refreshToken, this.refreshTokenCookieOptions).send({...user, accessToken});
+        try {
+            const user = await this.userRepository.getByLoginAndPassword(login, password);
+            const {refreshToken, accessToken} = await this.generateTokens(user.id);
+            res.cookie('refresh_token', refreshToken, this.refreshTokenCookieOptions).send({...user, accessToken});
+        } catch (e) {
+            res.status(400).send({message: `User with login ${login} doesn't exist`});
+        }
     }
 
     async signUp(req: Request, res: Response) {
@@ -28,9 +32,13 @@ export class UserController {
     }
 
     async getAccessToken(req: Request, res: Response) {
-        const {refresh_token}: { refresh_token: string } = req.cookies;
-        const accessToken = await this.userRepository.getAccessToken(refresh_token);
-        res.send({accessToken});
+        try {
+            const {refresh_token}: { refresh_token: string } = req.cookies;
+            const accessToken = await this.userRepository.getAccessToken(refresh_token);
+            res.send({accessToken});
+        } catch (e) {
+            res.status(401).send({message: 'Unauthorized'})
+        }
     }
 
     async checkAuthorize(req: Request, res: Response, next: NextFunction) {

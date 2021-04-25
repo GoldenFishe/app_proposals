@@ -2,7 +2,7 @@ import {query} from "../db";
 import {ProposalMapper} from "./Proposal.mapper";
 import {CommentMapper} from "../Comment/Comment.mapper";
 import {IProposal, IProposalDTO} from "./Proposal.types";
-import {IComment} from "../Comment/Comments.types";
+import {IComment} from "../Comment/Comment.types";
 
 export interface IProposalRepository {
     selectAllProposals(): Promise<IProposalDTO[]>;

@@ -1,4 +1,4 @@
-import {IComment, ICommentDTO} from "./Comments.types";
+import {IComment, ICommentDTO} from "./Comment.types";
 
 export class CommentMapper {
     public static toDTO(comment: IComment): ICommentDTO {

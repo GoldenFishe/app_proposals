@@ -25,6 +25,6 @@ function validateLoginAndPassword(req: Request): boolean {
 }
 
 function validateRefreshToken(req: Request): boolean {
-    const {refresh_token}: { refresh_token: string } = req.cookies;
+    const {refresh_token}: { refresh_token: string | undefined } = req.cookies;
     return Boolean(refresh_token);
 }

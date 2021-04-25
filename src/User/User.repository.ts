@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
 
     async getByLoginAndPassword(login: string, password: string) {
         const [user]: IUser[] = await query(`SELECT * FROM users WHERE login = '${login}' AND password = '${password}'`);
-        if (!user) throw new Error("User doesn't exist")
+        if (!user) throw new Error(`User with login ${login} doesn't exist`);
         return UserMapper.toDTO(user);
     }
 
@@ -33,6 +33,7 @@ export class UserRepository implements IUserRepository {
 
     async getAccessToken(refreshToken: AuthTokens.RefreshToken) {
         const [token]: Array<{ access_token: AuthTokens.AccessToken }> = await query(`SELECT access_token FROM users WHERE id = (SELECT user_id FROM refresh_sessions WHERE refresh_token = '${refreshToken}')`);
+        if (!token) throw new Error("Access token doesn't exist");
         return token.access_token;
     }
 

@@ -1,3 +1,5 @@
 node_modules
 src/view
 .idea
+.env
+.env.dev

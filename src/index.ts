@@ -6,7 +6,7 @@ import userRouter from "./User/User.router";
 import proposalRouter from "./Proposal/Proposal.router";
 import commentRouter from "./Comment/Comment.router";
 
-const PORT: number = Number(process.env.PORT) || 8080;
+const PORT: number = Number(process.env['APP_PORT']) || 8080;
 const app: Express = express();
 
 app.use(cookieParser());

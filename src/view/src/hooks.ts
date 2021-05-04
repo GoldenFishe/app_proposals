@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
+import HttpClient from "./httpClient";
 
-export function useFetch(url: string): any {
-    const [data, saveData] = useState<any | null>(null);
+export function useFetch<T>(url: string) {
+    const [data, saveData] = useState<T | null>(null);
     useEffect(() => {
         (async function getProposals() {
             try {
-                const request: Response = await fetch(url);
-                const data = await request.json();
+                const data = await HttpClient.get<T>(url);
                 saveData(data);
             } catch (err) {
                 console.error(err);

@@ -52,6 +52,10 @@ export class UserController {
         }
     }
 
+    async getUserInfo(req: Request, res: Response) {
+        res.send({login: 'login', id: 0, accessToken: new Date()});
+    }
+
     private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: AuthTokens.RefreshToken, accessToken: AuthTokens.AccessToken }> {
         const generatedAccessToken = jwt.sign(
             {userId},

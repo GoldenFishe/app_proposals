@@ -1,5 +1,5 @@
 import {MainActionTypes, MainState} from "./types";
-import {SIGN_IN} from "../SignIn/actionTypes";
+import {GET_USER} from "./actionTypes";
 
 const initialState: MainState = {
     user: null
@@ -7,7 +7,7 @@ const initialState: MainState = {
 
 const mainReducer = (state = initialState, action: MainActionTypes): MainState => {
     switch (action.type) {
-        case SIGN_IN:
+        case GET_USER:
             return {
                 ...state,
                 user: action.payload

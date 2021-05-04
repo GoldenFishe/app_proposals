@@ -1,6 +1,6 @@
 import {IComment} from "./IComment";
 
-interface IProposal {
+export interface IProposal {
     id: number;
     title: string;
     description: string;
@@ -9,5 +9,3 @@ interface IProposal {
     rating: number;
     comments: IComment[]
 }
-
-export default IProposal;

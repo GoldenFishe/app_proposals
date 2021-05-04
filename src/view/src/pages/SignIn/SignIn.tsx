@@ -1,34 +1,41 @@
-import React, {FC, FormEvent, useState} from 'react';
+import React, {FC, useCallback} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
+import {Button, Form, Input} from "antd";
 
 import {signIn} from "./actions";
 import {RootState} from "../../rootReducer";
 
+type SignInForm = {
+    login: string;
+    password: string;
+}
+
 const SignIn: FC = () => {
     const dispatch = useDispatch();
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
     const user = useSelector((state: RootState) => state.main.user);
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        if (login && password) dispatch(signIn(login, password))
-    }
-    if (user) return <Redirect to="/"/>
+    const onFinish = useCallback(({login, password}: SignInForm) => dispatch(signIn(login, password)), [dispatch]);
+    if (user) return <Redirect to="/"/>;
+
     return (
-        <form onSubmit={handleSubmit}>
-            <label>Login</label>
-            <input type="text"
-                   value={login}
-                   required
-                   onChange={e => setLogin(e.target.value)}/>
-            <label>Password</label>
-            <input type="password"
-                   value={password}
-                   required
-                   onChange={e => setPassword(e.target.value)}/>
-            <button type="submit">Sign In</button>
-        </form>
+        <Form onFinish={onFinish}
+              labelCol={{span: 8}}
+              wrapperCol={{span: 9}}
+              requiredMark={false}>
+            <Form.Item label="Login"
+                       name="login"
+                       rules={[{required: true, message: 'Please input your username'}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item label="Password"
+                       name="password"
+                       rules={[{required: true, message: 'Please input your password'}]}>
+                <Input.Password/>
+            </Form.Item>
+            <Form.Item wrapperCol={{offset: 8, span: 9}}>
+                <Button type="primary" htmlType="submit">Sign In</Button>
+            </Form.Item>
+        </Form>
     )
 };
 

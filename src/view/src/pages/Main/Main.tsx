@@ -1,22 +1,25 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {Layout} from "antd";
 
-import TopBar from "../../components/TopBar/TopBar";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
 import {Proposals} from '../Proposals';
 import CreateProposal from '../CreateProposal/CreateProposal';
 import Proposal from '../Proposal/Proposal';
 import {RootState} from "../../rootReducer";
-import classNames from './style.module.css';
+import {getUser} from "./actions";
 
 const Main: FC = () => {
+    const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.main.user);
+    useEffect(() => {
+        if (!user) dispatch(getUser());
+    }, [user])
     return (
-        <div className={classNames.container}>
+        <Layout >
             <BrowserRouter>
-                <TopBar/>
                 <Switch>
                     <Route path="/sign-in">
                         <SignIn/>
@@ -36,7 +39,7 @@ const Main: FC = () => {
                     <Redirect to="/proposals"/>
                 </Switch>
             </BrowserRouter>
-        </div>
+        </Layout>
     );
 };
 

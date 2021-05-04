@@ -1,26 +1,25 @@
-import React, {FC} from 'react';
+import React, {FC, useCallback} from 'react';
 import {useParams} from 'react-router-dom';
+import {Typography, Layout, List} from "antd";
 
 import {useFetch} from "../../hooks";
-import IProposal from "../../interfaces/IProposal";
+import {IProposal} from "../../interfaces/IProposal";
+import {IComment} from "../../interfaces/IComment";
 
 const Proposal: FC = () => {
-    const {id}: { id: string } = useParams();
-    const proposal: IProposal | null = useFetch(`/api/proposals/${id}`);
+    const {id} = useParams<{ id: string }>();
+    const proposal = useFetch<IProposal>(`/api/proposals/${id}`);
+    const renderItem = useCallback((comment: IComment) => (
+        <List.Item>{comment.comment}</List.Item>
+    ), []);
     return (
-        <div>
-            <div>
-                <h6>{proposal?.title}</h6>
-                <p>{proposal?.description}</p>
-            </div>
-            <ul>
-                {proposal?.comments.map(comment => {
-                    return (
-                        <li>{comment.comment}</li>
-                    )
-                })}
-            </ul>
-        </div>
+        <Layout>
+            <Typography.Title level={3}>{proposal?.title}</Typography.Title>
+            <Typography.Paragraph>{proposal?.description}</Typography.Paragraph>
+            <List dataSource={proposal?.comments}
+                  renderItem={renderItem}
+                  key="id"/>
+        </Layout>
     )
 };
 

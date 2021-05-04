@@ -33,32 +33,33 @@ axios.interceptors.response.use(response => {
 });
 
 export default class HttpClient {
-    static async get(url: string, withToken: boolean = true) {
+    static async get<T>(url: string, withToken: boolean = false) {
         let accessToken = accessTokenStore.getToken();
         let headers = {};
         if (withToken) {
             if (!accessToken) accessToken = await this.getAccessToken();
             headers = {...headers, 'Authorization': accessToken};
         }
-        return axios.get(url, {headers}).then((res: AxiosResponse) => res.data);
+        return axios.get(url, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 
-    static async post(url: string, body: object, withToken: boolean = false) {
+    static async post<T>(url: string, body: object, withToken: boolean = false) {
         let accessToken = accessTokenStore.getToken();
         let headers = {};
         if (withToken) {
             if (!accessToken) accessToken = await this.getAccessToken();
             headers = {...headers, 'Authorization': accessToken};
         }
-        return axios.post(url, body, {headers}).then((res: AxiosResponse) => res.data);
+        return axios.post(url, body, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 
     static async getAccessToken() {
         try {
-            const request = await axios.get('/api/user/access-token');
+            const request: AxiosResponse<{accessToken: string}> = await axios.get('/api/user/access-token');
             return request.data.accessToken;
         } catch (err) {
             console.error(err);
+            return '';
         }
     }
 }

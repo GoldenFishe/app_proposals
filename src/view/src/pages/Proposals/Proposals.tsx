@@ -1,10 +1,11 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import {Typography, List, Layout} from "antd";
 
 import Proposal from "./component/Proposal/Proposal";
 import {getProposals, resetProposals} from "./actions";
 import {RootState} from "../../rootReducer";
-import classNames from './style.module.css';
+import {IProposal} from "../../interfaces/IProposal";
 
 const Proposals: FC = () => {
     const dispatch = useDispatch();
@@ -14,24 +15,26 @@ const Proposals: FC = () => {
         return () => {
             dispatch(resetProposals())
         }
-    }, []);
+    }, [dispatch]);
+    const renderItem = useCallback((proposal: IProposal) => (
+        <List.Item>
+            <Proposal authorId={proposal.authorId}
+                      description={proposal.description}
+                      id={proposal.id}
+                      rating={proposal.rating}
+                      title={proposal.title}
+                      comments={proposal.comments}
+                      topicId={proposal.topicId}/>
+        </List.Item>
+    ), []);
     return (
-        <div className={classNames.container}>
-            <h1>Proposals</h1>
-            <ul className={classNames.list}>
-                {proposals.map(proposal => (
-                    <li key={proposal.id} className={classNames.listItem}>
-                        <Proposal authorId={proposal.authorId}
-                                  description={proposal.description}
-                                  id={proposal.id}
-                                  rating={proposal.rating}
-                                  title={proposal.title}
-                                  comments={proposal.comments}
-                                  topicId={proposal.topicId}/>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <Layout>
+            <Typography.Title>Proposals</Typography.Title>
+            <List dataSource={proposals}
+                  renderItem={renderItem}
+                  rowKey="id"
+                  bordered/>
+        </Layout>
     );
 };
 

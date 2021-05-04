@@ -10,7 +10,10 @@ const proposalController = new ProposalController(proposalRepository);
 const proposalRouter = Router();
 
 proposalRouter.use(ProposalRoutes.GET_PROPOSAL, validateProposalId);
-proposalRouter.use(ProposalRoutes.CREATE_PROPOSAL, validateCreateProposal);
+proposalRouter.use(ProposalRoutes.CREATE_PROPOSAL, ((req, res, next) => {
+    if (req.method === 'POST') validateCreateProposal(req, res, next);
+    else next();
+}));
 
 proposalRouter.get(ProposalRoutes.GET_PROPOSALS, (req: Request, res: Response) => proposalController.getAll(req, res));
 proposalRouter.get(ProposalRoutes.GET_PROPOSAL, (req: Request, res: Response) => proposalController.getById(req, res));

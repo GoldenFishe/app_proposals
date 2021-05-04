@@ -68,7 +68,7 @@ CREATE TABLE public.proposals
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE,
-    CONSTRAINT topic_id FOREIGN KEY (id)
+    CONSTRAINT topic_id FOREIGN KEY (topic_id)
         REFERENCES public.topics (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE

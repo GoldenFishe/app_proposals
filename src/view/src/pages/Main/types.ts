@@ -1,7 +1,13 @@
-import {SignInAction, User} from "../SignIn/types";
+import {IUser} from "../../interfaces/IUser";
+import {GET_USER} from "./actionTypes";
 
-export interface MainState {
-    user: User | null
+export interface GetUserAction {
+    type: typeof GET_USER,
+    payload: IUser
 }
 
-export type MainActionTypes = SignInAction
+export interface MainState {
+    user: IUser | null
+}
+
+export type MainActionTypes = GetUserAction;

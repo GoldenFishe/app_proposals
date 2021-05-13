@@ -7,7 +7,7 @@ export function validateProposalId(req: Request, res: Response, next: NextFuncti
 }
 
 export function validateCreateProposal(req: Request, res: Response, next: NextFunction) {
-    const {title, description}: { title: string | undefined, description: string | undefined } = req.body;
-    if (Boolean(title) && Boolean(description)) next();
+    const {title, description, topicId}: { title: string | undefined, description: string | undefined, topicId: number | undefined } = req.body;
+    if (Boolean(title) && Boolean(description) && Boolean(topicId) && !Number.isNaN(topicId)) next();
     else res.status(400).send({message: "Title and description are required"});
 }

@@ -2,7 +2,7 @@ import jwt, {Secret} from 'jsonwebtoken';
 import {CookieOptions, NextFunction, Request, Response} from "express";
 
 import {IUserRepository} from "./User.repository";
-import {AuthTokens, IUserDTO} from "./User.types";
+import {AuthTokens, IUserDTO, JWTPayload} from "./User.types";
 
 export class UserController {
     private readonly userRepository: IUserRepository;
@@ -53,12 +53,20 @@ export class UserController {
     }
 
     async getUserInfo(req: Request, res: Response) {
-        res.send({login: 'login', id: 0, accessToken: new Date()});
+        let user = null;
+        if (req.headers.authorization) {
+            try {
+                const jwtPayload = jwt.verify(req.headers.authorization, process.env["SECRET_JWT_KEY"] as Secret) as JWTPayload;
+                user = await this.userRepository.getById(jwtPayload.userId);
+            } catch (err) {}
+        }
+        res.status(200).send(user);
     }
 
     private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: AuthTokens.RefreshToken, accessToken: AuthTokens.AccessToken }> {
+        const jwtPayload: JWTPayload = {userId};
         const generatedAccessToken = jwt.sign(
-            {userId},
+            jwtPayload,
             process.env["SECRET_JWT_KEY"] as Secret,
             {expiresIn: Number(process.env["JWT_EXP"])}
         );

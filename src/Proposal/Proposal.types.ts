@@ -1,23 +1,31 @@
-
-import {IUser} from "../User/User.types";
+import {IAuthor, IUser} from "../User/User.types";
 import {ICommentDTO} from "../Comment/Comment.types";
+
+export interface ITopic {
+    id: number;
+    topic: string;
+}
 
 export interface IProposal {
     id: number;
     title: string;
     description: string;
     author_id: IUser["id"];
-    topic_id: number;
-    rating: number;
+    topic_id: ITopic["id"];
+    likes: number;
+    dislikes: number;
+    create_date: Date
 }
 
 export interface IProposalDTO {
     id: IProposal["id"];
     title: IProposal["title"];
     description: IProposal["description"];
-    authorId: IProposal["author_id"];
-    topicId: IProposal["topic_id"];
-    rating: IProposal["rating"];
+    author: IAuthor;
+    topic: ITopic;
+    likes: IProposal["likes"];
+    dislikes: IProposal["dislikes"];
+    createDate: IProposal["create_date"];
     comments: ICommentDTO[]
 }
 

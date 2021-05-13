@@ -1,7 +1,10 @@
+import {IAuthor} from "./IUser";
+
 export interface IComment {
     id: number;
     comment: string;
-    authorId: number;
-    proposalId: number;
-    rating: number;
+    author: IAuthor;
+    likes: number;
+    dislikes: number;
+    createDate: string;
 }

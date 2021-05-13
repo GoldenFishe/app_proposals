@@ -1,30 +1,13 @@
 import {GET_PROPOSALS, RESET_PROPOSALS} from './actionTypes';
+import {IProposal} from "../../interfaces/IProposal";
 
 export interface ProposalsState {
-    data: Proposal[]
-}
-
-export interface Comment {
-    id: number;
-    comment: string;
-    authorId: number;
-    proposalId: number;
-    rating: number;
-}
-
-export interface Proposal {
-    id: number;
-    title: string;
-    description: string;
-    authorId: number;
-    topicId: number;
-    rating: number;
-    comments: Comment[]
+    data: IProposal[]
 }
 
 export interface GetProposalsAction {
     type: typeof GET_PROPOSALS,
-    payload: Proposal[]
+    payload: IProposal[]
 }
 
 export interface ResetProposalsAction {

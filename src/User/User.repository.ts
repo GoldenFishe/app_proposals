@@ -7,6 +7,10 @@ export interface IUserRepository {
 
     getByLoginAndPassword(login: string, password: string): Promise<IUserDTO>;
 
+    getById(id: number): Promise<IUserDTO>;
+
+    getAll(): Promise<IUserDTO[]>;
+
     setRefreshToken(userId: IUserDTO["id"], refreshToken: AuthTokens.RefreshToken): Promise<AuthTokens.RefreshToken>;
 
     getAccessToken(refreshToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>;
@@ -16,7 +20,7 @@ export interface IUserRepository {
 
 export class UserRepository implements IUserRepository {
     async create(login: string, password: string) {
-        const [user]: IUser[] = await query(`INSERT INTO users (login, password) VALUES ('${login}', '${password}') RETURNING id, login, access_token`);
+        const [user]: IUser[] = await query(`INSERT INTO users (login, password, username) VALUES ('${login}', '${password}', '${login}') RETURNING *`);
         return UserMapper.toDTO(user);
     }
 
@@ -24,6 +28,16 @@ export class UserRepository implements IUserRepository {
         const [user]: IUser[] = await query(`SELECT * FROM users WHERE login = '${login}' AND password = '${password}'`);
         if (!user) throw new Error(`User with login ${login} doesn't exist`);
         return UserMapper.toDTO(user);
+    }
+
+    async getById(id: number) {
+        const [user]: IUser[] = await query(`SELECT * FROM users WHERE id = ${id}`);
+        return UserMapper.toDTO(user);
+    }
+
+    async getAll() {
+        const users: IUser[] = await query(`SELECT * FROM users`);
+        return users.map(UserMapper.toDTO);
     }
 
     async setRefreshToken(userId: IUserDTO["id"], refreshToken: AuthTokens.RefreshToken) {

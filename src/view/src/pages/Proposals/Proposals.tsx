@@ -18,13 +18,15 @@ const Proposals: FC = () => {
     }, [dispatch]);
     const renderItem = useCallback((proposal: IProposal) => (
         <List.Item>
-            <Proposal authorId={proposal.authorId}
-                      description={proposal.description}
+            <Proposal description={proposal.description}
                       id={proposal.id}
-                      rating={proposal.rating}
                       title={proposal.title}
                       comments={proposal.comments}
-                      topicId={proposal.topicId}/>
+                      author={proposal.author}
+                      createDate={proposal.createDate}
+                      dislikes={proposal.dislikes}
+                      likes={proposal.likes}
+                      topic={proposal.topic}/>
         </List.Item>
     ), []);
     return (

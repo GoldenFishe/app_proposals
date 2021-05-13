@@ -12,7 +12,7 @@ export class CommentController {
 
     async addCommentToProposal(req: Request, res: Response) {
         const {comment, authorId, proposalId}: { comment: string, authorId: number, proposalId: number } = req.body;
-        const commentDTO: ICommentDTO = await this.commentRepository.create(comment, authorId, proposalId);
+        const commentDTO: ICommentDTO = await this.commentRepository.create(comment, 1, proposalId);
         res.send(commentDTO);
     }
 }

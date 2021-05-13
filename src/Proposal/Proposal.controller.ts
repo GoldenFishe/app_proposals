@@ -21,8 +21,8 @@ export class ProposalController {
     }
 
     async create(req: Request, res: Response) {
-        const {title, description}: { title: string, description: string } = req.body;
-        const proposal = await this.proposalRepository.addProposal(title, description, 0);
+        const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
+        const proposal = await this.proposalRepository.addProposal(title, description, 1, topicId);
         res.send(proposal);
     }
 }

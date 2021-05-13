@@ -10,7 +10,7 @@ import {IUser} from "../../interfaces/IUser";
 export const getUser = (): ThunkAction<void, RootState, unknown, GetUserAction> => async (dispatch: Dispatch<GetUserAction>) => {
     try {
         const data: IUser = await HttpClient.get('/api/user');
-        dispatch({type: GET_USER, payload: data});
+        dispatch({type: GET_USER, payload: data || null});
     } catch (err) {
         console.error(err);
     }

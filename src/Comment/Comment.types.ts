@@ -1,18 +1,21 @@
 import {IProposal} from "../Proposal/Proposal.types";
-import {IUser} from "../User/User.types";
+import {IAuthor, IUser} from "../User/User.types";
 
 export interface IComment {
     id: number;
     comment: string;
     author_id: IUser["id"];
     proposal_id: IProposal["id"];
-    rating: number;
+    likes: number;
+    dislikes: number;
+    create_date: Date
 }
 
 export interface ICommentDTO {
     id: IComment["id"];
     comment: IComment["comment"];
-    authorId: IComment["author_id"];
-    proposalId: IComment["proposal_id"];
-    rating: number;
+    author: IAuthor;
+    likes: IComment["likes"];
+    dislikes: IComment["dislikes"];
+    createDate: IComment["create_date"]
 }

@@ -4,7 +4,7 @@ import {Typography} from "antd";
 
 import {IProposal} from "../../../../interfaces/IProposal";
 
-const Proposal: FC<IProposal> = ({authorId, description, id, rating, title}) => {
+const Proposal: FC<IProposal> = ({description, id, title, author}) => {
     return (
         <Link to={`/proposals/${id}`} component={Typography.Link}>
             <Typography.Title level={5}>{title}</Typography.Title>

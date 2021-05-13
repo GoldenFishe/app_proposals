@@ -15,7 +15,7 @@ const SignIn: FC = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.main.user);
     const onFinish = useCallback(({login, password}: SignInForm) => dispatch(signIn(login, password)), [dispatch]);
-    if (user) return <Redirect to="/"/>;
+    if (user !== null) return <Redirect to="/"/>;
 
     return (
         <Form onFinish={onFinish}

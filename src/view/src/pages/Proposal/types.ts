@@ -1,6 +1,6 @@
 import {IProposal} from "../../interfaces/IProposal";
 import {IComment} from "../../interfaces/IComment";
-import {GET_PROPOSAL, LEAVE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
+import {DISLIKE_COMMENT, GET_PROPOSAL, LEAVE_COMMENT, LIKE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
 
 export interface GetProposalAction {
     type: typeof GET_PROPOSAL,
@@ -14,6 +14,16 @@ export interface SetProposalAction {
 
 export interface LeaveCommentAction {
     type: typeof LEAVE_COMMENT,
+    payload: IComment
+}
+
+export interface LikeCommentAction {
+    type: typeof LIKE_COMMENT,
+    payload: IComment
+}
+
+export interface DislikeCommentAction {
+    type: typeof DISLIKE_COMMENT,
     payload: IComment
 }
 

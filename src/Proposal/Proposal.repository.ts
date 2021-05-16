@@ -11,6 +11,10 @@ export interface IProposalRepository {
     selectProposalById(id: number): Promise<IProposalDTO>;
 
     addProposal(title: string, description: string, authorId: number, topicId: number): Promise<IProposalDTO>;
+
+    setLike(proposalId: number, userId: number): Promise<IProposalDTO>;
+
+    setDislike(proposalId: number, userId: number): Promise<IProposalDTO>;
 }
 
 export class ProposalRepository implements IProposalRepository {
@@ -55,5 +59,15 @@ export class ProposalRepository implements IProposalRepository {
         const [user] = users;
         const [topic] = topics;
         return ProposalMapper.toDTO(proposal, [], user, topic);
+    }
+
+    async setLike(proposalId: number, userId: number) {
+        const [proposal]: IProposal[] = await query(`INSERT INTO proposals_likes (proposal_id, user_id) VALUES (${proposalId}, ${userId}) RETURNING *`);
+        return this.selectProposalById(proposal.id);
+    }
+
+    async setDislike(proposalId: number, userId: number) {
+        const [proposal]: IProposal[] = await query(`INSERT INTO proposals_dislikes (proposal_id, user_id) VALUES (${proposalId}, ${userId}) RETURNING *`);
+        return this.selectProposalById(proposal.id);
     }
 }

@@ -22,7 +22,22 @@ export class ProposalController {
 
     async create(req: Request, res: Response) {
         const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
-        const proposal = await this.proposalRepository.addProposal(title, description, 1, topicId);
+        const userId: number = res.locals.userId;
+        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId);
         res.send(proposal);
+    }
+
+    async likeProposal(req: Request, res: Response) {
+        const {proposalId}: { proposalId: number } = req.body;
+        const userId: number = res.locals.userId;
+        const commentDTO = await this.proposalRepository.setLike(proposalId, userId);
+        res.send(commentDTO);
+    }
+
+    async dislikeProposal(req: Request, res: Response) {
+        const {proposalId}: { proposalId: number} = req.body;
+        const userId: number = res.locals.userId;
+        const commentDTO = await this.proposalRepository.setDislike(proposalId, userId);
+        res.send(commentDTO);
     }
 }

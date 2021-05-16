@@ -8,6 +8,7 @@ import SignUp from "../SignUp/SignUp";
 import Proposals from '../Proposals/Proposals';
 import CreateProposal from '../CreateProposal/CreateProposal';
 import Proposal from '../Proposal/Proposal';
+import Profile from "../Profile/Profile";
 import {RootState} from "../../rootReducer";
 import {getUser} from "./actions";
 
@@ -44,6 +45,9 @@ const Main: FC = () => {
                     </Route>
                     <Route path="/proposals/:id">
                         <Proposal/>
+                    </Route>
+                    <Route path="/profile/:id">
+                        <Profile/>
                     </Route>
                     <Redirect to="/proposals"/>
                 </Switch>

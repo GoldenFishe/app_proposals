@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 
 import {ICommentsRepository} from "./Comment.repository";
-import {ICommentDTO} from "./Comment.types";
 
 export class CommentController {
     private readonly commentRepository: ICommentsRepository;
@@ -11,8 +10,23 @@ export class CommentController {
     }
 
     async addCommentToProposal(req: Request, res: Response) {
-        const {comment, authorId, proposalId}: { comment: string, authorId: number, proposalId: number } = req.body;
-        const commentDTO: ICommentDTO = await this.commentRepository.create(comment, 1, proposalId);
+        const {comment, proposalId}: { comment: string, proposalId: number } = req.body;
+        const userId: number = res.locals.userId;
+        const commentDTO = await this.commentRepository.create(comment, userId, proposalId);
+        res.send(commentDTO);
+    }
+
+    async likeComment(req: Request, res: Response) {
+        const {commentId}: { commentId: number } = req.body;
+        const userId: number = res.locals.userId;
+        const commentDTO = await this.commentRepository.setLike(commentId, userId);
+        res.send(commentDTO);
+    }
+
+    async dislikeComment(req: Request, res: Response) {
+        const {commentId}: { commentId: number } = req.body;
+        const userId: number = res.locals.userId;
+        const commentDTO = await this.commentRepository.setDislike(commentId, userId);
         res.send(commentDTO);
     }
 }

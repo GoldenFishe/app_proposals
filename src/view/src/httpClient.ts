@@ -11,26 +11,26 @@ export const accessTokenStore = (function () {
         }
     }
 })();
-//
-// axios.interceptors.request.use(config => {
-//     console.log(config);
-//     return config;
-// }, error => {
-//     console.log(error);
-//     return Promise.reject(error);
-// });
-//
-// axios.interceptors.response.use(response => {
-//     if (response.config.url) {
-//         if (/sign-(in|up)/.test(response.config.url)) {
-//             accessTokenStore.setToken(response.data.accessToken);
-//         }
-//     }
-//     return response;
-// }, error => {
-//     console.log(error);
-//     return Promise.reject(error);
-// });
+
+axios.interceptors.request.use(config => {
+    console.log(config);
+    return config;
+}, error => {
+    console.log(error);
+    return Promise.reject(error);
+});
+
+axios.interceptors.response.use(response => {
+    if (response.config.url) {
+        if (/sign-(in|up)/.test(response.config.url)) {
+            accessTokenStore.setToken(response.data.accessToken);
+        }
+    }
+    return response;
+}, error => {
+    console.log(error);
+    return Promise.reject(error);
+});
 
 export default class HttpClient {
     static async get<T>(url: string, withToken: boolean = false) {

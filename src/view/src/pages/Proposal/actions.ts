@@ -1,9 +1,15 @@
 import {Dispatch} from "redux";
 import {ThunkAction} from "redux-thunk";
 
-import {GetProposalAction, LeaveCommentAction, SetProposalAction} from './types';
+import {
+    DislikeCommentAction,
+    GetProposalAction,
+    LeaveCommentAction,
+    LikeCommentAction,
+    SetProposalAction
+} from './types';
 import HttpClient from "../../httpClient";
-import {GET_PROPOSAL, LEAVE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
+import {DISLIKE_COMMENT, GET_PROPOSAL, LEAVE_COMMENT, LIKE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
 import {RootState} from "../../rootReducer";
 import {IProposal} from "../../interfaces/IProposal";
 import {IComment} from "../../interfaces/IComment";
@@ -36,6 +42,24 @@ export const leaveComment = (comment: string, proposalId: number): ThunkAction<v
     try {
         const data = await HttpClient.post<IComment>(`/api/comments`, {comment, proposalId});
         dispatch({type: LEAVE_COMMENT, payload: data});
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const likeComment = (commentId: number): ThunkAction<void, RootState, unknown, LikeCommentAction> => async (dispatch: Dispatch<LikeCommentAction>) => {
+    try {
+        const data = await HttpClient.post<IComment>(`/api/comments/like`, {commentId}, true);
+        dispatch({type: LIKE_COMMENT, payload: data});
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const dislikeComment = (commentId: number): ThunkAction<void, RootState, unknown, DislikeCommentAction> => async (dispatch: Dispatch<DislikeCommentAction>) => {
+    try {
+        const data = await HttpClient.post<IComment>(`/api/comments/dislike`, {commentId}, true);
+        dispatch({type: DISLIKE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);
     }

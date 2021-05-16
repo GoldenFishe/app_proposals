@@ -6,7 +6,7 @@ import {IProposal} from "../../../../interfaces/IProposal";
 
 const Proposal: FC<IProposal> = ({description, id, title, author}) => {
     return (
-        <Link to={`/proposals/${id}`} component={Typography.Link}>
+        <Link to={`/proposals/${id}`}>
             <Typography.Title level={5}>{title}</Typography.Title>
             <Typography.Paragraph>{description}</Typography.Paragraph>
         </Link>

@@ -11,9 +11,24 @@ const userRouter = Router();
 
 userRouter.use(userMiddleware);
 
-userRouter.post(UserRoutes.SIGN_IN, (req: Request, res: Response) => userController.signIn(req, res));
-userRouter.post(UserRoutes.SIGN_UP, (req: Request, res: Response) => userController.signUp(req, res));
-userRouter.get(UserRoutes.ACCESS_TOKEN, (req: Request, res: Response) => userController.getAccessToken(req, res));
-userRouter.get(UserRoutes.INFO, (req: Request, res: Response) => userController.getUserInfo(req, res));
+userRouter.post(
+    UserRoutes.SIGN_IN,
+    (req: Request, res: Response) => userController.signIn(req, res)
+);
+
+userRouter.post(
+    UserRoutes.SIGN_UP,
+    (req: Request, res: Response) => userController.signUp(req, res)
+);
+
+userRouter.get(
+    UserRoutes.ACCESS_TOKEN,
+    (req: Request, res: Response) => userController.getAccessToken(req, res)
+);
+
+userRouter.get(
+    UserRoutes.INFO,
+    (req: Request, res: Response) => userController.getUserInfo(req, res)
+);
 
 export default userRouter;

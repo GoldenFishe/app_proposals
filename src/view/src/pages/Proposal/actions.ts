@@ -31,16 +31,16 @@ export const getProposal = (id: number): ThunkAction<void, RootState, unknown, G
 
 export const createProposal = ({title, description, topicId}: CreateProposalForm): ThunkAction<void, RootState, unknown, SetProposalAction> => async (dispatch: Dispatch<SetProposalAction>) => {
     try {
-        const data = await HttpClient.post<IProposal>(`/api/proposals`, {title, description, topicId});
+        const data = await HttpClient.post<IProposal>(`/api/proposals`, {title, description, topicId}, true);
         dispatch({type: SET_PROPOSAL, payload: data});
     } catch (err) {
         console.error(err);
     }
 }
 
-export const leaveComment = (comment: string, proposalId: number): ThunkAction<void, RootState, unknown, LeaveCommentAction> => async (dispatch: Dispatch<LeaveCommentAction>) => {
+export const leaveComment = (comment: string, proposalId: number, parentCommentId: number | null): ThunkAction<void, RootState, unknown, LeaveCommentAction> => async (dispatch: Dispatch<LeaveCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment>(`/api/comments`, {comment, proposalId});
+        const data = await HttpClient.post<IComment>(`/api/comments`, {comment, proposalId, parentCommentId}, true);
         dispatch({type: LEAVE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);

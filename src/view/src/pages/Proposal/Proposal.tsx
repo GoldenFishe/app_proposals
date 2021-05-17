@@ -1,8 +1,10 @@
-import React, {FC, useCallback, useEffect} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {Typography, Layout, List, Comment} from "antd";
+import {Typography, Layout, List} from "antd";
+import Comment from "./components/Comment/Comment";
 
+import {RootState} from "../../rootReducer";
 import {IComment} from "../../interfaces/IComment";
 import CreateCommentForm from "./components/CreateCommentForm/CreateCommentForm";
 import {
@@ -11,10 +13,10 @@ import {
     likeComment as likeCommentAction,
     dislikeComment as dislikeCommentAction
 } from "./actions";
-import {RootState} from "../../rootReducer";
 
 const Proposal: FC = () => {
     const {id} = useParams<{ id: string }>();
+    const [parentCommentId, setParentCommentId] = useState(null);
     const proposal = useSelector((state: RootState) => state.proposal.data);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -25,25 +27,24 @@ const Proposal: FC = () => {
     // }, []);
     const likeComment = useCallback((commentId) => () => dispatch(likeCommentAction(commentId)), [dispatch]);
     const dislikeComment = useCallback((commentId) => () => dispatch(dislikeCommentAction(commentId)), [dispatch]);
+    const replyTo = useCallback((commentId) => () => setParentCommentId(commentId), []);
 
     const onSubmitCreateCommentForm = useCallback(({comment}: { comment: string }) => {
-        dispatch(leaveComment(comment, Number(id)));
-    }, [dispatch, id]);
+        dispatch(leaveComment(comment, Number(id), parentCommentId));
+    }, [dispatch, id, parentCommentId]);
     const renderItem = useCallback((comment: IComment) => {
-        const actions = [
-            <span onClick={likeComment(comment.id)}>Like</span>,
-            <span onClick={dislikeComment(comment.id)}>Dislike</span>,
-            <span>Reply to</span>,
-        ];
         return (
             <List.Item>
-                <Comment author={comment.author.username}
-                         content={comment.comment}
-                         datetime={new Date(comment.createDate).toDateString()}
-                         actions={actions}/>
+                <Comment authorUsername={comment.author.username}
+                         comment={comment.comment}
+                         createDate={new Date(comment.createDate).toDateString()}
+                         onLikeComment={likeComment(comment.id)}
+                         onDislikeComment={dislikeComment(comment.id)}
+                         onReplyTo={replyTo(comment.id)}/>
+                {comment.id === parentCommentId && <CreateCommentForm onCreate={onSubmitCreateCommentForm}/>}
             </List.Item>
         )
-    }, [likeComment, dislikeComment]);
+    }, [likeComment, dislikeComment, onSubmitCreateCommentForm, replyTo]);
     return (
         <Layout>
             <Typography.Title level={3}>{proposal?.title}</Typography.Title>

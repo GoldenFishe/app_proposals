@@ -10,9 +10,9 @@ export class CommentController {
     }
 
     async addCommentToProposal(req: Request, res: Response) {
-        const {comment, proposalId}: { comment: string, proposalId: number } = req.body;
+        const {comment, proposalId, parentCommentId}: { comment: string, proposalId: number, parentCommentId: number } = req.body;
         const userId: number = res.locals.userId;
-        const commentDTO = await this.commentRepository.create(comment, userId, proposalId);
+        const commentDTO = await this.commentRepository.create(comment, userId, proposalId, parentCommentId);
         res.send(commentDTO);
     }
 

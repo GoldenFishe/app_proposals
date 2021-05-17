@@ -4,3 +4,4 @@ src/view
 .idea
 .env
 .env.dev
+src/resources

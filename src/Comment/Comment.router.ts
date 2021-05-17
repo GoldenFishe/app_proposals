@@ -13,7 +13,8 @@ const commentRouter = Router();
 commentRouter.post(
     CommentRoutes.CREATE_COMMENT,
     validateAuthorization,
-    validateCreateComment, (req: Request, res: Response) => commentController.addCommentToProposal(req, res)
+    validateCreateComment,
+    (req: Request, res: Response) => commentController.addCommentToProposal(req, res)
 );
 
 commentRouter.post(

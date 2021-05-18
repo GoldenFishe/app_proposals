@@ -1,14 +1,16 @@
 import React, {FormEvent} from 'react';
+import {useParams} from "react-router-dom";
+
 import HttpClient from "../../httpClient";
 
 const Profile = () => {
     const formData = new FormData();
-
+    const {id} = useParams<{ id: string }>();
     return (
         <div>
             <form onSubmit={(e: FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
-                HttpClient.post('/api/user/avatar', formData);
+                HttpClient.post('/api/user/avatar', formData, true);
             }}>
                 <input type="file" name="avatar" onChange={event => {
                     console.log(event);
@@ -17,7 +19,7 @@ const Profile = () => {
                 }}/>
                 <button type="submit">Submit</button>
             </form>
-            <img src="/api/user/avatar"/>
+            <img src={`/resources/avatar/${id}`}/>
         </div>
     );
 };

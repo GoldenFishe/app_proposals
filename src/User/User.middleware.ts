@@ -1,30 +1,13 @@
 import {NextFunction, Request, Response} from "express";
-import userRoutes from "./User.routes";
 
-export default function userMiddleware(req: Request, res: Response, next: NextFunction) {
-    switch (req.path) {
-        case userRoutes.SIGN_IN:
-        case userRoutes.SIGN_UP: {
-            if (validateLoginAndPassword(req)) next();
-            else res.status(400).send({message: 'Login and password are required'});
-            break;
-        }
-        case userRoutes.ACCESS_TOKEN:
-            if (validateRefreshToken(req)) next();
-            else res.status(401).send({message: 'Unauthorized'});
-            break;
-        default:
-            next();
-            break;
-    }
-}
-
-function validateLoginAndPassword(req: Request): boolean {
+export function validateLoginAndPassword(req: Request, res: Response, next: NextFunction) {
     const {login, password}: { login: string | undefined, password: string | undefined } = req.body;
-    return Boolean(login) && Boolean(password);
+    if (Boolean(login) && Boolean(password)) next();
+    else res.status(400).send({message: 'Login and password are required'});
 }
 
-function validateRefreshToken(req: Request): boolean {
+export function validateRefreshToken(req: Request, res: Response, next: NextFunction) {
     const {refresh_token}: { refresh_token: string | undefined } = req.cookies;
-    return Boolean(refresh_token);
+    if (Boolean(refresh_token)) next();
+    else res.status(401).send({message: 'Unauthorized'});
 }

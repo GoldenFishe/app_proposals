@@ -1,5 +1,5 @@
 import jwt, {Secret} from 'jsonwebtoken';
-import {CookieOptions, NextFunction, Request, Response} from "express";
+import {CookieOptions, Request, Response} from "express";
 
 import {IUserRepository} from "./User.repository";
 import {AuthTokens, IUserDTO, JWTPayload} from "./User.types";
@@ -41,17 +41,6 @@ export class UserController {
         }
     }
 
-    async checkAuthorize(req: Request, res: Response, next: NextFunction) {
-        if (req.headers.authorization) {
-            try {
-                jwt.verify(req.headers.authorization, process.env["SECRET_JWT_KEY"] as Secret);
-                next();
-            } catch (err) {
-                res.status(401).send({message: 'Unauthorized'});
-            }
-        }
-    }
-
     async getUserInfo(req: Request, res: Response) {
         let user = null;
         if (req.headers.authorization) {
@@ -61,6 +50,12 @@ export class UserController {
             } catch (err) {}
         }
         res.status(200).send(user);
+    }
+
+    async uploadAvatar(req: Request, res: Response) {
+        const userId: number = res.locals.userId;
+        const user = await this.userRepository.getById(userId);
+        res.send(user);
     }
 
     private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: AuthTokens.RefreshToken, accessToken: AuthTokens.AccessToken }> {

@@ -29,6 +29,7 @@ const Main: FC = () => {
                         <Typography.Title level={5}>Make your digital dream come true</Typography.Title>
                     </div>
                     <Link to="/proposals/create">Create Proposal</Link>
+                    <Link to="/profile/1">Profile</Link>
                 </Layout.Header>
                 <Switch>
                     <Route path="/sign-in">

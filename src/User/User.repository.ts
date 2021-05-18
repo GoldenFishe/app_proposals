@@ -15,7 +15,7 @@ export interface IUserRepository {
 
     getAccessToken(refreshToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>;
 
-    setAccessToken(userId: IUserDTO["id"], accessToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>
+    setAccessToken(userId: IUserDTO["id"], accessToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>;
 }
 
 export class UserRepository implements IUserRepository {

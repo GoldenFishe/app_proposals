@@ -3,9 +3,11 @@ export interface IUser {
     login: string;
     username: string;
     accessToken: string;
+    avatar: string | null;
 }
 
 export interface IAuthor {
-    id: IUser["id"],
-    username: IUser["username"]
+    id: IUser["id"];
+    username: IUser["username"];
+    avatar: IUser["avatar"]
 }

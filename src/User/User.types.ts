@@ -7,7 +7,7 @@ export interface IUser {
     id: number;
     login: string;
     username: string;
-    access_token: AuthTokens.AccessToken
+    access_token: AuthTokens.AccessToken,
 }
 
 export interface IUserDTO {
@@ -15,11 +15,13 @@ export interface IUserDTO {
     login: IUser["login"];
     username: IUser["username"];
     accessToken: AuthTokens.AccessToken;
+    avatar: string | null;
 }
 
 export interface IAuthor {
     id: IUser["id"],
-    username: IUser["username"]
+    username: IUser["username"],
+    avatar: string | null
 }
 
 export interface JWTPayload {

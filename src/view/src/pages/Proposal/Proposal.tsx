@@ -35,7 +35,7 @@ const Proposal: FC = () => {
     const renderItem = useCallback((comment: IComment) => {
         return (
             <List.Item>
-                <Comment authorUsername={comment.author.username}
+                <Comment author={comment.author}
                          comment={comment.comment}
                          createDate={new Date(comment.createDate).toDateString()}
                          onLikeComment={likeComment(comment.id)}

@@ -27,3 +27,24 @@ export interface IAuthor {
 export interface JWTPayload {
     userId: IUserDTO["id"]
 }
+
+export type GeneratedTokens = {
+    refreshToken: AuthTokens.RefreshToken,
+    accessToken: AuthTokens.AccessToken
+}
+
+export interface IRefreshSession {
+    id: number;
+    user_id: IUser["id"];
+    refresh_token: string;
+    expires_in: string;
+    created_at: string;
+}
+
+export interface IRefreshSessionDTO {
+    id: IRefreshSession["id"];
+    userId: IRefreshSession["user_id"];
+    refreshToken: IRefreshSession["refresh_token"];
+    expiresIn: IRefreshSession["expires_in"];
+    createdAt: IRefreshSession["created_at"];
+}

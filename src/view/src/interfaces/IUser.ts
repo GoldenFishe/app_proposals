@@ -2,7 +2,6 @@ export interface IUser {
     id: number;
     login: string;
     username: string;
-    accessToken: string;
     avatar: string | null;
 }
 

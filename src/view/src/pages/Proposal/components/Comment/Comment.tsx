@@ -1,8 +1,10 @@
 import React, {FC, MouseEventHandler} from 'react';
 import {Comment as AntdComment} from "antd";
 
+import {IAuthor} from "../../../../interfaces/IUser";
+
 interface IProps {
-    authorUsername: string;
+    author: IAuthor;
     comment: string;
     createDate: string;
     onLikeComment: MouseEventHandler<HTMLSpanElement>;
@@ -11,7 +13,7 @@ interface IProps {
 }
 
 const Comment: FC<IProps> = ({
-                                 authorUsername,
+                                 author,
                                  comment,
                                  createDate,
                                  onLikeComment,
@@ -24,7 +26,8 @@ const Comment: FC<IProps> = ({
         <span onClick={onReplyTo}>Reply to</span>
     ];
     return (
-        <AntdComment author={authorUsername}
+        <AntdComment avatar={author.avatar}
+                     author={author.username}
                      content={comment}
                      datetime={createDate}
                      actions={actions}/>

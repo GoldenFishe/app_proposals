@@ -3,7 +3,7 @@ enum UserRoutes {
     SIGN_UP = '/sign-up',
     ACCESS_TOKEN = '/access-token',
     INFO = '/',
-    UPLOAD_AVATAR = '/avatar'
+    UPDATE_INFO = '/'
 }
 
 export default UserRoutes;

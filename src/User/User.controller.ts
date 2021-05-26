@@ -2,15 +2,25 @@ import jwt, {Secret} from 'jsonwebtoken';
 import {CookieOptions, Request, Response} from "express";
 
 import {IUserRepository} from "./User.repository";
-import {AuthTokens, IUserDTO, JWTPayload} from "./User.types";
+import {GeneratedTokens, IUserDTO, JWTPayload} from "./User.types";
 
-export class UserController {
+export interface IUserController {
+    signIn(req: Request, res: Response): Promise<void>;
+
+    signUp(req: Request, res: Response): Promise<void>;
+
+    getAccessToken(req: Request, res: Response): Promise<void>;
+
+    getUserInfo(req: Request, res: Response): Promise<void>;
+
+    setUserInfo(req: Request, res: Response): Promise<void>;
+}
+
+export class UserController implements IUserController {
     private readonly userRepository: IUserRepository;
-    private readonly refreshTokenCookieOptions: CookieOptions;
 
     constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository;
-        this.refreshTokenCookieOptions = {httpOnly: true, maxAge: Number(process.env["JWT_EXP"])};
     }
 
     async signIn(req: Request, res: Response) {
@@ -34,31 +44,32 @@ export class UserController {
     async getAccessToken(req: Request, res: Response) {
         try {
             const {refresh_token}: { refresh_token: string } = req.cookies;
-            const accessToken = await this.userRepository.getAccessToken(refresh_token);
-            res.send({accessToken});
+            const refreshSession = await this.userRepository.getRefreshSession(refresh_token);
+            if (refreshSession) {
+                const {refreshToken, accessToken} = await this.generateTokens(refreshSession.userId);
+                res.cookie('refresh_token', refreshToken, this.refreshTokenCookieOptions).send({accessToken});
+            } else {
+                res.status(401).send({message: 'Unauthorized'});
+            }
         } catch (e) {
-            res.status(401).send({message: 'Unauthorized'})
+            res.status(401).send({message: 'Unauthorized'});
         }
     }
 
     async getUserInfo(req: Request, res: Response) {
-        let user = null;
-        if (req.headers.authorization) {
-            try {
-                const jwtPayload = jwt.verify(req.headers.authorization, process.env["SECRET_JWT_KEY"] as Secret) as JWTPayload;
-                user = await this.userRepository.getById(jwtPayload.userId);
-            } catch (err) {}
-        }
+        const {userId} = res.locals;
+        const user = await this.userRepository.getById(userId);
         res.status(200).send(user);
     }
 
-    async uploadAvatar(req: Request, res: Response) {
-        const userId: number = res.locals.userId;
-        const user = await this.userRepository.getById(userId);
-        res.send(user);
+    async setUserInfo(req: Request, res: Response) {
+        const {login, password, username}: { login: string, password: string, username: string } = req.body;
+        const {userId} = res.locals;
+        const user = await this.userRepository.updateUser(userId, login, password, username);
+        res.status(200).send(user);
     }
 
-    private async generateTokens(userId: IUserDTO["id"]): Promise<{ refreshToken: AuthTokens.RefreshToken, accessToken: AuthTokens.AccessToken }> {
+    private async generateTokens(userId: IUserDTO["id"]): Promise<GeneratedTokens> {
         const jwtPayload: JWTPayload = {userId};
         const generatedAccessToken = jwt.sign(
             jwtPayload,
@@ -69,5 +80,9 @@ export class UserController {
         const accessTokenPromise = this.userRepository.setAccessToken(userId, generatedAccessToken);
         const [refreshToken, accessToken] = await Promise.all([refreshTokenPromise, accessTokenPromise]);
         return {refreshToken, accessToken};
+    }
+
+    private get refreshTokenCookieOptions(): CookieOptions {
+        return {httpOnly: true, maxAge: Number(process.env["JWT_EXP"]) * 2}
     }
 }

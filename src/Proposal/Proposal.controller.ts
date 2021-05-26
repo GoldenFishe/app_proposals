@@ -2,7 +2,20 @@ import {Request, Response} from "express";
 
 import {IProposalRepository} from "./Proposal.repository";
 
-export class ProposalController {
+export interface IProposalController {
+
+    getAll(req: Request, res: Response): Promise<void>;
+
+    getById(req: Request, res: Response): Promise<void>;
+
+    create(req: Request, res: Response): Promise<void>;
+
+    likeProposal(req: Request, res: Response): Promise<void>;
+
+    dislikeProposal(req: Request, res: Response): Promise<void>;
+}
+
+export class ProposalController implements IProposalController {
     private readonly proposalRepository: IProposalRepository;
 
     constructor(proposalRepository: IProposalRepository) {
@@ -35,7 +48,7 @@ export class ProposalController {
     }
 
     async dislikeProposal(req: Request, res: Response) {
-        const {proposalId}: { proposalId: number} = req.body;
+        const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
         const commentDTO = await this.proposalRepository.setDislike(proposalId, userId);
         res.send(commentDTO);

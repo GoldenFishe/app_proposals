@@ -12,25 +12,31 @@ export const accessTokenStore = (function () {
     }
 })();
 
-axios.interceptors.request.use(config => {
-    console.log(config);
-    return config;
-}, error => {
-    console.log(error);
-    return Promise.reject(error);
-});
+axios.interceptors.request.use(
+    config => {
+        console.log(config);
+        return config;
+    },
+    error => {
+        console.log(error);
+        return Promise.reject(error);
+    });
 
-axios.interceptors.response.use(response => {
-    if (response.config.url) {
-        if (/sign-(in|up)/.test(response.config.url)) {
-            accessTokenStore.setToken(response.data.accessToken);
+axios.interceptors.response.use(
+    response => {
+        if (response.config.url) {
+            if (/sign-(in|up)/.test(response.config.url)) {
+                accessTokenStore.setToken(response.data.accessToken);
+            }
         }
-    }
-    return response;
-}, error => {
-    console.log(error);
-    return Promise.reject(error);
-});
+        return response;
+    },
+    error => {
+        if (error.response.status === 401 && error.response.headers.Authorization) {
+            accessTokenStore.setToken('');
+        }
+        return Promise.reject(error);
+    });
 
 export default class HttpClient {
     static async get<T>(url: string, withToken: boolean = false) {
@@ -55,7 +61,7 @@ export default class HttpClient {
 
     static async getAccessToken() {
         try {
-            const request: AxiosResponse<{accessToken: string}> = await axios.get('/api/user/access-token');
+            const request: AxiosResponse<{ accessToken: string }> = await axios.get('/api/user/access-token');
             return request.data.accessToken;
         } catch (err) {
             console.error(err);

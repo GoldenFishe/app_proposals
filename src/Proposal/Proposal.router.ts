@@ -1,13 +1,12 @@
 import {Request, Response, Router} from "express";
 
-import {ProposalRepository} from "./Proposal.repository";
-import {ProposalController} from "./Proposal.controller";
+import {IProposalController} from "./Proposal.controller";
 import ProposalRoutes from "./Proposal.routes";
 import {validateCreateProposal, validateProposalId} from "./Proposal.middleware";
 import {validateAuthorization} from "../validators";
+import DIContainer from "../DIContainer";
 
-const proposalRepository = new ProposalRepository();
-const proposalController = new ProposalController(proposalRepository);
+const proposalController = DIContainer.get('proposalController') as IProposalController;
 const proposalRouter = Router();
 
 proposalRouter.get(

@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {Layout, Typography} from "antd";
 
+import Protected from "../../components/Protected";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
 import Proposals from '../Proposals/Proposals';
@@ -28,8 +29,10 @@ const Main: FC = () => {
                         <Typography.Title level={1}>Proposals</Typography.Title>
                         <Typography.Title level={5}>Make your digital dream come true</Typography.Title>
                     </div>
-                    <Link to="/proposals/create">Create Proposal</Link>
-                    <Link to="/profile/1">Profile</Link>
+                    <Link to="/sign-in">Sign-in</Link>
+                    <Link to="/sign-up">Sign-up</Link>
+                    <Protected><Link to="/proposals/create">Create Proposal</Link></Protected>
+                    <Protected><Link to={`/profile/${user?.id}`}>Profile</Link></Protected>
                 </Layout.Header>
                 <Switch>
                     <Route path="/sign-in">

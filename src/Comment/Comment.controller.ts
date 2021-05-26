@@ -2,7 +2,16 @@ import {Request, Response} from "express";
 
 import {ICommentsRepository} from "./Comment.repository";
 
-export class CommentController {
+export interface ICommentController {
+
+    addCommentToProposal(req: Request, res: Response): Promise<void>;
+
+    likeComment(req: Request, res: Response): Promise<void>;
+
+    dislikeComment(req: Request, res: Response): Promise<void>;
+}
+
+export class CommentController implements ICommentController {
     private readonly commentRepository: ICommentsRepository;
 
     constructor(commentRepository: ICommentsRepository) {
@@ -10,7 +19,11 @@ export class CommentController {
     }
 
     async addCommentToProposal(req: Request, res: Response) {
-        const {comment, proposalId, parentCommentId}: { comment: string, proposalId: number, parentCommentId: number } = req.body;
+        const {
+            comment,
+            proposalId,
+            parentCommentId
+        }: { comment: string, proposalId: number, parentCommentId: number } = req.body;
         const userId: number = res.locals.userId;
         const commentDTO = await this.commentRepository.create(comment, userId, proposalId, parentCommentId);
         res.send(commentDTO);

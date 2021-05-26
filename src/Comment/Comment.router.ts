@@ -1,13 +1,12 @@
 import {Request, Response, Router} from "express";
 
-import {CommentRepository} from "./Comment.repository";
-import {CommentController} from "./Comment.controller";
+import {ICommentController} from "./Comment.controller";
 import CommentRoutes from "./Comment.routes";
 import {validateCreateComment} from "./Comment.middleware";
 import {validateAuthorization} from "../validators";
+import DIContainer from "../DIContainer";
 
-const commentRepository = new CommentRepository();
-const commentController = new CommentController(commentRepository);
+const commentController = DIContainer.get('commentController') as ICommentController;
 const commentRouter = Router();
 
 commentRouter.post(

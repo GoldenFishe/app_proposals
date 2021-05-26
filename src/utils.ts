@@ -17,6 +17,7 @@ export default class Utils {
     }
 
     static get avatarsPath() {
+
         return join(Utils.resourcesPath, 'avatars')
     }
 }

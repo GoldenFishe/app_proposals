@@ -29,10 +29,13 @@ const Main: FC = () => {
                         <Typography.Title level={1}>Proposals</Typography.Title>
                         <Typography.Title level={5}>Make your digital dream come true</Typography.Title>
                     </div>
-                    <Link to="/sign-in">Sign-in</Link>
-                    <Link to="/sign-up">Sign-up</Link>
-                    <Protected><Link to="/proposals/create">Create Proposal</Link></Protected>
-                    <Protected><Link to={`/profile/${user?.id}`}>Profile</Link></Protected>
+                    <div className={classNames.links}>
+                        {!user && <Link to="/sign-in">Sign-In</Link>}
+                        {!user && <Link to="/sign-up">Sign-Up</Link>}
+                        <Link to="/proposals">Proposals</Link>
+                        <Protected><Link to="/proposals/create">Create Proposal</Link></Protected>
+                        <Protected><Link to={`/profile/${user?.id}`}>Profile</Link></Protected>
+                    </div>
                 </Layout.Header>
                 <Switch>
                     <Route path="/sign-in">

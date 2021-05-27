@@ -8,7 +8,7 @@ export class UserMapper {
             login: user.login,
             username: user.username,
             accessToken: user.access_token,
-            avatar: Utils.getAvatar(user.id) && `/resources/avatar/${user.id}`
+            avatar: user.avatar_filename && Utils.getAvatarPath(user.avatar_filename)
         }
     }
 }

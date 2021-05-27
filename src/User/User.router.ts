@@ -1,19 +1,20 @@
 import {Request, Response, Router} from "express";
 import multer from "multer";
+import {nanoid} from "nanoid";
 
 import {IUserController} from "./User.controller";
 import UserRoutes from "./User.routes";
-import {validateLoginAndPassword, validateRefreshToken, validateUserInfo} from "./User.middleware";
+import {validateLoginAndPassword, validateRefreshToken} from "./User.middleware";
 import {validateAuthorization} from "../validators";
-import DIContainer from "../DIContainer";
+import dependenciesResolver from "../dependenciesResolver";
 
-const userController = DIContainer.get('userController') as IUserController;
+const userController = dependenciesResolver.get('userController') as IUserController;
 const userRouter = Router();
 
 const avatars = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => cb(null, './src/resources/avatars/'),
-        filename: (req, file, cb) => cb(null, `avatar_${req.res?.locals.userId}`)
+        filename: (req, file, cb) => cb(null, nanoid())
     })
 });
 
@@ -44,9 +45,8 @@ userRouter.get(
 userRouter.post(
     UserRoutes.UPDATE_INFO,
     validateAuthorization,
-    validateUserInfo,
     avatars.single('avatar'),
-    (req: Request, res: Response) => userController.getUserInfo(req, res)
+    (req: Request, res: Response) => userController.setUserInfo(req, res)
 )
 
 export default userRouter;

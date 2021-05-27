@@ -1,7 +1,7 @@
 import {query} from "../db";
 import {ProposalMapper} from "./Proposal.mapper";
 import {CommentMapper} from "../Comment/Comment.mapper";
-import {IProposal, IProposalDTO, ITopic} from "./Proposal.types";
+import {IProposal, IProposalAttachments, IProposalDTO, ITopic} from "./Proposal.types";
 import {IComment} from "../Comment/Comment.types";
 import {IUser} from "../User/User.types";
 
@@ -10,11 +10,13 @@ export interface IProposalRepository {
 
     selectProposalById(id: number): Promise<IProposalDTO>;
 
-    addProposal(title: string, description: string, authorId: number, topicId: number): Promise<IProposalDTO>;
+    addProposal(title: string, description: string, authorId: number, topicId: number, attachments: []): Promise<IProposalDTO>;
 
     setLike(proposalId: number, userId: number): Promise<IProposalDTO>;
 
     setDislike(proposalId: number, userId: number): Promise<IProposalDTO>;
+
+    saveFile(proposalId: number, filename: string): Promise<IProposalDTO>;
 }
 
 export class ProposalRepository implements IProposalRepository {
@@ -23,7 +25,8 @@ export class ProposalRepository implements IProposalRepository {
         const commentsPromise: Promise<IComment[]> = query('SELECT * FROM comments');
         const usersPromise: Promise<IUser[]> = query('SELECT * FROM users');
         const topicsPromise: Promise<ITopic[]> = query('SELECT * FROM topics');
-        const [proposals, comments, users, topics] = await Promise.all([proposalsPromise, commentsPromise, usersPromise, topicsPromise]);
+        const attachmentsPromise: Promise<IProposalAttachments[]> = await query(`SELECT * FROM proposal_attachments`);
+        const [proposals, comments, users, topics, attachments] = await Promise.all([proposalsPromise, commentsPromise, usersPromise, topicsPromise, attachmentsPromise]);
         return proposals.map(proposal => {
             const proposalComments = comments
                 .filter(comment => comment.proposal_id === proposal.id)
@@ -31,9 +34,11 @@ export class ProposalRepository implements IProposalRepository {
                     const author = users.find(user => user.id === comment.author_id);
                     return CommentMapper.toDTO(comment, author!);
                 });
+            const proposalAttachments = attachments
+                .filter(attachment => attachment.proposal_id === proposal.id)
             const author = users.find(user => user.id === proposal.author_id);
             const proposalTopic = topics.find(topic => proposal.topic_id === topic.id);
-            return ProposalMapper.toDTO(proposal, proposalComments, author!, proposalTopic!);
+            return ProposalMapper.toDTO(proposal, proposalComments, author!, proposalTopic!, proposalAttachments);
         });
     }
 
@@ -42,15 +47,16 @@ export class ProposalRepository implements IProposalRepository {
         const comments: IComment[] = await query(`SELECT * FROM comments WHERE proposal_id=${proposal.id}`);
         const [author]: IUser[] = await query(`SELECT * FROM users WHERE id=${proposal.author_id}`);
         const [topic]: ITopic[] = await query(`SELECT * FROM topics WHERE id=${proposal.topic_id}`);
+        const proposalAttachments: IProposalAttachments[] = await query(`SELECT * FROM proposal_attachments WHERE proposal_id=${id}`);
         const users: IUser[] = await query(`SELECT * FROM users`);
         const commentsDTO = comments.map(comment => {
             const author = users.find(user => user.id === comment.author_id);
             return CommentMapper.toDTO(comment, author!);
         });
-        return ProposalMapper.toDTO(proposal, commentsDTO, author, topic);
+        return ProposalMapper.toDTO(proposal, commentsDTO, author, topic, proposalAttachments);
     }
 
-    async addProposal(title: string, description: string, authorId: number, topicId: number) {
+    async addProposal(title: string, description: string, authorId: number, topicId: number, attachments: []) {
         const proposalsPromise: Promise<IProposal[]> = query(`INSERT INTO proposals (title, description, author_id, topic_id) VALUES ('${title}', '${description}', ${authorId}, '${topicId}') RETURNING *`);
         const usersPromise: Promise<IUser[]> = query(`SELECT * FROM users WHERE id=${authorId}`);
         const topicsPromise: Promise<ITopic[]> = query(`SELECT * FROM topics WHERE id=${topicId}`);
@@ -58,7 +64,7 @@ export class ProposalRepository implements IProposalRepository {
         const [proposal] = proposals;
         const [user] = users;
         const [topic] = topics;
-        return ProposalMapper.toDTO(proposal, [], user, topic);
+        return ProposalMapper.toDTO(proposal, [], user, topic, []);
     }
 
     async setLike(proposalId: number, userId: number) {
@@ -69,5 +75,10 @@ export class ProposalRepository implements IProposalRepository {
     async setDislike(proposalId: number, userId: number) {
         const [proposal]: IProposal[] = await query(`INSERT INTO proposals_dislikes (proposal_id, user_id) VALUES (${proposalId}, ${userId}) RETURNING *`);
         return this.selectProposalById(proposal.id);
+    }
+
+    async saveFile(proposalId: number, filename: string) {
+        await query(`INSERT INTO proposal_attachments (proposal_id, filename) VALUES (${proposalId}, '${filename}') RETURNING *`);
+        return this.selectProposalById(proposalId);
     }
 }

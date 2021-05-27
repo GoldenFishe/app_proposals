@@ -7,11 +7,13 @@ const initialState: MainState = {
 
 const mainReducer = (state = initialState, action: MainActionTypes): MainState => {
     switch (action.type) {
-        case GET_USER:
+        case GET_USER: {
+            const {id, login, username, avatar} = action.payload;
             return {
                 ...state,
-                user: action.payload
+                user: {id, login, username, avatar}
             }
+        }
         default:
             return state;
     }

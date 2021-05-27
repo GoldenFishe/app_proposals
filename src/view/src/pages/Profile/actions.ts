@@ -5,11 +5,11 @@ import {RootState} from "../../rootReducer";
 import {IUser} from "../../interfaces/IUser";
 import HttpClient from "../../httpClient";
 import {GET_USER} from "../Main/actionTypes";
-import {UploadAvatarAction} from "./types";
+import {GetUserAction} from "../Main/types";
 
-export const uploadAvatar = (avatar: FormData): ThunkAction<void, RootState, unknown, UploadAvatarAction> => async (dispatch: Dispatch<UploadAvatarAction>) => {
+export const updateSettings = (settings: FormData): ThunkAction<void, RootState, unknown, GetUserAction> => async (dispatch: Dispatch<GetUserAction>) => {
     try {
-        const user = await HttpClient.post<IUser>('/api/user/avatar', avatar, true);
+        const user = await HttpClient.post<IUser>('/api/user', settings, true);
         dispatch({type: GET_USER, payload: user});
     } catch (err) {
         console.error(err);

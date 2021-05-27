@@ -44,7 +44,7 @@ const Proposal: FC = () => {
                 {comment.id === parentCommentId && <CreateCommentForm onCreate={onSubmitCreateCommentForm}/>}
             </List.Item>
         )
-    }, [likeComment, dislikeComment, onSubmitCreateCommentForm, replyTo]);
+    }, [likeComment, dislikeComment, onSubmitCreateCommentForm, replyTo, parentCommentId]);
     return (
         <Layout>
             <Typography.Title level={3}>{proposal?.title}</Typography.Title>

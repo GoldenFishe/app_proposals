@@ -2,39 +2,44 @@ import axios, {AxiosResponse} from 'axios';
 
 export const accessTokenStore = (function () {
     let accessToken = '';
+    let initialized = false;
     return {
         setToken: function (token: string) {
             accessToken = token;
         },
         getToken: function () {
             return accessToken;
+        },
+        init: function () {
+            initialized = true;
+        },
+        isInitialized: function () {
+            return initialized;
         }
     }
 })();
 
 axios.interceptors.request.use(
     config => {
-        console.log(config);
+
         return config;
     },
     error => {
-        console.log(error);
+
         return Promise.reject(error);
     });
 
 axios.interceptors.response.use(
     response => {
-        if (response.config.url) {
-            if (/sign-(in|up)/.test(response.config.url)) {
-                accessTokenStore.setToken(response.data.accessToken);
-            }
-        }
+        if (response.data.accessToken) accessTokenStore.setToken(response.data.accessToken);
         return response;
     },
-    error => {
-        if (error.response.status === 401 && error.response.headers.Authorization) {
-            accessTokenStore.setToken('');
-        }
+    async (error) => {
+        // if (error.response && error.response.status === 401 && !accessTokenStore.isInitialized()) {
+        //     accessTokenStore.init();
+        //     await HttpClient.getAccessToken();
+        //     return axios.request(error.response.config);
+        // }
         return Promise.reject(error);
     });
 
@@ -69,3 +74,5 @@ export default class HttpClient {
         }
     }
 }
+
+export type HttpClientResponse<Ok, Error> = Ok | Error;

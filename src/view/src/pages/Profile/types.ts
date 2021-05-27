@@ -1,7 +1,6 @@
-import {IUser} from "../../interfaces/IUser";
-import {GET_USER} from "../Main/actionTypes";
-
-export interface UploadAvatarAction {
-    type: typeof GET_USER,
-    payload: IUser
+export type Settings = {
+    login: string | undefined;
+    username: string | undefined;
+    password: string | undefined;
+    avatar: { file: File, fileList: File[] } | undefined;
 }

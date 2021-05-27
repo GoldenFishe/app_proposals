@@ -63,9 +63,10 @@ export class UserController implements IUserController {
     }
 
     async setUserInfo(req: Request, res: Response) {
-        const {login, password, username}: { login: string, password: string, username: string } = req.body;
+        const {login, password, username}: { login?: string, password?: string, username?: string } = req.body;
         const {userId} = res.locals;
-        const user = await this.userRepository.updateUser(userId, login, password, username);
+        const filename = req.file?.filename;
+        const user = await this.userRepository.updateUser(userId, login, password, username, filename);
         res.status(200).send(user);
     }
 

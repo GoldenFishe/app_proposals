@@ -8,3 +8,12 @@
     display: flex;
     flex-flow: row;
 }
+
+.links {
+    display: flex;
+    flex-flow: row;
+}
+
+.links > a:not(:last-child) {
+    margin-right: 10px;
+}

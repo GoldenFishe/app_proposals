@@ -4,9 +4,9 @@ import {ICommentController} from "./Comment.controller";
 import CommentRoutes from "./Comment.routes";
 import {validateCreateComment} from "./Comment.middleware";
 import {validateAuthorization} from "../validators";
-import DIContainer from "../DIContainer";
+import dependenciesResolver from "../dependenciesResolver";
 
-const commentController = DIContainer.get('commentController') as ICommentController;
+const commentController = dependenciesResolver.get('commentController') as ICommentController;
 const commentRouter = Router();
 
 commentRouter.post(

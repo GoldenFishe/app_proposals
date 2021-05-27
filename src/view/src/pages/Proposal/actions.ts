@@ -29,9 +29,9 @@ export const getProposal = (id: number): ThunkAction<void, RootState, unknown, G
     }
 }
 
-export const createProposal = ({title, description, topicId}: CreateProposalForm): ThunkAction<void, RootState, unknown, SetProposalAction> => async (dispatch: Dispatch<SetProposalAction>) => {
+export const createProposal = (proposalParams: FormData): ThunkAction<void, RootState, unknown, SetProposalAction> => async (dispatch: Dispatch<SetProposalAction>) => {
     try {
-        const data = await HttpClient.post<IProposal>(`/api/proposals`, {title, description, topicId}, true);
+        const data = await HttpClient.post<IProposal>(`/api/proposals`, proposalParams, true);
         dispatch({type: SET_PROPOSAL, payload: data});
     } catch (err) {
         console.error(err);

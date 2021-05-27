@@ -1,18 +1,20 @@
 import React, {FC, useCallback} from 'react';
-import {Redirect} from 'react-router-dom';
-import {useDispatch, useSelector} from "react-redux";
-import {Button, Form, Input, Select} from "antd";
+import {useDispatch} from "react-redux";
+import {Button, Form, Input, Select, Upload} from "antd";
 
 import {createProposal} from "../Proposal/actions";
-import {RootState} from "../../rootReducer";
 
 const CreateProposal: FC = () => {
     const dispatch = useDispatch();
-    const proposal = useSelector((state: RootState) => state.proposal.data);
-    const onFinish = useCallback(({title, description, topicId}) => {
-        dispatch(createProposal({title, description, topicId}));
+    const onFinish = useCallback(values => {
+        const {title, description, topicId, attachments} = values;
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('topicId', topicId);
+        attachments.fileList.map((file: any) => formData.append('attachments[]', file.originFileObj));
+        dispatch(createProposal(formData));
     }, [dispatch]);
-    //if (proposal !== null) return <Redirect to={`/proposals/${proposal.id}`}/>;
     return (
         <Form layout="vertical"
               onFinish={onFinish}
@@ -34,6 +36,14 @@ const CreateProposal: FC = () => {
                     <Select.Option value="1">Frontend</Select.Option>
                     <Select.Option value="2">Backend</Select.Option>
                 </Select>
+            </Form.Item>
+            <Form.Item label="Attachments"
+                       name="attachments">
+                <Upload listType="picture-card"
+                        beforeUpload={() => false}
+                        showUploadList={true}>
+                    +
+                </Upload>
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">Create Proposal</Button>

@@ -8,6 +8,7 @@ export interface IUser {
     login: string;
     username: string;
     access_token: AuthTokens.AccessToken,
+    avatar_filename: string | null
 }
 
 export interface IUserDTO {

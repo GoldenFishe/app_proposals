@@ -1,6 +1,7 @@
 import {query} from "../db";
 import {RefreshSessionMapper, UserMapper} from "./User.mapper";
 import {AuthTokens, IRefreshSession, IRefreshSessionDTO, IUser, IUserDTO} from "./User.types";
+import Utils from "../utils";
 
 export interface IUserRepository {
     create(login: string, password: string): Promise<IUserDTO>;
@@ -15,11 +16,11 @@ export interface IUserRepository {
 
     getRefreshSession(refreshToken: AuthTokens.RefreshToken): Promise<IRefreshSessionDTO | null>;
 
-    getAccessToken(refreshToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>;
+    getAccessToken(refreshToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken | null>;
 
     setAccessToken(userId: IUserDTO["id"], accessToken: AuthTokens.AccessToken): Promise<AuthTokens.AccessToken>;
 
-    updateUser(userId: IUserDTO["id"], login: string, password: string, username: string): Promise<IUserDTO>;
+    updateUser(userId: IUserDTO["id"], login: string | undefined, password: string | undefined, username: string | undefined, avatarFilename: string | undefined): Promise<IUserDTO>;
 }
 
 export class UserRepository implements IUserRepository {
@@ -56,8 +57,7 @@ export class UserRepository implements IUserRepository {
 
     async getAccessToken(refreshToken: AuthTokens.RefreshToken) {
         const [token]: Array<{ access_token: AuthTokens.AccessToken }> = await query(`SELECT access_token FROM users WHERE id = (SELECT user_id FROM refresh_sessions WHERE refresh_token = '${refreshToken}')`);
-        if (!token) throw new Error("Access token doesn't exist");
-        return token.access_token;
+        return token !== null ? token.access_token : null;
     }
 
     async setAccessToken(userId: IUserDTO["id"], accessToken: AuthTokens.AccessToken) {
@@ -65,8 +65,16 @@ export class UserRepository implements IUserRepository {
         return user.access_token;
     }
 
-    async updateUser(userId: IUserDTO["id"], login: string, password: string, username: string) {
-        const [user]: IUser[] = await query(`UPDATE users SET login = '${login}', password = '${password}', username = '${username}' WHERE id = ${userId}`);
+    async updateUser(userId: IUserDTO["id"], login: string | undefined, password: string | undefined, username: string | undefined, avatarFilename: string | undefined) {
+        const userDTO = await this.getById(userId);
+        if (userDTO.avatar) Utils.deleteAvatarFile(userDTO.avatar);
+        let queryCommand = 'UPDATE users SET';
+        if (login) queryCommand += ` login = '${login}'`;
+        if (password) queryCommand += `${login ? ' ,' : ''} password = '${password}'`;
+        if (username) queryCommand += `${(login || password) ? ' ,' : ''} username = '${username}'`;
+        if (avatarFilename) queryCommand += `${(login || password || username) ? ' ,' : ''} avatar_filename = '${avatarFilename}'`;
+        queryCommand += ` WHERE id = ${userId} RETURNING *`
+        const [user]: IUser[] = await query(queryCommand);
         return UserMapper.toDTO(user);
     }
 }

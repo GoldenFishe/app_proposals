@@ -10,7 +10,7 @@ export class CommentMapper {
             author: {
                 id: user.id,
                 username: user.username,
-                avatar: Utils.getAvatar(user.id) && `/resources/avatar/${user.id}`
+                avatar: user.avatar_filename && Utils.getAvatarPath(user.avatar_filename)
             },
             likes: comment.likes,
             dislikes: comment.dislikes,

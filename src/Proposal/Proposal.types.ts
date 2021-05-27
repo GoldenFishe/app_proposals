@@ -26,6 +26,13 @@ export interface IProposalDTO {
     likes: IProposal["likes"];
     dislikes: IProposal["dislikes"];
     createDate: IProposal["create_date"];
-    comments: ICommentDTO[]
+    comments: ICommentDTO[],
+    attachments: IProposalAttachments["filename"][],
+}
+
+export interface IProposalAttachments {
+    id: number;
+    filename: string;
+    proposal_id: IProposal["id"];
 }
 

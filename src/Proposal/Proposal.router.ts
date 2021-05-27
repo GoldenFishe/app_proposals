@@ -4,10 +4,19 @@ import {IProposalController} from "./Proposal.controller";
 import ProposalRoutes from "./Proposal.routes";
 import {validateCreateProposal, validateProposalId} from "./Proposal.middleware";
 import {validateAuthorization} from "../validators";
-import DIContainer from "../DIContainer";
+import dependenciesResolver from "../dependenciesResolver";
+import multer from "multer";
+import {nanoid} from "nanoid";
 
-const proposalController = DIContainer.get('proposalController') as IProposalController;
+const proposalController = dependenciesResolver.get('proposalController') as IProposalController;
 const proposalRouter = Router();
+
+const attachments = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => cb(null, './src/resources/attachments/'),
+        filename: (req, file, cb) => cb(null, nanoid())
+    })
+});
 
 proposalRouter.get(
     ProposalRoutes.GET_PROPOSALS,
@@ -23,6 +32,7 @@ proposalRouter.get(
 proposalRouter.post(
     ProposalRoutes.CREATE_PROPOSAL,
     validateAuthorization,
+    attachments.array('attachments[]'),
     validateCreateProposal,
     (req: Request, res: Response) => proposalController.create(req, res)
 );

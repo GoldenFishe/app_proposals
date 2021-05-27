@@ -11,9 +11,3 @@ export function validateRefreshToken(req: Request, res: Response, next: NextFunc
     if (Boolean(refresh_token)) next();
     else res.status(401).send({message: 'Unauthorized'});
 }
-
-export function validateUserInfo(req: Request, res: Response, next: NextFunction) {
-    const {login, password, username}: { login: string, password: string, username: string } = req.body;
-    if (Boolean(login) && Boolean(password) && Boolean(username)) next();
-    else res.status(400).send({message: 'Login, password, username are required'});
-}

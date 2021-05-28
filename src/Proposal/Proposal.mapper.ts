@@ -1,10 +1,10 @@
-import {IProposal, IProposalAttachments, IProposalDTO, ITopic} from "./Proposal.types";
+import {IProposal, IProposalAttachment, IProposalDTO, ITopic} from "./Proposal.types";
 import {ICommentDTO} from "../Comment/Comment.types";
 import {IUser} from "../User/User.types";
 import Utils from "../utils";
 
 export class ProposalMapper {
-    public static toDTO(proposal: IProposal, comments: ICommentDTO[], user: IUser, topic: ITopic, proposalAttachments: IProposalAttachments[]): IProposalDTO {
+    public static toDTO(proposal: IProposal, comments: ICommentDTO[], user: IUser, topic: ITopic, attachments: IProposalAttachment[]): IProposalDTO {
         return {
             id: proposal.id,
             title: proposal.title,
@@ -22,7 +22,7 @@ export class ProposalMapper {
             dislikes: proposal.dislikes,
             createDate: proposal.create_date,
             comments: comments,
-            attachments: proposalAttachments.map(attachment => Utils.getAttachmentPath(attachment.filename))
+            attachments: attachments.map(attachment => Utils.getAttachmentPath(attachment.filename))
         }
     }
 }

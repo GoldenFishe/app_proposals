@@ -32,9 +32,9 @@ export const createProposal = (proposalParams: FormData): ThunkAction<void, Root
     }
 }
 
-export const leaveComment = (comment: string, proposalId: number, parentCommentId: number | null): ThunkAction<void, RootState, unknown, LeaveCommentAction> => async (dispatch: Dispatch<LeaveCommentAction>) => {
+export const leaveComment = (commentParams: FormData): ThunkAction<void, RootState, unknown, LeaveCommentAction> => async (dispatch: Dispatch<LeaveCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment>(`/api/comments`, {comment, proposalId, parentCommentId}, true);
+        const data = await HttpClient.post<IComment>(`/api/comments`, commentParams, true);
         dispatch({type: LEAVE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);

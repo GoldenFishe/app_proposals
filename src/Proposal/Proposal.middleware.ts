@@ -14,6 +14,6 @@ type CreateProposalBody = {
 
 export function validateCreateProposal(req: Request, res: Response, next: NextFunction) {
     const {title, description, topicId}: CreateProposalBody = req.body;
-    if (Boolean(title) && Boolean(description) && Boolean(topicId) && !Number.isNaN(topicId)) next();
+    if (Boolean(title) && Boolean(description) && Boolean(topicId) && !Number.isNaN(topicId) && Array.isArray(req.files)) next();
     else res.status(400).send({message: "Title and description are required"});
 }

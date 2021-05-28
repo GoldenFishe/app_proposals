@@ -11,12 +11,12 @@ import {
     getProposal,
     leaveComment,
     likeComment as likeCommentAction,
-    dislikeComment as dislikeCommentAction
+    dislikeComment as dislikeCommentAction, createProposal
 } from "./actions";
 
 const Proposal: FC = () => {
     const {id} = useParams<{ id: string }>();
-    const [parentCommentId, setParentCommentId] = useState(null);
+    const [parentCommentId, setParentCommentId] = useState<IComment["id"] | null>(null);
     const proposal = useSelector((state: RootState) => state.proposal.data);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -29,8 +29,14 @@ const Proposal: FC = () => {
     const dislikeComment = useCallback((commentId) => () => dispatch(dislikeCommentAction(commentId)), [dispatch]);
     const replyTo = useCallback((commentId) => () => setParentCommentId(commentId), []);
 
-    const onSubmitCreateCommentForm = useCallback(({comment}: { comment: string }) => {
-        dispatch(leaveComment(comment, Number(id), parentCommentId));
+    const onSubmitCreateCommentForm = useCallback(values => {
+        const {comment, attachments} = values;
+        const formData = new FormData();
+        formData.append('comment', comment);
+        formData.append('proposalId', id);
+        if (parentCommentId !== null) formData.append('topicId', parentCommentId.toString());
+        attachments.fileList.map((file: any) => formData.append('attachments[]', file.originFileObj));
+        dispatch(leaveComment(formData));
     }, [dispatch, id, parentCommentId]);
     const renderItem = useCallback((comment: IComment) => {
         return (

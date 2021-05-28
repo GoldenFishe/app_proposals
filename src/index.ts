@@ -18,11 +18,21 @@ app.use('/api/user', userRouter);
 app.use('/api/proposals', proposalRouter);
 app.use('/api/comments', commentRouter);
 
-app.get('/resources/avatars/:avatarFilename', (req: Request, res: Response) => {
-    const {avatarFilename} = req.params;
-    if (avatarFilename) {
-        const avatar = Utils.getAvatarFile(avatarFilename);
-        avatar ? res.sendFile(avatar) : res.sendStatus(404);
+app.get('/resources/avatars/:filename', (req: Request, res: Response) => {
+    const {filename} = req.params;
+    if (filename) {
+        const file = Utils.getAvatarFile(filename);
+        file ? res.sendFile(file) : res.sendStatus(404);
+    } else {
+        res.sendStatus(404);
+    }
+})
+
+app.get('/resources/attachments/:filename', (req: Request, res: Response) => {
+    const {filename} = req.params;
+    if (filename) {
+        const file = Utils.getAttachmentFile(filename);
+        file ? res.sendFile(file) : res.sendStatus(404);
     } else {
         res.sendStatus(404);
     }

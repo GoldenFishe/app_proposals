@@ -1,8 +1,8 @@
 import React, {FC} from "react";
-import {Button, Form, Input} from "antd";
+import {Button, Form, Input, Upload} from "antd";
 
 interface IProps {
-    onCreate: ({comment}: { comment: string }) => void
+    onCreate: ({comment, attachments}: { comment: string, attachments: { file: File, fileList: File[] } }) => void
 }
 
 const CreateCommentForm: FC<IProps> = ({onCreate}) => {
@@ -15,6 +15,14 @@ const CreateCommentForm: FC<IProps> = ({onCreate}) => {
                        name="comment"
                        rules={[{required: true, message: 'Please enter comment'}]}>
                 <Input.TextArea/>
+            </Form.Item>
+            <Form.Item label="Attachments"
+                       name="attachments">
+                <Upload listType="picture-card"
+                        beforeUpload={() => false}
+                        showUploadList={true}>
+                    +
+                </Upload>
             </Form.Item>
             <Form.Item wrapperCol={{offset: 8, span: 9}}>
                 <Button type="primary" htmlType="submit">Leave comment</Button>

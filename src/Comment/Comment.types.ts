@@ -17,5 +17,12 @@ export interface ICommentDTO {
     author: IAuthor;
     likes: IComment["likes"];
     dislikes: IComment["dislikes"];
-    createDate: IComment["create_date"]
+    createDate: IComment["create_date"],
+    attachments: ICommentAttachment["filename"][],
+}
+
+export interface ICommentAttachment {
+    id: number;
+    filename: string;
+    comment_id: IComment["id"];
 }

@@ -1,12 +1,12 @@
 import {Request, Response, Router} from "express";
+import multer from "multer";
+import {nanoid} from "nanoid";
 
 import {IProposalController} from "./Proposal.controller";
 import ProposalRoutes from "./Proposal.routes";
 import {validateCreateProposal, validateProposalId} from "./Proposal.middleware";
 import {validateAuthorization} from "../validators";
 import dependenciesResolver from "../dependenciesResolver";
-import multer from "multer";
-import {nanoid} from "nanoid";
 
 const proposalController = dependenciesResolver.get('proposalController') as IProposalController;
 const proposalRouter = Router();

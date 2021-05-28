@@ -23,9 +23,11 @@ export class CommentController implements ICommentController {
             comment,
             proposalId,
             parentCommentId
-        }: { comment: string, proposalId: number, parentCommentId: number } = req.body;
+        }: { comment: string, proposalId: number, parentCommentId: number | undefined } = req.body;
         const userId: number = res.locals.userId;
-        const commentDTO = await this.commentRepository.create(comment, userId, proposalId, parentCommentId);
+        const attachments = req.files as Express.Multer.File[];
+        const filenames = attachments.map(file => file.filename);
+        const commentDTO = await this.commentRepository.addComment(comment, userId, proposalId, parentCommentId, filenames);
         res.send(commentDTO);
     }
 

@@ -36,8 +36,9 @@ export class ProposalController implements IProposalController {
     async create(req: Request, res: Response) {
         const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
         const userId: number = res.locals.userId;
-        const attachments = (req.files as Array<Express.Multer.File>).map((file: Express.Multer.File) => file.filename);
-        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId, attachments);
+        const attachments = req.files as Express.Multer.File[];
+        const filenames = attachments.map(file => file.filename);
+        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId, filenames);
         res.send(proposal);
     }
 

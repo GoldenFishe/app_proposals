@@ -14,12 +14,6 @@ import {RootState} from "../../rootReducer";
 import {IProposal} from "../../interfaces/IProposal";
 import {IComment} from "../../interfaces/IComment";
 
-type CreateProposalForm = {
-    title: string;
-    description: string;
-    topicId: number;
-}
-
 export const getProposal = (id: number): ThunkAction<void, RootState, unknown, GetProposalAction> => async (dispatch: Dispatch<GetProposalAction>) => {
     try {
         const data = await HttpClient.get<IProposal>(`/api/proposals/${id}`);

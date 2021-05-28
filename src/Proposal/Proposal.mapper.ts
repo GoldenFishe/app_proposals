@@ -22,7 +22,7 @@ export class ProposalMapper {
             dislikes: proposal.dislikes,
             createDate: proposal.create_date,
             comments: comments,
-            attachments: proposalAttachments.map(attachment => (attachment.filename))
+            attachments: proposalAttachments.map(attachment => Utils.getAttachmentPath(attachment.filename))
         }
     }
 }

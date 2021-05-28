@@ -13,8 +13,6 @@ export interface IProposalController {
     likeProposal(req: Request, res: Response): Promise<void>;
 
     dislikeProposal(req: Request, res: Response): Promise<void>;
-
-    attachFile(req: Request, res: Response): Promise<void>;
 }
 
 export class ProposalController implements IProposalController {
@@ -38,7 +36,8 @@ export class ProposalController implements IProposalController {
     async create(req: Request, res: Response) {
         const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
         const userId: number = res.locals.userId;
-        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId, []);
+        const attachments = (req.files as Array<Express.Multer.File>).map((file: Express.Multer.File) => file.filename);
+        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId, attachments);
         res.send(proposal);
     }
 
@@ -53,12 +52,6 @@ export class ProposalController implements IProposalController {
         const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
         const proposal = await this.proposalRepository.setDislike(proposalId, userId);
-        res.send(proposal);
-    }
-
-    async attachFile(req: Request, res: Response) {
-        const {proposalId}: { proposalId: number } = req.body;
-        const proposal = await this.proposalRepository.saveFile(proposalId, 'filename');
         res.send(proposal);
     }
 }

@@ -21,6 +21,10 @@ export default class Utils {
         return `/resources/avatars/${avatarFilename}`;
     }
 
+    static getAttachmentPath(attachmentFilename: string) {
+        return `/resources/attachments/${attachmentFilename}`;
+    }
+
     static get resourcesPath() {
         return join(__dirname, 'resources')
     }

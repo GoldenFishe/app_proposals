@@ -1,7 +1,7 @@
 import {IAuthor} from "./IUser";
 
 export interface IComment {
-    attachments: [],
+    attachments: [];
     author: IAuthor;
     comment: string;
     createDate: string;

@@ -7,13 +7,30 @@ export interface ITopic {
 }
 
 export interface IProposal {
-    id: number;
-    title: string;
-    description: string;
+    attachments: [],
     author: IAuthor;
-    topic: ITopic;
-    likes: number;
-    dislikes: number;
-    createDate: string;
     comments: IComment[]
+    createDate: string;
+    description: string;
+    dislikes: number;
+    id: number;
+    isDisliked: boolean;
+    isLiked: boolean;
+    likes: number;
+    title: string;
+    topic: ITopic;
+}
+
+export interface IProposalPreview {
+    author: IAuthor;
+    commentsQuantity: number;
+    createDate: string;
+    description: string;
+    dislikes: number;
+    id: number;
+    isDisliked: boolean;
+    isLiked: boolean;
+    likes: number;
+    title: string;
+    topic: ITopic;
 }

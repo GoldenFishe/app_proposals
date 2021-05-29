@@ -46,6 +46,8 @@ const Proposal: FC = () => {
                          createDate={new Date(comment.createDate).toDateString()}
                          isLiked={comment.isLiked}
                          isDisliked={comment.isDisliked}
+                         likes={comment.likes}
+                         dislikes={comment.dislikes}
                          onLikeComment={likeComment(comment.id)}
                          onDislikeComment={dislikeComment(comment.id)}
                          onReplyTo={replyTo(comment.id)}/>

@@ -1,5 +1,5 @@
 import {ProposalsActionTypes, ProposalsState} from "./types";
-import {GET_PROPOSALS, RESET_PROPOSALS} from "./actionTypes";
+import {DISLIKE_PROPOSAL, GET_PROPOSALS, LIKE_PROPOSAL, RESET_PROPOSALS} from "./actionTypes";
 
 const initialState: ProposalsState = {
     data: []
@@ -12,6 +12,16 @@ const proposalsReducer = (state = initialState, action: ProposalsActionTypes): P
                 ...state,
                 data: action.payload
             }
+        case LIKE_PROPOSAL:
+        case DISLIKE_PROPOSAL: {
+            const targetIndex = state.data.findIndex(proposal => proposal.id === action.payload.id);
+            const data = [...state.data];
+            data[targetIndex] = action.payload;
+            return {
+                ...state,
+                data
+            }
+        }
         case RESET_PROPOSALS:
             return {...initialState};
         default:

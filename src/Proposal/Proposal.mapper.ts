@@ -17,8 +17,8 @@ export class ProposalMapper {
                 id: proposal.topic_id,
                 topic: proposal.topic
             },
-            likes: proposal.likes,
-            dislikes: proposal.dislikes,
+            likes: Number(proposal.likes),
+            dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,
             isDisliked: proposal.is_disliked,
             createDate: proposal.create_date,
@@ -41,12 +41,12 @@ export class ProposalMapper {
                 id: proposal.topic_id,
                 topic: proposal.topic
             },
-            likes: proposal.likes,
-            dislikes: proposal.dislikes,
+            likes: Number(proposal.likes),
+            dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,
             isDisliked: proposal.is_disliked,
             createDate: proposal.create_date,
-            commentsQuantity: proposal.comments_quantity
+            commentsQuantity: Number(proposal.comments_quantity)
         }
     }
 }

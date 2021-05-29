@@ -1,5 +1,4 @@
 import {IComment, ICommentAttachment, ICommentDTO} from "./Comment.types";
-import {IUser} from "../User/User.types";
 import Utils from "../utils";
 
 export class CommentMapper {
@@ -12,8 +11,8 @@ export class CommentMapper {
                 username: comment.author_username,
                 avatar: comment.author_avatar && Utils.getAvatarPath(comment.author_avatar)
             },
-            likes: comment.likes,
-            dislikes: comment.dislikes,
+            likes: Number(comment.likes),
+            dislikes: Number(comment.dislikes),
             isDisliked: comment.is_disliked,
             isLiked: comment.is_liked,
             createDate: comment.create_date,

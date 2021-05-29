@@ -1,11 +1,11 @@
-import React, {FC, useCallback, useEffect} from 'react';
+import React, {FC, MouseEvent, useCallback, useEffect} from "react";
+import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Typography, List, Layout} from "antd";
+import {Col, Layout, Row, Typography} from "antd";
 
-import Proposal from "./component/Proposal/Proposal";
-import {getProposals, resetProposals} from "./actions";
+import {dislikeProposal, getProposals, likeProposal, resetProposals} from "./actions";
 import {RootState} from "../../rootReducer";
-import {IProposal} from "../../interfaces/IProposal";
+import Proposal from "./component/Proposal/Proposal";
 
 const Proposals: FC = () => {
     const dispatch = useDispatch();
@@ -16,26 +16,38 @@ const Proposals: FC = () => {
             dispatch(resetProposals())
         }
     }, [dispatch]);
-    const renderItem = useCallback((proposal: IProposal) => (
-        <List.Item>
-            <Proposal description={proposal.description}
-                      id={proposal.id}
-                      title={proposal.title}
-                      comments={proposal.comments}
-                      author={proposal.author}
-                      createDate={proposal.createDate}
-                      dislikes={proposal.dislikes}
-                      likes={proposal.likes}
-                      topic={proposal.topic}/>
-        </List.Item>
-    ), []);
+    const like = useCallback((proposalId) => {
+        return (e: MouseEvent) => {
+            e.preventDefault();
+            dispatch(likeProposal(proposalId))
+        }
+    }, [dispatch]);
+    const dislike = useCallback((proposalId) => {
+        return (e: MouseEvent) => {
+            e.preventDefault();
+            dispatch(dislikeProposal(proposalId))
+        }
+    }, [dispatch]);
     return (
         <Layout>
             <Typography.Title>Proposals</Typography.Title>
-            <List dataSource={proposals}
-                  renderItem={renderItem}
-                  rowKey="id"
-                  bordered/>
+            <Row gutter={[16, 16]}>
+                {proposals.map(proposal => {
+                    return (
+                        <Col key={proposal.id}>
+                            <Link to={`/proposals/${proposal.id}`}>
+                                <Proposal title={proposal.title}
+                                          description={proposal.description}
+                                          liked={proposal.isLiked}
+                                          likes={proposal.likes}
+                                          like={like(proposal.id)}
+                                          disliked={proposal.isDisliked}
+                                          dislikes={proposal.dislikes}
+                                          dislike={dislike(proposal.id)}/>
+                            </Link>
+                        </Col>)
+                })}
+            </Row>
         </Layout>
     );
 };

@@ -1,7 +1,9 @@
-import React, {FC, MouseEventHandler} from 'react';
+import React, {FC, MouseEvent} from 'react';
 import {Comment as AntdComment} from "antd";
 
 import {IAuthor} from "../../../../interfaces/IUser";
+import Like from "../../../../components/Like";
+import Dislike from "../../../../components/Dislike";
 
 interface IProps {
     author: IAuthor;
@@ -9,9 +11,11 @@ interface IProps {
     createDate: string;
     isLiked: boolean;
     isDisliked: boolean;
-    onLikeComment: MouseEventHandler<HTMLSpanElement>;
-    onDislikeComment: MouseEventHandler<HTMLSpanElement>;
-    onReplyTo: MouseEventHandler<HTMLSpanElement>;
+    likes: number;
+    dislikes: number;
+    onLikeComment: (e: MouseEvent) => void;
+    onDislikeComment: (e: MouseEvent) => void;
+    onReplyTo: (e: MouseEvent) => void;
 }
 
 const Comment: FC<IProps> = ({
@@ -20,13 +24,15 @@ const Comment: FC<IProps> = ({
                                  createDate,
                                  isLiked,
                                  isDisliked,
+                                 likes,
+                                 dislikes,
                                  onLikeComment,
                                  onDislikeComment,
                                  onReplyTo
                              }) => {
     const actions = [
-        <span onClick={onLikeComment} style={{color: isLiked ? 'green': 'gray'}}>Like</span>,
-        <span onClick={onDislikeComment} style={{color: isDisliked ? 'green': 'gray'}}>Dislike</span>,
+        <Like quantity={likes} liked={isLiked} like={onLikeComment}/>,
+        <Dislike quantity={dislikes} disliked={isDisliked} dislike={onDislikeComment}/>,
         <span onClick={onReplyTo}>Reply to</span>
     ];
     return (

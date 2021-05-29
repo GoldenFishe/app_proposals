@@ -19,9 +19,9 @@ export interface IProposalRepository {
 
     insert(data: INewProposal): Promise<IProposalDTO>;
 
-    setLike(proposalId: number, userId: number): Promise<IProposalDTO>;
+    toggleLike(proposalId: number, userId: number): Promise<IProposalDTO>;
 
-    setDislike(proposalId: number, userId: number): Promise<IProposalDTO>;
+    toggleDislike(proposalId: number, userId: number): Promise<IProposalDTO>;
 }
 
 export class ProposalRepository implements IProposalRepository {
@@ -145,7 +145,7 @@ export class ProposalRepository implements IProposalRepository {
 
     async insert(data: INewProposal) {
         const {title, description, authorId, topicId, filenames} = data;
-        const [{id}] = await query<{id: IProposal["id"]}>(`
+        const [{id}] = await query<{ id: IProposal["id"] }>(`
             INSERT INTO proposals (title, description, author_id, topic_id)
             VALUES ('${title}', '${description}', ${authorId}, ${topicId})
             RETURNING id;
@@ -161,18 +161,60 @@ export class ProposalRepository implements IProposalRepository {
         return this.selectById(id, authorId);
     }
 
-    async setLike(proposalId: number, userId: number) {
+    async toggleLike(proposalId: number, userId: number) {
+        const [id] = await query<{ id: number }>(`
+            SELECT id
+            FROM proposals_likes
+            WHERE proposal_id = ${proposalId}
+              AND user_id = ${userId}
+        `);
+        return Boolean(id) ? this.unsetLike(proposalId, userId) : this.setLike(proposalId, userId);
+    }
+
+    async toggleDislike(proposalId: number, userId: number) {
+        const [id] = await query<{ id: number }>(`
+            SELECT id
+            FROM proposals_dislikes
+            WHERE proposal_id = ${proposalId}
+              AND user_id = ${userId}
+        `);
+        return Boolean(id) ? this.unsetDislike(proposalId, userId) : this.setDislike(proposalId, userId);
+    }
+
+    private async setLike(proposalId: number, userId: number) {
         await query<IProposal>(`
             INSERT INTO proposals_likes (proposal_id, user_id)
             VALUES (${proposalId}, ${userId})
         `);
+        await this.unsetDislike(proposalId, userId);
         return this.selectById(proposalId, userId);
     }
 
-    async setDislike(proposalId: number, userId: number) {
+    private async setDislike(proposalId: number, userId: number) {
         await query<IProposal>(`
             INSERT INTO proposals_dislikes (proposal_id, user_id)
             VALUES (${proposalId}, ${userId})
+        `);
+        await this.unsetLike(proposalId, userId);
+        return this.selectById(proposalId, userId);
+    }
+
+    private async unsetLike(proposalId: number, userId: number) {
+        await query<IProposal>(`
+            DELETE
+            FROM proposals_likes
+            WHERE proposal_id = ${proposalId}
+              AND user_id = ${userId}
+        `);
+        return this.selectById(proposalId, userId);
+    }
+
+    private async unsetDislike(proposalId: number, userId: number) {
+        await query<IProposal>(`
+            DELETE
+            FROM proposals_dislikes
+            WHERE proposal_id = ${proposalId}
+              AND user_id = ${userId}
         `);
         return this.selectById(proposalId, userId);
     }

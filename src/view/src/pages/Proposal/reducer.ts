@@ -1,5 +1,5 @@
 import {MainActionTypes, ProposalState} from "./types";
-import {GET_PROPOSAL, LEAVE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
+import {DISLIKE_COMMENT, GET_PROPOSAL, LEAVE_COMMENT, LIKE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
 
 const initialState: ProposalState = {
     data: null
@@ -14,6 +14,8 @@ const proposalReducer = (state = initialState, action: MainActionTypes): Proposa
                 data: action.payload
             }
         case LEAVE_COMMENT:
+        case LIKE_COMMENT:
+        case DISLIKE_COMMENT:
             if (state.data !== null) {
                 return {
                     ...state,

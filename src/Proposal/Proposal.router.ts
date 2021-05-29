@@ -5,7 +5,7 @@ import {nanoid} from "nanoid";
 import {IProposalController} from "./Proposal.controller";
 import ProposalRoutes from "./Proposal.routes";
 import {validateCreateProposal, validateProposalId} from "./Proposal.middleware";
-import {validateAuthorization} from "../validators";
+import {addUserInfo, validateAuthorization} from "../middlewares";
 import dependenciesResolver from "../dependenciesResolver";
 
 const proposalController = dependenciesResolver.get('proposalController') as IProposalController;
@@ -20,12 +20,14 @@ const attachments = multer({
 
 proposalRouter.get(
     ProposalRoutes.GET_PROPOSALS,
+    addUserInfo,
     (req: Request, res: Response) => proposalController.getAll(req, res)
 );
 
 proposalRouter.get(
     ProposalRoutes.GET_PROPOSAL,
     validateProposalId,
+    addUserInfo,
     (req: Request, res: Response) => proposalController.getById(req, res)
 );
 

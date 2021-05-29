@@ -5,7 +5,7 @@ import {nanoid} from "nanoid";
 import {ICommentController} from "./Comment.controller";
 import CommentRoutes from "./Comment.routes";
 import {validateCreateComment} from "./Comment.middleware";
-import {validateAuthorization} from "../validators";
+import {validateAuthorization} from "../middlewares";
 import dependenciesResolver from "../dependenciesResolver";
 
 const commentController = dependenciesResolver.get('commentController') as ICommentController;

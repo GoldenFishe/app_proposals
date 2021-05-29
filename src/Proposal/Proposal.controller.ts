@@ -23,13 +23,15 @@ export class ProposalController implements IProposalController {
     }
 
     async getAll(req: Request, res: Response) {
-        const proposals = await this.proposalRepository.selectAll(1);
+        const userId: number = res.locals.userId;
+        const proposals = await this.proposalRepository.selectAll(userId);
         res.send(proposals);
     }
 
     async getById(req: Request, res: Response) {
         const id: number = Number(req.params.id);
-        const proposal = await this.proposalRepository.selectById(id, 1);
+        const userId: number = res.locals.userId;
+        const proposal = await this.proposalRepository.selectById(id, userId);
         res.send(proposal);
     }
 
@@ -45,14 +47,14 @@ export class ProposalController implements IProposalController {
     async like(req: Request, res: Response) {
         const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
-        const proposal = await this.proposalRepository.setLike(proposalId, userId);
+        const proposal = await this.proposalRepository.toggleLike(proposalId, userId);
         res.send(proposal);
     }
 
     async dislike(req: Request, res: Response) {
         const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
-        const proposal = await this.proposalRepository.setDislike(proposalId, userId);
+        const proposal = await this.proposalRepository.toggleDislike(proposalId, userId);
         res.send(proposal);
     }
 }

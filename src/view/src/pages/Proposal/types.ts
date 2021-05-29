@@ -36,4 +36,10 @@ export interface ProposalState {
     data: IProposal | null
 }
 
-export type MainActionTypes = GetProposalAction | SetProposalAction | LeaveCommentAction | ResetProposalAction;
+export type MainActionTypes =
+    | GetProposalAction
+    | SetProposalAction
+    | LeaveCommentAction
+    | LikeCommentAction
+    | DislikeCommentAction
+    | ResetProposalAction;

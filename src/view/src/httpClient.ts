@@ -44,23 +44,19 @@ axios.interceptors.response.use(
     });
 
 export default class HttpClient {
-    static async get<T>(url: string, withToken: boolean = false) {
+    static async get<T>(url: string) {
         let accessToken = accessTokenStore.getToken();
         let headers = {};
-        if (withToken) {
-            if (!accessToken) accessToken = await this.getAccessToken();
-            headers = {...headers, 'Authorization': accessToken};
-        }
+        if (!accessToken) accessToken = await this.getAccessToken();
+        headers = {...headers, 'Authorization': accessToken};
         return axios.get(url, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 
     static async post<T>(url: string, body: object, withToken: boolean = false) {
         let accessToken = accessTokenStore.getToken();
         let headers = {};
-        if (withToken) {
-            if (!accessToken) accessToken = await this.getAccessToken();
-            headers = {...headers, 'Authorization': accessToken};
-        }
+        if (!accessToken) accessToken = await this.getAccessToken();
+        headers = {...headers, 'Authorization': accessToken};
         return axios.post(url, body, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 

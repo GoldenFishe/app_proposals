@@ -34,14 +34,14 @@ export class CommentController implements ICommentController {
     async like(req: Request, res: Response) {
         const {commentId}: { commentId: number } = req.body;
         const userId: number = res.locals.userId;
-        const commentDTO = await this.commentRepository.setLike(commentId, userId);
-        res.send(commentDTO);
+        const comments = await this.commentRepository.toggleLike(commentId, userId);
+        res.send(comments);
     }
 
     async dislike(req: Request, res: Response) {
         const {commentId}: { commentId: number } = req.body;
         const userId: number = res.locals.userId;
-        const commentDTO = await this.commentRepository.setDislike(commentId, userId);
-        res.send(commentDTO);
+        const comments = await this.commentRepository.toggleDislike(commentId, userId);
+        res.send(comments);
     }
 }

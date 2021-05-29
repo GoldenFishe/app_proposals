@@ -8,9 +8,9 @@ export interface ICommentsRepository {
 
     insert(data: INewComment): Promise<ICommentDTO[]>;
 
-    setLike(commentId: number, userId: number): Promise<ICommentDTO[]>;
+    toggleLike(commentId: number, userId: number): Promise<ICommentDTO[]>;
 
-    setDislike(commentId: number, userId: number): Promise<ICommentDTO[]>;
+    toggleDislike(commentId: number, userId: number): Promise<ICommentDTO[]>;
 }
 
 export class CommentRepository implements ICommentsRepository {
@@ -57,7 +57,7 @@ export class CommentRepository implements ICommentsRepository {
 
     async insert(data: INewComment) {
         const {commentText, authorId, proposalId, parentCommentId, filenames} = data;
-        const [{id}] = await query<{id: IComment["id"]}>(`
+        const [{id}] = await query<{ id: IComment["id"] }>(`
             INSERT INTO comments (comment, author_id, proposal_id${parentCommentId ? ', parent_comment_id' : ''})
             VALUES ('${commentText}', ${authorId}, ${proposalId}${parentCommentId ? `, ${parentCommentId}` : ''})
             RETURNING id;
@@ -73,12 +73,33 @@ export class CommentRepository implements ICommentsRepository {
         return this.selectCommentsByProposalId(proposalId, authorId);
     }
 
-    async setLike(commentId: number, userId: number) {
+    async toggleLike(commentId: number, userId: number) {
+        const [id] = await query<{ id: number }>(`
+            SELECT id
+            FROM comments_likes
+            WHERE comment_id = ${commentId}
+              AND user_id = ${userId}
+        `);
+        return Boolean(id) ? this.unsetLike(commentId, userId) : this.setLike(commentId, userId);
+    }
+
+    async toggleDislike(commentId: number, userId: number) {
+        const [id] = await query<{ id: number }>(`
+            SELECT id
+            FROM comments_dislikes
+            WHERE comment_id = ${commentId}
+              AND user_id = ${userId}
+        `);
+        return Boolean(id) ? this.unsetDislike(commentId, userId) : this.setDislike(commentId, userId);
+    }
+
+    private async setLike(commentId: number, userId: number) {
         await query<IComment>(`
             INSERT INTO comments_likes (comment_id, user_id)
             VALUES (${commentId}, ${userId})
         `);
-        const [{proposal_id}] = await query<{proposal_id: IComment["proposal_id"]}>(`
+        await this.unsetDislike(commentId, userId);
+        const [{proposal_id}] = await query<{ proposal_id: IComment["proposal_id"] }>(`
             SELECT proposal_id
             FROM comments
             WHERE id = ${commentId}
@@ -86,12 +107,43 @@ export class CommentRepository implements ICommentsRepository {
         return this.selectCommentsByProposalId(proposal_id, userId);
     }
 
-    async setDislike(commentId: number, userId: number) {
+    private async unsetLike(commentId: number, userId: number) {
+        await query<IComment>(`
+            DELETE
+            FROM comments_likes
+            WHERE comment_id = ${commentId}
+              AND user_id = ${userId}
+        `);
+        const [{proposal_id}] = await query<{ proposal_id: IComment["proposal_id"] }>(`
+            SELECT proposal_id
+            FROM comments
+            WHERE id = ${commentId}
+        `);
+        return this.selectCommentsByProposalId(proposal_id, userId);
+    }
+
+    private async setDislike(commentId: number, userId: number) {
         await query<IComment>(`
             INSERT INTO comments_dislikes (comment_id, user_id)
             VALUES (${commentId}, ${userId})
         `);
-        const [{proposal_id}] = await query<{proposal_id: IComment["proposal_id"]}>(`
+        await this.unsetLike(commentId, userId);
+        const [{proposal_id}] = await query<{ proposal_id: IComment["proposal_id"] }>(`
+            SELECT proposal_id
+            FROM comments
+            WHERE id = ${commentId}
+        `);
+        return this.selectCommentsByProposalId(proposal_id, userId);
+    }
+
+    private async unsetDislike(commentId: number, userId: number) {
+        await query<IComment>(`
+            DELETE
+            FROM comments_dislikes
+            WHERE comment_id = ${commentId}
+              AND user_id = ${userId}
+        `);
+        const [{proposal_id}] = await query<{ proposal_id: IComment["proposal_id"] }>(`
             SELECT proposal_id
             FROM comments
             WHERE id = ${commentId}

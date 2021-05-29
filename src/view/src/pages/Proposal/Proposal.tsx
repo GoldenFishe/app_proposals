@@ -11,7 +11,7 @@ import {
     getProposal,
     leaveComment,
     likeComment as likeCommentAction,
-    dislikeComment as dislikeCommentAction, createProposal
+    dislikeComment as dislikeCommentAction
 } from "./actions";
 
 const Proposal: FC = () => {
@@ -44,6 +44,8 @@ const Proposal: FC = () => {
                 <Comment author={comment.author}
                          comment={comment.comment}
                          createDate={new Date(comment.createDate).toDateString()}
+                         isLiked={comment.isLiked}
+                         isDisliked={comment.isDisliked}
                          onLikeComment={likeComment(comment.id)}
                          onDislikeComment={dislikeComment(comment.id)}
                          onReplyTo={replyTo(comment.id)}/>

@@ -1,10 +1,13 @@
 import {IAuthor} from "./IUser";
 
 export interface IComment {
-    id: number;
-    comment: string;
+    attachments: [],
     author: IAuthor;
-    likes: number;
-    dislikes: number;
+    comment: string;
     createDate: string;
+    dislikes: number;
+    id: number;
+    isDisliked: boolean;
+    isLiked: boolean;
+    likes: number;
 }

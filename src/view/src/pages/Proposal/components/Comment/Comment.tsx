@@ -7,6 +7,8 @@ interface IProps {
     author: IAuthor;
     comment: string;
     createDate: string;
+    isLiked: boolean;
+    isDisliked: boolean;
     onLikeComment: MouseEventHandler<HTMLSpanElement>;
     onDislikeComment: MouseEventHandler<HTMLSpanElement>;
     onReplyTo: MouseEventHandler<HTMLSpanElement>;
@@ -16,13 +18,15 @@ const Comment: FC<IProps> = ({
                                  author,
                                  comment,
                                  createDate,
+                                 isLiked,
+                                 isDisliked,
                                  onLikeComment,
                                  onDislikeComment,
                                  onReplyTo
                              }) => {
     const actions = [
-        <span onClick={onLikeComment}>Like</span>,
-        <span onClick={onDislikeComment}>Dislike</span>,
+        <span onClick={onLikeComment} style={{color: isLiked ? 'green': 'gray'}}>Like</span>,
+        <span onClick={onDislikeComment} style={{color: isDisliked ? 'green': 'gray'}}>Dislike</span>,
         <span onClick={onReplyTo}>Reply to</span>
     ];
     return (

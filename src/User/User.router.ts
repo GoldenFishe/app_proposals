@@ -5,7 +5,7 @@ import {nanoid} from "nanoid";
 import {IUserController} from "./User.controller";
 import UserRoutes from "./User.routes";
 import {validateLoginAndPassword, validateRefreshToken} from "./User.middleware";
-import {validateAuthorization} from "../validators";
+import {validateAuthorization} from "../middlewares";
 import dependenciesResolver from "../dependenciesResolver";
 
 const userController = dependenciesResolver.get('userController') as IUserController;

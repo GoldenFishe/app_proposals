@@ -40,13 +40,13 @@ proposalRouter.post(
 proposalRouter.post(
     ProposalRoutes.LIKE_PROPOSAL,
     validateAuthorization,
-    (req: Request, res: Response) => proposalController.likeProposal(req, res)
+    (req: Request, res: Response) => proposalController.like(req, res)
 );
 
 proposalRouter.post(
     ProposalRoutes.DISLIKE_PROPOSAL,
     validateAuthorization,
-    (req: Request, res: Response) => proposalController.dislikeProposal(req, res)
+    (req: Request, res: Response) => proposalController.dislike(req, res)
 );
 
 export default proposalRouter;

@@ -10,9 +10,9 @@ export interface IProposalController {
 
     create(req: Request, res: Response): Promise<void>;
 
-    likeProposal(req: Request, res: Response): Promise<void>;
+    like(req: Request, res: Response): Promise<void>;
 
-    dislikeProposal(req: Request, res: Response): Promise<void>;
+    dislike(req: Request, res: Response): Promise<void>;
 }
 
 export class ProposalController implements IProposalController {
@@ -23,33 +23,33 @@ export class ProposalController implements IProposalController {
     }
 
     async getAll(req: Request, res: Response) {
-        const proposals = await this.proposalRepository.selectAllProposals();
+        const proposals = await this.proposalRepository.selectAll(1);
         res.send(proposals);
     }
 
     async getById(req: Request, res: Response) {
         const id: number = Number(req.params.id);
-        const proposal = await this.proposalRepository.selectProposalById(id);
+        const proposal = await this.proposalRepository.selectById(id, 1);
         res.send(proposal);
     }
 
     async create(req: Request, res: Response) {
         const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
-        const userId: number = res.locals.userId;
+        const authorId: number = res.locals.userId;
         const attachments = req.files as Express.Multer.File[];
         const filenames = attachments.map(file => file.filename);
-        const proposal = await this.proposalRepository.addProposal(title, description, userId, topicId, filenames);
+        const proposal = await this.proposalRepository.insert({title, description, authorId, topicId, filenames});
         res.send(proposal);
     }
 
-    async likeProposal(req: Request, res: Response) {
+    async like(req: Request, res: Response) {
         const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
         const proposal = await this.proposalRepository.setLike(proposalId, userId);
         res.send(proposal);
     }
 
-    async dislikeProposal(req: Request, res: Response) {
+    async dislike(req: Request, res: Response) {
         const {proposalId}: { proposalId: number } = req.body;
         const userId: number = res.locals.userId;
         const proposal = await this.proposalRepository.setDislike(proposalId, userId);

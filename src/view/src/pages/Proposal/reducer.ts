@@ -19,7 +19,7 @@ const proposalReducer = (state = initialState, action: MainActionTypes): Proposa
                     ...state,
                     data: {
                         ...state.data,
-                        comments: [...state.data.comments, action.payload]
+                        comments: action.payload
                     }
                 }
             }

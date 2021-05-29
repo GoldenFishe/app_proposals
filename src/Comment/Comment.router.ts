@@ -23,19 +23,19 @@ commentRouter.post(
     validateAuthorization,
     attachments.array('attachments[]'),
     validateCreateComment,
-    (req: Request, res: Response) => commentController.addCommentToProposal(req, res)
+    (req: Request, res: Response) => commentController.create(req, res)
 );
 
 commentRouter.post(
     CommentRoutes.LIKE_COMMENT,
     validateAuthorization,
-    (req: Request, res: Response) => commentController.likeComment(req, res)
+    (req: Request, res: Response) => commentController.like(req, res)
 );
 
 commentRouter.post(
     CommentRoutes.DISLIKE_COMMENT,
     validateAuthorization,
-    (req: Request, res: Response) => commentController.dislikeComment(req, res)
+    (req: Request, res: Response) => commentController.dislike(req, res)
 );
 
 export default commentRouter;

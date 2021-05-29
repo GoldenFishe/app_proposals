@@ -34,7 +34,7 @@ export const createProposal = (proposalParams: FormData): ThunkAction<void, Root
 
 export const leaveComment = (commentParams: FormData): ThunkAction<void, RootState, unknown, LeaveCommentAction> => async (dispatch: Dispatch<LeaveCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment>(`/api/comments`, commentParams, true);
+        const data = await HttpClient.post<IComment[]>(`/api/comments`, commentParams, true);
         dispatch({type: LEAVE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);
@@ -43,7 +43,7 @@ export const leaveComment = (commentParams: FormData): ThunkAction<void, RootSta
 
 export const likeComment = (commentId: number): ThunkAction<void, RootState, unknown, LikeCommentAction> => async (dispatch: Dispatch<LikeCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment>(`/api/comments/like`, {commentId}, true);
+        const data = await HttpClient.post<IComment[]>(`/api/comments/like`, {commentId}, true);
         dispatch({type: LIKE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);
@@ -52,7 +52,7 @@ export const likeComment = (commentId: number): ThunkAction<void, RootState, unk
 
 export const dislikeComment = (commentId: number): ThunkAction<void, RootState, unknown, DislikeCommentAction> => async (dispatch: Dispatch<DislikeCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment>(`/api/comments/dislike`, {commentId}, true);
+        const data = await HttpClient.post<IComment[]>(`/api/comments/dislike`, {commentId}, true);
         dispatch({type: DISLIKE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);

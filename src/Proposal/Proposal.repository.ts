@@ -1,16 +1,23 @@
 import {query} from "../db";
 import {ProposalMapper} from "./Proposal.mapper";
 import {CommentMapper} from "../Comment/Comment.mapper";
-import {IProposal, IProposalAttachment, IProposalDTO, ITopic} from "./Proposal.types";
+import {
+    INewProposal,
+    IProposal,
+    IProposalAttachment,
+    IProposalDTO,
+    IProposalPreview,
+    IProposalPreviewDTO
+} from "./Proposal.types";
 import {IComment, ICommentAttachment} from "../Comment/Comment.types";
-import {IUser} from "../User/User.types";
 
 export interface IProposalRepository {
-    selectAllProposals(): Promise<IProposalDTO[]>;
 
-    selectProposalById(id: number): Promise<IProposalDTO>;
+    selectAll(userId: number): Promise<IProposalPreviewDTO[]>;
 
-    addProposal(title: string, description: string, authorId: number, topicId: number, attachments: Array<string>): Promise<IProposalDTO>;
+    selectById(id: number, userId: number): Promise<IProposalDTO>;
+
+    insert(data: INewProposal): Promise<IProposalDTO>;
 
     setLike(proposalId: number, userId: number): Promise<IProposalDTO>;
 
@@ -18,67 +25,155 @@ export interface IProposalRepository {
 }
 
 export class ProposalRepository implements IProposalRepository {
-    async selectAllProposals() {
-        const proposalsPromise = query<IProposal>('SELECT * FROM proposals');
-        const commentsPromise = query<IComment>('SELECT * FROM comments');
-        const usersPromise = query<IUser>('SELECT * FROM users');
-        const topicsPromise = query<ITopic>('SELECT * FROM topics');
-        const proposalAttachmentsPromise = await query<IProposalAttachment>(`SELECT * FROM proposal_attachments`);
-        const commentAttachmentsPromise = await query<ICommentAttachment>(`SELECT * FROM comment_attachments`);
-        const [proposals, comments, users, topics, proposalAttachments, commentAttachments] = await Promise.all([proposalsPromise, commentsPromise, usersPromise, topicsPromise, proposalAttachmentsPromise, commentAttachmentsPromise]);
-        return proposals.map(proposal => {
-            const proposalComments = comments
-                .filter(comment => comment.proposal_id === proposal.id)
-                .map(comment => {
-                    const author = users.find(user => user.id === comment.author_id);
-                    const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
-                    return CommentMapper.toDTO(comment, author!, attachments);
-                });
-            const attachments = proposalAttachments.filter(attachment => attachment.proposal_id === proposal.id);
-            const author = users.find(user => user.id === proposal.author_id);
-            const proposalTopic = topics.find(topic => proposal.topic_id === topic.id);
-            return ProposalMapper.toDTO(proposal, proposalComments, author!, proposalTopic!, attachments);
-        });
+
+    async selectAll(userId: number) {
+        const proposals = await query<IProposalPreview>(`
+            SELECT p.id,
+                   p.title,
+                   p.description,
+                   p.author_id,
+                   u.username                                                "author_username",
+                   u.avatar_filename                                         "author_avatar",
+                   p.topic_id,
+                   t.topic,
+                   p.create_date,
+                   COUNT(pl)                                                 "likes",
+                   COUNT(pd)                                                 "dislikes",
+                   CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
+                   CASE WHEN pd.user_id = ${userId} THEN TRUE ELSE FALSE END is_disliked,
+                   COUNT(c)                                                  "comments_quantity"
+            FROM proposals p
+                     JOIN users u ON u.id = p.author_id
+                     JOIN topics t ON t.id = p.topic_id
+                     LEFT OUTER JOIN proposals_likes pl ON p.id = pl.proposal_id
+                     LEFT OUTER JOIN proposals_dislikes pd ON p.id = pd.proposal_id
+                     LEFT OUTER JOIN comments c ON p.id = c.proposal_id
+            GROUP BY p.id,
+                     p.title,
+                     p.description,
+                     p.author_id,
+                     u.username,
+                     u.avatar_filename,
+                     p.topic_id,
+                     t.topic,
+                     p.create_date,
+                     pl.user_id,
+                     pd.user_id
+        `);
+        return proposals.map(proposal => ProposalMapper.toPreviewDTO(proposal));
     }
 
-    async selectProposalById(id: number) {
-        const [proposal] = await query<IProposal>(`SELECT * FROM proposals WHERE id=${id}`);
-        const comments = await query<IComment>(`SELECT * FROM comments WHERE proposal_id=${proposal.id}`);
-        const [author] = await query<IUser>(`SELECT * FROM users WHERE id=${proposal.author_id}`);
-        const [topic] = await query<ITopic>(`SELECT * FROM topics WHERE id=${proposal.topic_id}`);
-        const proposalAttachments = await query<IProposalAttachment>(`SELECT * FROM proposal_attachments WHERE proposal_id=${id}`);
-        const commentAttachments = await query<ICommentAttachment>(`SELECT * FROM comment_attachments`);
-        const users = await query<IUser>(`SELECT * FROM users`);
+    async selectById(id: number, userId: number) {
+        const [proposal] = await query<IProposal>(`
+            SELECT p.id,
+                   p.title,
+                   p.description,
+                   p.author_id,
+                   u.username                                                "author_username",
+                   u.avatar_filename                                         "author_avatar",
+                   p.topic_id,
+                   t.topic,
+                   p.create_date,
+                   COUNT(pl)                                                 "likes",
+                   COUNT(pd)                                                 "dislikes",
+                   CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
+                   CASE WHEN pd.user_id = ${userId} THEN TRUE ELSE FALSE END is_disliked,
+                   COUNT(c)                                                  "comments_quantity"
+            FROM proposals p
+                     JOIN users u ON u.id = p.author_id
+                     JOIN topics t ON t.id = p.topic_id
+                     LEFT OUTER JOIN proposals_likes pl ON p.id = pl.proposal_id
+                     LEFT OUTER JOIN proposals_dislikes pd ON p.id = pd.proposal_id
+                     LEFT OUTER JOIN comments c ON p.id = c.proposal_id
+            WHERE p.id = ${id}
+            GROUP BY p.id,
+                     p.title,
+                     p.description,
+                     p.author_id,
+                     u.username,
+                     u.avatar_filename,
+                     p.topic_id,
+                     t.topic,
+                     p.create_date,
+                     pl.user_id,
+                     pd.user_id
+        `);
+        const proposalAttachments = await query<IProposalAttachment>(`
+            SELECT *
+            FROM proposal_attachments
+            WHERE proposal_id = ${proposal.id}
+        `);
+        const comments = await query<IComment>(`
+            SELECT c.id,
+                   c.comment,
+                   c.author_id,
+                   u.username                                                "author_username",
+                   u.avatar_filename                                         "author_avatar",
+                   c.proposal_id,
+                   c.create_date,
+                   COUNT(cl)                                                 "likes",
+                   COUNT(cd)                                                 "dislikes",
+                   CASE WHEN cl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
+                   CASE WHEN cd.user_id = ${userId} THEN TRUE ELSE FALSE END is_disliked,
+                   c.parent_comment_id
+            FROM comments c
+                     JOIN users u ON u.id = c.author_id
+                     LEFT OUTER JOIN comments_likes cl ON c.id = cl.comment_id
+                     LEFT OUTER JOIN comments_dislikes cd ON c.id = cd.comment_id
+            WHERE c.proposal_id = ${id}
+            GROUP BY c.id,
+                     c.comment,
+                     c.author_id,
+                     u.username,
+                     u.avatar_filename,
+                     c.proposal_id,
+                     c.create_date,
+                     cl.user_id,
+                     cd.user_id,
+                     c.parent_comment_id
+        `);
+        const commentAttachments = await query<ICommentAttachment>(`
+            SELECT *
+            FROM comment_attachments
+        `);
         const commentsDTO = comments.map(comment => {
-            const author = users.find(user => user.id === comment.author_id);
             const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
-            return CommentMapper.toDTO(comment, author!, attachments);
+            return CommentMapper.toDTO(comment, attachments);
         });
-        return ProposalMapper.toDTO(proposal, commentsDTO, author, topic, proposalAttachments);
+        return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments);
     }
 
-    async addProposal(title: string, description: string, authorId: number, topicId: number, filenames: Array<string>) {
-        const proposalsPromise = query<IProposal>(`INSERT INTO proposals (title, description, author_id, topic_id) VALUES ('${title}', '${description}', ${authorId}, '${topicId}') RETURNING *`);
-        const usersPromise = query<IUser>(`SELECT * FROM users WHERE id=${authorId}`);
-        const topicsPromise = query<ITopic>(`SELECT * FROM topics WHERE id=${topicId}`);
-        const [proposals, users, topics] = await Promise.all([proposalsPromise, usersPromise, topicsPromise]);
-        const [proposal] = proposals;
-        const [user] = users;
-        const [topic] = topics;
+    async insert(data: INewProposal) {
+        const {title, description, authorId, topicId, filenames} = data;
+        const [{id}] = await query<{id: IProposal["id"]}>(`
+            INSERT INTO proposals (title, description, author_id, topic_id)
+            VALUES ('${title}', '${description}', ${authorId}, ${topicId})
+            RETURNING id;
+        `);
         const attachmentsPromise: Array<Promise<IProposalAttachment[]>> = filenames.map(filename => {
-            return query<IProposalAttachment>(`INSERT INTO proposal_attachments (proposal_id, filename) VALUES (${proposal.id}, '${filename}') RETURNING *`);
+            return query<IProposalAttachment>(`
+                INSERT INTO proposal_attachments (proposal_id, filename)
+                VALUES (${id}, '${filename}')
+                RETURNING *
+            `);
         });
-        const savedAttachments = await Promise.all(attachmentsPromise)
-        return ProposalMapper.toDTO(proposal, [], user, topic, savedAttachments.map(a => a[0]));
+        await Promise.all(attachmentsPromise);
+        return this.selectById(id, authorId);
     }
 
     async setLike(proposalId: number, userId: number) {
-        const [proposal] = await query<IProposal>(`INSERT INTO proposals_likes (proposal_id, user_id) VALUES (${proposalId}, ${userId}) RETURNING *`);
-        return this.selectProposalById(proposal.id);
+        await query<IProposal>(`
+            INSERT INTO proposals_likes (proposal_id, user_id)
+            VALUES (${proposalId}, ${userId})
+        `);
+        return this.selectById(proposalId, userId);
     }
 
     async setDislike(proposalId: number, userId: number) {
-        const [proposal] = await query<IProposal>(`INSERT INTO proposals_dislikes (proposal_id, user_id) VALUES (${proposalId}, ${userId}) RETURNING *`);
-        return this.selectProposalById(proposal.id);
+        await query<IProposal>(`
+            INSERT INTO proposals_dislikes (proposal_id, user_id)
+            VALUES (${proposalId}, ${userId})
+        `);
+        return this.selectById(proposalId, userId);
     }
 }

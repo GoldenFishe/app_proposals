@@ -32,7 +32,7 @@ const Proposal: FC = () => {
     const onSubmitCreateCommentForm = useCallback(values => {
         const {comment, attachments} = values;
         const formData = new FormData();
-        formData.append('comment', comment);
+        formData.append('commentText', comment);
         formData.append('proposalId', id);
         if (parentCommentId !== null) formData.append('topicId', parentCommentId.toString());
         attachments.fileList.map((file: any) => formData.append('attachments[]', file.originFileObj));

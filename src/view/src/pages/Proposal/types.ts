@@ -14,17 +14,17 @@ export interface SetProposalAction {
 
 export interface LeaveCommentAction {
     type: typeof LEAVE_COMMENT,
-    payload: IComment
+    payload: IComment[]
 }
 
 export interface LikeCommentAction {
     type: typeof LIKE_COMMENT,
-    payload: IComment
+    payload: IComment[]
 }
 
 export interface DislikeCommentAction {
     type: typeof DISLIKE_COMMENT,
-    payload: IComment
+    payload: IComment[]
 }
 
 export interface ResetProposalAction {

@@ -1,10 +1,11 @@
 import React, {FC, useCallback} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
-import {Button, Form, Input} from "antd";
+import {Redirect, Link} from "react-router-dom";
+import {Button, Form, Input, Layout, Typography} from "antd";
 
 import {signIn} from "./actions";
 import {RootState} from "../../rootReducer";
+import classNames from './style.module.css';
 
 type SignInForm = {
     login: string;
@@ -18,24 +19,29 @@ const SignIn: FC = () => {
     if (user !== null) return <Redirect to="/"/>;
 
     return (
-        <Form onFinish={onFinish}
-              labelCol={{span: 8}}
-              wrapperCol={{span: 9}}
-              requiredMark={false}>
-            <Form.Item label="Login"
-                       name="login"
-                       rules={[{required: true, message: 'Please input your username'}]}>
-                <Input/>
-            </Form.Item>
-            <Form.Item label="Password"
-                       name="password"
-                       rules={[{required: true, message: 'Please input your password'}]}>
-                <Input.Password/>
-            </Form.Item>
-            <Form.Item wrapperCol={{offset: 8, span: 9}}>
-                <Button type="primary" htmlType="submit">Sign In</Button>
-            </Form.Item>
-        </Form>
+        <Layout.Content className={classNames.container}>
+            <Typography.Title level={2}>Proposals</Typography.Title>
+            <Typography.Title level={4}>Sign In</Typography.Title>
+            <Form onFinish={onFinish}
+                  className={classNames.form}
+                  layout="vertical"
+                  requiredMark={false}>
+                <Form.Item label="Login"
+                           name="login"
+                           rules={[{required: true, message: 'Please input your username'}]}>
+                    <Input/>
+                </Form.Item>
+                <Form.Item label="Password"
+                           name="password"
+                           rules={[{required: true, message: 'Please input your password'}]}>
+                    <Input.Password/>
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" className={classNames.submitButton}>Sign In</Button>
+                </Form.Item>
+            </Form>
+            <Typography.Paragraph>New to Proposals? <Link to="/sign-up">Create an account.</Link></Typography.Paragraph>
+        </Layout.Content>
     )
 };
 

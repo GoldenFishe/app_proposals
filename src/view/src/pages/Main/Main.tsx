@@ -1,9 +1,8 @@
 import React, {FC, useEffect} from 'react';
-import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {Layout, Typography} from "antd";
+import {Layout} from "antd";
 
-import Protected from "../../components/Protected";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
 import Proposals from '../Proposals/Proposals';
@@ -14,6 +13,7 @@ import {RootState} from "../../rootReducer";
 import {getUser} from "./actions";
 
 import classNames from './style.module.css';
+import Header from "./components/Header/Header";
 
 const Main: FC = () => {
     const dispatch = useDispatch();
@@ -22,21 +22,9 @@ const Main: FC = () => {
         if (!user) dispatch(getUser());
     }, [user, dispatch]);
     return (
-        <Layout>
+        <Layout className={classNames.container}>
             <BrowserRouter>
-                <Layout.Header className={classNames.header}>
-                    <div className={classNames.titles}>
-                        <Typography.Title level={1}>Proposals</Typography.Title>
-                        <Typography.Title level={5}>Make your digital dream come true</Typography.Title>
-                    </div>
-                    <div className={classNames.links}>
-                        {!user && <Link to="/sign-in">Sign-In</Link>}
-                        {!user && <Link to="/sign-up">Sign-Up</Link>}
-                        <Link to="/proposals">Proposals</Link>
-                        <Protected><Link to="/proposals/create">Create Proposal</Link></Protected>
-                        <Protected><Link to={`/profile/${user?.id}`}>Profile</Link></Protected>
-                    </div>
-                </Layout.Header>
+                <Header visibleSignLinks={!user} userId={user?.id}/>
                 <Switch>
                     <Route path="/sign-in">
                         <SignIn/>

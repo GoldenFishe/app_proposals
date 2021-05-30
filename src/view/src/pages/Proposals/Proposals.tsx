@@ -31,23 +31,25 @@ const Proposals: FC = () => {
     return (
         <Layout>
             <Typography.Title>Proposals</Typography.Title>
-            <Row gutter={[16, 16]}>
-                {proposals.map(proposal => {
-                    return (
-                        <Col key={proposal.id}>
-                            <Link to={`/proposals/${proposal.id}`}>
-                                <Proposal title={proposal.title}
-                                          description={proposal.description}
-                                          liked={proposal.isLiked}
-                                          likes={proposal.likes}
-                                          like={like(proposal.id)}
-                                          disliked={proposal.isDisliked}
-                                          dislikes={proposal.dislikes}
-                                          dislike={dislike(proposal.id)}/>
-                            </Link>
-                        </Col>)
-                })}
-            </Row>
+            <Layout.Content>
+                <Row gutter={[16, 16]}>
+                    {proposals.map(proposal => {
+                        return (
+                            <Col key={proposal.id}>
+                                <Link to={`/proposals/${proposal.id}`}>
+                                    <Proposal title={proposal.title}
+                                              description={proposal.description}
+                                              liked={proposal.isLiked}
+                                              likes={proposal.likes}
+                                              like={like(proposal.id)}
+                                              disliked={proposal.isDisliked}
+                                              dislikes={proposal.dislikes}
+                                              dislike={dislike(proposal.id)}/>
+                                </Link>
+                            </Col>)
+                    })}
+                </Row>
+            </Layout.Content>
         </Layout>
     );
 };

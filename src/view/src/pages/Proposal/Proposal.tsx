@@ -7,12 +7,15 @@ import Comment from "./components/Comment/Comment";
 import {RootState} from "../../rootReducer";
 import {IComment} from "../../interfaces/IComment";
 import CreateCommentForm from "./components/CreateCommentForm/CreateCommentForm";
+import Protected from "../../components/Protected";
 import {
     getProposal,
     leaveComment,
     likeComment as likeCommentAction,
     dislikeComment as dislikeCommentAction
 } from "./actions";
+import classNames from './style.module.css';
+
 
 const Proposal: FC = () => {
     const {id} = useParams<{ id: string }>();
@@ -34,8 +37,8 @@ const Proposal: FC = () => {
         const formData = new FormData();
         formData.append('commentText', comment);
         formData.append('proposalId', id);
-        if (parentCommentId !== null) formData.append('topicId', parentCommentId.toString());
-        attachments.fileList.map((file: any) => formData.append('attachments[]', file.originFileObj));
+        if (parentCommentId !== null) formData.append('parentCommentId', parentCommentId.toString());
+        if (attachments) attachments.fileList.map((file: any) => formData.append('attachments[]', file.originFileObj));
         dispatch(leaveComment(formData));
     }, [dispatch, id, parentCommentId]);
     const renderItem = useCallback((comment: IComment) => {
@@ -55,15 +58,30 @@ const Proposal: FC = () => {
             </List.Item>
         )
     }, [likeComment, dislikeComment, onSubmitCreateCommentForm, replyTo, parentCommentId]);
+    if (!proposal) return <p>...loading</p>;
     return (
-        <Layout>
-            <Typography.Title level={3}>{proposal?.title}</Typography.Title>
-            <Typography.Paragraph>{proposal?.description}</Typography.Paragraph>
-            <CreateCommentForm onCreate={onSubmitCreateCommentForm}/>
+        <Layout.Content className={classNames.container}>
+            <Typography.Title level={3}>{proposal.title}</Typography.Title>
+            <Comment author={proposal.author}
+                     comment={proposal.description}
+                     createDate={proposal.createDate}
+                     isLiked={proposal.isLiked}
+                     isDisliked={proposal.isDisliked}
+                     likes={proposal.likes}
+                     dislikes={proposal.dislikes}
+                     onLikeComment={() => {
+                     }}
+                     onDislikeComment={() => {
+                     }}
+                     onReplyTo={() => {
+                     }}/>
             <List dataSource={proposal?.comments}
                   renderItem={renderItem}
                   key="id"/>
-        </Layout>
+            <Protected>
+                <CreateCommentForm onCreate={onSubmitCreateCommentForm}/>
+            </Protected>
+        </Layout.Content>
     )
 };
 

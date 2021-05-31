@@ -20,11 +20,13 @@ export interface ICommentDTO {
     id: IComment["id"];
     comment: IComment["comment"];
     author: IAuthor;
-    createDate: IComment["create_date"],
+
     likes: IComment["likes"];
     dislikes: IComment["dislikes"];
-    isLiked: IComment["is_liked"];
     isDisliked: IComment["is_disliked"];
+    isLiked: IComment["is_liked"];
+    createDate: IComment["create_date"],
+    parentCommentId: IComment["parent_comment_id"],
     attachments: ICommentAttachment["filename"][],
 }
 

@@ -9,7 +9,7 @@ export interface GetProposalAction {
 
 export interface SetProposalAction {
     type: typeof SET_PROPOSAL,
-    payload: IProposal
+    payload: any
 }
 
 export interface LeaveCommentAction {

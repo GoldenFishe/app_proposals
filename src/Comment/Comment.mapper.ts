@@ -16,6 +16,7 @@ export class CommentMapper {
             isDisliked: comment.is_disliked,
             isLiked: comment.is_liked,
             createDate: comment.create_date,
+            parentCommentId: comment.parent_comment_id,
             attachments: attachments.map(attachment => Utils.getAttachmentPath(attachment.filename))
         }
     }

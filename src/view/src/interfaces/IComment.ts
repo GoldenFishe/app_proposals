@@ -10,4 +10,5 @@ export interface IComment {
     isDisliked: boolean;
     isLiked: boolean;
     likes: number;
+    parentCommentId: number | null;
 }

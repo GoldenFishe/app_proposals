@@ -7,11 +7,7 @@ interface IProtected {
 
 const Protected: FC<IProtected> = ({children}) => {
     const user = useSelector((state: RootState) => state.main.user);
-    if (user !== null) {
-        return children;
-    } else {
-        return null;
-    }
+    return user !== null ? children : null;
 };
 
 export default Protected;

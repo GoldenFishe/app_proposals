@@ -22,7 +22,7 @@ const Header: FC = () => {
                 {(user === null && pathname !== routes.signUp.path) && <Link to={routes.signUp.path}>Sign-Up</Link>}
                 <Link to={routes.proposals.path}>Proposals</Link>
                 <Protected><Link to={routes.createProposal.path}>Create Proposal</Link></Protected>
-                <Protected><Link to={routes.profile.getLinkPath(user!.id)}>Profile</Link></Protected>
+                <Protected><Link to={routes.profile.getLinkPath(user?.id || '')}>Profile</Link></Protected>
             </div>
         </header>
     );

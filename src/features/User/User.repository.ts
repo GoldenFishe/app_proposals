@@ -1,7 +1,7 @@
-import {query} from "../db";
+import {query} from "../../utils/db";
 import {RefreshSessionMapper, UserMapper} from "./User.mapper";
 import {AuthTokens, IRefreshSession, IRefreshSessionDTO, IUser, IUserDTO} from "./User.types";
-import Utils from "../utils";
+import {deleteAvatarFile} from "../../utils/files";
 
 export interface IUserRepository {
     create(login: string, password: string): Promise<IUserDTO>;
@@ -67,7 +67,7 @@ export class UserRepository implements IUserRepository {
 
     async updateUser(userId: IUserDTO["id"], login: string | undefined, password: string | undefined, username: string | undefined, avatarFilename: string | undefined) {
         const userDTO = await this.getById(userId);
-        if (userDTO.avatar) Utils.deleteAvatarFile(userDTO.avatar);
+        if (userDTO.avatar) deleteAvatarFile(userDTO.avatar);
         let queryCommand = 'UPDATE users SET';
         if (login) queryCommand += ` login = '${login}'`;
         if (password) queryCommand += `${login ? ' ,' : ''} password = '${password}'`;

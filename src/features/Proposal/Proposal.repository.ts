@@ -1,4 +1,4 @@
-import {query} from "../db";
+import {query} from "../../utils/db";
 import {ProposalMapper} from "./Proposal.mapper";
 import {CommentMapper} from "../Comment/Comment.mapper";
 import {

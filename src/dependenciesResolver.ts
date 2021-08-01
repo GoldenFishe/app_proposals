@@ -1,9 +1,9 @@
-import {IUserRepository, UserRepository} from "./User/User.repository";
-import {IProposalRepository, ProposalRepository} from "./Proposal/Proposal.repository";
-import {CommentRepository, ICommentsRepository} from "./Comment/Comment.repository";
-import {IUserController, UserController} from "./User/User.controller";
-import {IProposalController, ProposalController} from "./Proposal/Proposal.controller";
-import {CommentController, ICommentController} from "./Comment/Comment.controller";
+import {IUserRepository, UserRepository} from "./features/User/User.repository";
+import {IProposalRepository, ProposalRepository} from "./features/Proposal/Proposal.repository";
+import {CommentRepository, ICommentsRepository} from "./features/Comment/Comment.repository";
+import {IUserController, UserController} from "./features/User/User.controller";
+import {IProposalController, ProposalController} from "./features/Proposal/Proposal.controller";
+import {CommentController, ICommentController} from "./features/Comment/Comment.controller";
 
 type DependencyName =
     | 'userRepository'

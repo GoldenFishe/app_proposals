@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import jwt, {Secret} from "jsonwebtoken";
 
-import {JWTPayload} from "./User/User.types";
+import {JWTPayload} from "./features/User/User.types";
 
 export function validateAuthorization(req: Request, res: Response, next: NextFunction) {
     if (req.headers.authorization) {

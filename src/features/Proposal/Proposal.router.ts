@@ -5,8 +5,8 @@ import {nanoid} from "nanoid";
 import {IProposalController} from "./Proposal.controller";
 import ProposalRoutes from "./Proposal.routes";
 import {validateCreateProposal, validateProposalId} from "./Proposal.middleware";
-import {addUserInfo, validateAuthorization} from "../middlewares";
-import dependenciesResolver from "../dependenciesResolver";
+import {addUserInfo, validateAuthorization} from "../../middlewares";
+import dependenciesResolver from "../../dependenciesResolver";
 
 const proposalController = dependenciesResolver.get('proposalController') as IProposalController;
 const proposalRouter = Router();

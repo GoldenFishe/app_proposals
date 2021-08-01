@@ -1,5 +1,5 @@
 import {IComment, ICommentAttachment, ICommentDTO} from "./Comment.types";
-import Utils from "../utils";
+import {getAttachmentPath, getAvatarPath} from "../../utils/files";
 
 export class CommentMapper {
     public static toDTO(comment: IComment, attachments: ICommentAttachment[]): ICommentDTO {
@@ -9,7 +9,7 @@ export class CommentMapper {
             author: {
                 id: comment.author_id,
                 username: comment.author_username,
-                avatar: comment.author_avatar && Utils.getAvatarPath(comment.author_avatar)
+                avatar: comment.author_avatar && getAvatarPath(comment.author_avatar)
             },
             likes: Number(comment.likes),
             dislikes: Number(comment.dislikes),
@@ -17,7 +17,7 @@ export class CommentMapper {
             isLiked: comment.is_liked,
             createDate: comment.create_date,
             parentCommentId: comment.parent_comment_id,
-            attachments: attachments.map(attachment => Utils.getAttachmentPath(attachment.filename))
+            attachments: attachments.map(attachment => getAttachmentPath(attachment.filename))
         }
     }
 }

@@ -1,4 +1,4 @@
-import {query} from "../db";
+import {query} from "../../utils/db";
 import {CommentMapper} from "./Comment.mapper";
 import {IComment, ICommentAttachment, ICommentDTO, INewComment} from "./Comment.types";
 

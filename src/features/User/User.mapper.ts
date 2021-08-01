@@ -1,5 +1,5 @@
 import {IRefreshSession, IRefreshSessionDTO, IUser, IUserDTO} from "./User.types";
-import Utils from "../utils";
+import {getAvatarPath} from "../../utils/files";
 
 export class UserMapper {
     public static toDTO(user: IUser): IUserDTO {
@@ -8,7 +8,7 @@ export class UserMapper {
             login: user.login,
             username: user.username,
             accessToken: user.access_token,
-            avatar: user.avatar_filename && Utils.getAvatarPath(user.avatar_filename)
+            avatar: user.avatar_filename && getAvatarPath(user.avatar_filename)
         }
     }
 }

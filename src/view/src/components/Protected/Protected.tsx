@@ -1,12 +1,11 @@
-import React, {FC, ReactElement} from 'react';
+import {FC, ReactElement} from 'react';
 import {useSelector} from "react-redux";
-import {RootState} from "../../rootReducer";
 
-interface IProps {
+interface IProtected {
     children: ReactElement
 }
 
-const Protected: FC<IProps> = ({children, ...rest}) => {
+const Protected: FC<IProtected> = ({children}) => {
     const user = useSelector((state: RootState) => state.main.user);
     if (user !== null) {
         return children;

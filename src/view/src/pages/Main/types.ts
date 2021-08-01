@@ -1,4 +1,4 @@
-import {IUser} from "../../interfaces/IUser";
+import {IUser} from "../../types/IUser";
 import {GET_USER} from "./actionTypes";
 
 export interface GetUserAction {

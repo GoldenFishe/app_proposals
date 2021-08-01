@@ -1,5 +1,5 @@
-import {IProposal} from "../../interfaces/IProposal";
-import {IComment} from "../../interfaces/IComment";
+import {IProposal} from "../../types/IProposal";
+import {IComment} from "../../types/IComment";
 import {DISLIKE_COMMENT, GET_PROPOSAL, LEAVE_COMMENT, LIKE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
 
 export interface GetProposalAction {

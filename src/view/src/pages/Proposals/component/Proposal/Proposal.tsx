@@ -1,9 +1,11 @@
-import React, {FC, useMemo, MouseEvent} from 'react';
-import {Card, Typography} from "antd";
+import React, {FC, MouseEvent} from 'react';
 import Like from "../../../../components/Like";
 import Dislike from "../../../../components/Dislike";
+import Title from "../../../../components/Title";
+import Paragraph from "../../../../components/Paragraph";
+import classNames from "./style.module.css";
 
-interface IProps {
+interface IProposal {
     title: string;
     description: string;
     liked: boolean;
@@ -14,30 +16,23 @@ interface IProps {
     dislike: (e: MouseEvent) => void;
 }
 
-const Proposal: FC<IProps> = ({
-                                  description,
-                                  title,
-                                  liked,
-                                  likes,
-                                  like,
-                                  disliked,
-                                  dislikes,
-                                  dislike
-                              }) => {
-    const actions = [
-        <Like liked={liked} quantity={likes} like={like}/>,
-        <Dislike disliked={disliked} quantity={dislikes} dislike={dislike}/>
-    ]
-    const cardTitle = <Typography.Title level={5} ellipsis={{rows: 2}}>{title}</Typography.Title>;
-    const cardDescription = <Typography.Paragraph ellipsis={{rows: 4}} type="secondary">{description}</Typography.Paragraph>;
+const Proposal: FC<IProposal> = ({
+                                     description,
+                                     title,
+                                     liked,
+                                     likes,
+                                     like,
+                                     disliked,
+                                     dislikes,
+                                     dislike
+                                 }) => {
     return (
-        <Card hoverable
-              style={{width: 240}}
-              actions={actions}
-              cover={<img alt="example"
-                          src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"/>}>
-            <Card.Meta title={cardTitle} description={cardDescription}/>
-        </Card>
+        <div className={classNames.proposal}>
+            <Title level={5}>{title}</Title>
+            <Paragraph>{description}</Paragraph>
+            <Like liked={liked} quantity={likes} like={like}/>,
+            <Dislike disliked={disliked} quantity={dislikes} dislike={dislike}/>
+        </div>
     );
 };
 

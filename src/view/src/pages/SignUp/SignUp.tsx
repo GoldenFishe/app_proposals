@@ -1,48 +1,52 @@
-import React, {FC, useCallback} from 'react';
+import React, {FC, FormEvent, useState} from 'react';
 import {Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Form, Input, Layout, Typography} from "antd";
 
-import {RootState} from "../../rootReducer";
 import {signUp} from "./actions";
+import Title from "../../components/Title";
+import Input from "../../components/Input";
+import {useForm} from "../../hooks/useForm";
+import Button from "../../components/Button";
 import classNames from "../SignIn/style.module.css";
-
-type SignUnForm = {
-    login: string;
-    password: string;
-}
 
 const SignUp: FC = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.main.user);
-    const onFinish = useCallback(({login, password}: SignUnForm) => dispatch(signUp(login, password)), [dispatch]);
+    const [login, setLogin] = useState("login");
+    const [password, setPassword] = useState("password");
+    const {handleInput, formData, reset} = useForm<"login" | "password">({
+        login: {
+            type: "text",
+            setter: setLogin
+        },
+        password: {
+            type: "password",
+            setter: setPassword
+        }
+    });
+    const onSignUp = (e: FormEvent) => {
+        e.preventDefault();
+        const login = formData.get("login") as string;
+        const password = formData.get("password") as string;
+        dispatch(signUp(login, password));
+        reset();
+    }
     if (user !== null) return <Redirect to="/"/>;
-
     return (
-        <Layout.Content className={classNames.container}>
-            <Typography.Title level={5}>Join Proposals</Typography.Title>
-            <Typography.Title level={2}>Create your account</Typography.Title>
-            <Form onFinish={onFinish}
-                  className={classNames.form}
-                  layout="vertical"
-                  requiredMark={false}>
-                <Form.Item label="Login"
-                           name="login"
-                           rules={[{required: true, message: 'Please input your username'}]}>
-                    <Input/>
-                </Form.Item>
-                <Form.Item label="Password"
-                           name="password"
-                           rules={[{required: true, message: 'Please input your password'}]}>
-                    <Input.Password/>
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary"
-                            htmlType="submit"
-                            className={classNames.submitButton}>Create account</Button>
-                </Form.Item>
-            </Form>
-        </Layout.Content>
+        <div className={classNames.container}>
+            <Title level={5}>Join Proposals</Title>
+            <Title level={2}>Create your account</Title>
+            <form onSubmit={onSignUp}
+                  className={classNames.form}>
+                <Input label="Login"
+                       value={login}
+                       onChange={handleInput("login")}/>
+                <Input label="Password"
+                       value={password}
+                       onChange={handleInput("password")}/>
+                <Button type="submit">Create account</Button>
+            </form>
+        </div>
     );
 };
 

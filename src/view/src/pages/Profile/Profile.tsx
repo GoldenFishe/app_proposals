@@ -1,52 +1,58 @@
-import React from 'react';
-import {Button, Form, Input, Upload} from "antd";
+import React, {FC, FormEvent, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
-import {RootState} from "../../rootReducer";
 import {updateSettings} from "./actions";
-import {Settings} from "./types";
+import {useForm} from "../../hooks/useForm";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 
-const Profile = () => {
+const Profile: FC = () => {
     const dispatch = useDispatch();
-    // const {id} = useParams<{ id: string }>();
     const user = useSelector((state: RootState) => state.main.user);
-    const onFinish = (values: Settings) => {
-        const formData = new FormData();
-        if (values.login) formData.append('login', values.login);
-        if (values.username) formData.append('username', values.username);
-        if (values.password) formData.append('password', values.password);
-        if (values.avatar) formData.append('avatar', values.avatar?.file as Blob);
+    const [login, setLogin] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const {formData, handleInput, reset} = useForm<"login" | "username" | "password" | "avatar">({
+        "login": {
+            type: "text",
+            setter: setLogin
+        },
+        "username": {
+            type: "text",
+            setter: setUsername
+        },
+        "password": {
+            type: "password",
+            setter: setPassword
+        },
+        "avatar": {
+            type: "file"
+        }
+    });
+    const onSaveSettings = (e: FormEvent) => {
+        e.preventDefault();
         dispatch(updateSettings(formData));
+        reset();
     }
     return (
-        <Form onFinish={onFinish}
-              labelCol={{span: 8}}
-              wrapperCol={{span: 9}}>
-            <Form.Item label="Login"
-                       name="login">
-                <Input/>
-            </Form.Item>
-            <Form.Item label="Username"
-                       name="username">
-                <Input/>
-            </Form.Item>
-            <Form.Item label="Password"
-                       name="password">
-                <Input.Password/>
-            </Form.Item>
-            <Form.Item label="Avatar"
-                       name="avatar">
-                <Upload listType="picture-card"
-                        beforeUpload={() => false}
-                        showUploadList={false}>
-                    +
-                </Upload>
-            </Form.Item>
-            <Form.Item wrapperCol={{offset: 8, span: 9}}>
-                <Button type="primary" htmlType="submit">Save new settings</Button>
-            </Form.Item>
-            {user?.avatar && <img src={user.avatar}/>}
-        </Form>
+        <form onSubmit={onSaveSettings}>
+            <Input label="Login"
+                   value={login}
+                   onChange={handleInput("login")}/>
+            <Input label="Username"
+                   value={username}
+                   onChange={handleInput("username")}/>
+            <Input label="Password"
+                   type="password"
+                   value={password}
+                   onChange={handleInput("password")}/>
+            <Input label="Avatar"
+                   type="file"
+                   value={""}
+                   onChange={handleInput("avatar")}/>
+            <Button type="submit">Save new settings</Button>
+            {user?.avatar && <img src={user.avatar} alt="User avatar"/>}
+        </form>
     );
 };
 

@@ -1,23 +1,23 @@
-import React, {FC, MouseEvent} from 'react';
-import {DislikeFilled, DislikeOutlined} from '@ant-design/icons';
-import {Typography} from "antd";
+import React, {FC, MouseEvent} from "react";
 
-import classNames from './style.module.css';
+import Paragraph from "../Paragraph";
+import Icon from "../Icon";
+import classNames from "./style.module.css";
 
-interface IProps {
+interface IDislike {
     disliked: boolean;
     quantity: number;
     dislike: (event: MouseEvent) => void;
 }
 
-const Dislike: FC<IProps> = ({disliked, quantity, dislike}) => {
+const Dislike: FC<IDislike> = ({disliked, quantity, dislike}) => {
     return (
         <span onClick={dislike}>
-            <Typography.Text style={{opacity: quantity > 0 ? 1 : 0}}
-                             className={classNames.quantity}>
+            <Paragraph style={{opacity: quantity > 0 ? 1 : 0}}
+                       className={classNames.quantity}>
                 {quantity || null}
-            </Typography.Text>
-            {disliked ? <DislikeFilled/> : <DislikeOutlined/>}
+            </Paragraph>
+            {disliked ? <Icon icon="dislike"/> : <Icon icon="dislike"/>}
       </span>
     );
 };

@@ -1,15 +1,13 @@
 import {Dispatch} from "redux";
-import {ThunkAction} from "redux-thunk";
 
-import {GetUserAction} from './types';
 import HttpClient from "../../httpClient";
+import {IUser} from "../../types/IUser";
+import {GetUserAction} from "./types";
 import {GET_USER} from "./actionTypes";
-import {RootState} from "../../rootReducer";
-import {IUser} from "../../interfaces/IUser";
 
-export const getUser = (): ThunkAction<void, RootState, unknown, GetUserAction> => async (dispatch: Dispatch<GetUserAction>) => {
+export const getUser = () => async (dispatch: Dispatch<GetUserAction>) => {
     try {
-        const data = await HttpClient.get<IUser>('/api/user');
+        const data = await HttpClient.get<IUser>("/api/user");
         dispatch({type: GET_USER, payload: data || null});
     } catch (err) {
         console.error(err);

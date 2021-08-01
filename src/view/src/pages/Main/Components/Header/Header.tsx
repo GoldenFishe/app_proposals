@@ -1,32 +1,30 @@
-import React, {FC} from 'react';
+import React, {FC} from "react";
 import {Link, useLocation} from "react-router-dom";
-import {Layout, Typography} from "antd";
+import {useSelector} from "react-redux";
 
 import Protected from "../../../../components/Protected";
+import Title from "../../../../components/Title";
 import classNames from "./style.module.css";
+import {routes} from "../../../../routes";
 
-interface IProps {
-    visibleSignLinks: boolean;
-    userId: number | undefined;
-}
-
-const Header: FC<IProps> = ({visibleSignLinks, userId}) => {
+const Header: FC = () => {
     const {pathname} = useLocation();
-    if (pathname === '/sign-in') return null;
+    const user = useSelector((state: RootState) => state.main.user);
+    if (pathname === "/sign-in") return null;
     return (
-        <Layout.Header className={classNames.header}>
+        <header className={classNames.header}>
             <div className={classNames.titles}>
-                <Typography.Title level={1}>Proposals</Typography.Title>
-                <Typography.Title level={5}>Make your digital dream come true</Typography.Title>
+                <Title level={1}>Proposals</Title>
+                <Title level={5}>Make your digital dream come true</Title>
             </div>
             <div className={classNames.links}>
-                {visibleSignLinks && <Link to="/sign-in">Sign-In</Link>}
-                {(visibleSignLinks && pathname !== '/sign-up') && <Link to="/sign-up">Sign-Up</Link>}
-                <Link to="/proposals">Proposals</Link>
-                <Protected><Link to="/proposals/create">Create Proposal</Link></Protected>
-                <Protected><Link to={`/profile/${userId}`}>Profile</Link></Protected>
+                {user === null && <Link to={routes.signIn.path}>Sign-In</Link>}
+                {(user === null && pathname !== routes.signUp.path) && <Link to={routes.signUp.path}>Sign-Up</Link>}
+                <Link to={routes.proposals.path}>Proposals</Link>
+                <Protected><Link to={routes.createProposal.path}>Create Proposal</Link></Protected>
+                <Protected><Link to={routes.profile.getLinkPath(user!.id)}>Profile</Link></Protected>
             </div>
-        </Layout.Header>
+        </header>
     );
 };
 

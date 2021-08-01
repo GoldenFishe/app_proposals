@@ -1,33 +1,39 @@
-import React, {FC} from "react";
-import {Button, Form, Input, Upload} from "antd";
+import React, {FC, FormEvent, useState} from "react";
 
-interface IProps {
-    onCreate: ({comment, attachments}: { comment: string, attachments: { file: File, fileList: File[] } }) => void
+import {useForm} from "../../../../hooks/useForm";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+
+interface ICreateCommentForm {
+    onCreate: (formData: FormData) => void;
 }
 
-const CreateCommentForm: FC<IProps> = ({onCreate}) => {
+const CreateCommentForm: FC<ICreateCommentForm> = ({onCreate}) => {
+    const [comment, setComment] = useState("");
+    const {formData, handleInput, reset} = useForm<"commentText" | "attachments">({
+        commentText: {
+            type: "text",
+            setter: setComment
+        },
+        attachments: {
+            type: "file"
+        }
+    });
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        onCreate(formData);
+        reset();
+    }
     return (
-        <Form onFinish={onCreate}
-              labelCol={{span: 8}}
-              wrapperCol={{span: 9}}
-              requiredMark={false}>
-            <Form.Item label="Comment"
-                       name="comment"
-                       rules={[{required: true, message: 'Please enter comment'}]}>
-                <Input.TextArea/>
-            </Form.Item>
-            <Form.Item label="Attachments"
-                       name="attachments">
-                <Upload listType="picture-card"
-                        beforeUpload={() => false}
-                        showUploadList={true}>
-                    +
-                </Upload>
-            </Form.Item>
-            <Form.Item wrapperCol={{offset: 8, span: 9}}>
-                <Button type="primary" htmlType="submit">Leave comment</Button>
-            </Form.Item>
-        </Form>
+        <form onSubmit={handleSubmit}>
+            <Input label="Comment"
+                   value={comment}
+                   onChange={handleInput("commentText")}/>
+            <Input label="Attachments"
+                   value={""}
+                   onChange={handleInput("attachments")}/>
+            <Button type="submit">Leave comment</Button>
+        </form>
     )
 };
 

@@ -1,5 +1,5 @@
 import {DISLIKE_PROPOSAL, GET_PROPOSALS, LIKE_PROPOSAL, RESET_PROPOSALS} from './actionTypes';
-import {IProposalPreview} from "../../interfaces/IProposal";
+import {IProposalPreview} from "../../types/IProposal";
 
 export interface ProposalsState {
     data: IProposalPreview[]

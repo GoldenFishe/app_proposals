@@ -3,6 +3,7 @@ import {CookieOptions, Request, Response} from "express";
 
 import {IUserRepository} from "./User.repository";
 import {GeneratedTokens, IUserDTO, JWTPayload} from "./User.types";
+import {getDataFromEnvironment} from "../../utils/env";
 
 export interface IUserController {
     signIn(req: Request, res: Response): Promise<void>;
@@ -74,8 +75,8 @@ export class UserController implements IUserController {
         const jwtPayload: JWTPayload = {userId};
         const generatedAccessToken = jwt.sign(
             jwtPayload,
-            process.env["SECRET_JWT_KEY"] as Secret,
-            {expiresIn: Number(process.env["JWT_EXP"])}
+            getDataFromEnvironment("SECRET_JWT_KEY") as Secret,
+            {expiresIn: Number(getDataFromEnvironment("JWT_EXP"))}
         );
         const refreshTokenPromise = this.userRepository.setRefreshToken(userId, Date.now().toString());
         const accessTokenPromise = this.userRepository.setAccessToken(userId, generatedAccessToken);
@@ -84,6 +85,6 @@ export class UserController implements IUserController {
     }
 
     private get refreshTokenCookieOptions(): CookieOptions {
-        return {httpOnly: true, maxAge: Number(process.env["JWT_EXP"]) * 2}
+        return {httpOnly: true, maxAge: Number(getDataFromEnvironment("JWT_EXP")) * 2}
     }
 }

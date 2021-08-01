@@ -1,11 +1,13 @@
 import {Pool} from "pg";
 
+import {getDataFromEnvironment} from "./env";
+
 const pool = new Pool({
-    user: process.env["DB_USER"],
-    host: process.env["DB_HOST"],
-    database: process.env["DB_NAME"],
-    password: process.env["DB_PASSWORD"],
-    port: Number(process.env["DB_PORT"]),
+    user: getDataFromEnvironment("DB_USER"),
+    host: getDataFromEnvironment("DB_HOST"),
+    database: getDataFromEnvironment("DB_NAME"),
+    password: getDataFromEnvironment("DB_PASSWORD"),
+    port: Number(getDataFromEnvironment("DB_PORT"))
 });
 
 export const query = async <T>(command: string, params?: string[]): Promise<T[]> => {

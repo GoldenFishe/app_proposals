@@ -2,11 +2,12 @@ import {NextFunction, Request, Response} from "express";
 import jwt, {Secret} from "jsonwebtoken";
 
 import {JWTPayload} from "./features/User/User.types";
+import {getDataFromEnvironment} from "./utils/env";
 
 export function validateAuthorization(req: Request, res: Response, next: NextFunction) {
     if (req.headers.authorization) {
         try {
-            const jwtPayload = jwt.verify(req.headers.authorization, process.env["SECRET_JWT_KEY"] as Secret) as JWTPayload;
+            const jwtPayload = jwt.verify(req.headers.authorization, getDataFromEnvironment("SECRET_JWT_KEY") as Secret) as JWTPayload;
             res.locals.userId = jwtPayload.userId;
             next();
         } catch (err) {
@@ -20,7 +21,7 @@ export function validateAuthorization(req: Request, res: Response, next: NextFun
 export function addUserInfo(req: Request, res: Response, next: NextFunction) {
     if (req.headers.authorization) {
         try {
-            const jwtPayload = jwt.verify(req.headers.authorization, process.env["SECRET_JWT_KEY"] as Secret) as JWTPayload;
+            const jwtPayload = jwt.verify(req.headers.authorization, getDataFromEnvironment("SECRET_JWT_KEY") as Secret) as JWTPayload;
             res.locals.userId = jwtPayload.userId;
         } catch (err) {
             res.locals.userId = -1;

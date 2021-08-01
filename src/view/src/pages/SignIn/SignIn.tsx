@@ -46,7 +46,7 @@ const SignIn: FC = () => {
                 <Input label="Password"
                        value={password}
                        onChange={handleInput("password")}/>
-                <Button type="submit">Sign In</Button>
+                <Button type="submit" fullWidth>Sign In</Button>
             </form>
             <Paragraph>New to Proposals? <Link to={routes.signUp.path}>Create an account.</Link></Paragraph>
         </div>

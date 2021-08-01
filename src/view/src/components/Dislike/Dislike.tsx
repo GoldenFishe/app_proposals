@@ -18,7 +18,7 @@ const Dislike: FC<IDislike> = ({disliked, quantity, dislike}) => {
                 {quantity || null}
             </Paragraph>
             {disliked ? <Icon icon="dislike"/> : <Icon icon="dislike"/>}
-      </span>
+        </span>
     );
 };
 

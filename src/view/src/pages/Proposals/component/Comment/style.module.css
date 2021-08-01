@@ -1,0 +1,6 @@
+.quantity {
+    transition: opacity 0.2s ease;
+    display: inline-block;
+    min-width: 10px;
+    margin-right: 5px;
+}

@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 
-type Icons = "like" | "dislike";
+type Icons = "like" | "dislike" | "comment";
 
 interface IIcon {
     icon: Icons
@@ -12,6 +12,8 @@ const Icon: FC<IIcon> = ({icon}) => {
             return <>👍</>;
         case "dislike":
             return <>👎</>;
+        case "comment":
+            return <>💬</>
         default:
             return null;
     }

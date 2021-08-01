@@ -1,0 +1,22 @@
+.proposal {
+    width: 640px;
+    border-radius: 5px;
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.proposal:hover {
+    border: 1px solid var(--accent-color);
+}
+
+.actions {
+    display: flex;
+    flex-flow: row;
+    margin-top: 10px;
+}
+
+.actions > *:not(:last-child) {
+    margin-right: 20px;
+}

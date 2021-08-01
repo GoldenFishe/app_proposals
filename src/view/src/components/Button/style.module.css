@@ -1,0 +1,14 @@
+.button {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color);
+    cursor: pointer;
+    background: #ffffff;
+    height: 40px;
+}
+
+.fullWidth {
+    width: 100%;
+}

@@ -18,7 +18,7 @@ const Like: FC<ILike> = ({liked, quantity, like}) => {
                 {quantity || null}
             </Paragraph>
             {liked ? <Icon icon="like"/> : <Icon icon="like"/>}
-      </span>
+        </span>
     );
 };
 

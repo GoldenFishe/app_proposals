@@ -40,7 +40,8 @@ const Proposals: FC = () => {
                                       like={like(proposal.id)}
                                       disliked={proposal.isDisliked}
                                       dislikes={proposal.dislikes}
-                                      dislike={dislike(proposal.id)}/>
+                                      dislike={dislike(proposal.id)}
+                                      commentsQuantity={proposal.commentsQuantity}/>
                         </Link>
                     </li>
                 ))}

@@ -1,5 +1,7 @@
 import React, {FC, ChangeEvent} from "react";
 
+import classNames from './style.module.css';
+
 interface IInput {
     label: string;
     type?: string;
@@ -24,11 +26,12 @@ const Input: FC<IInput> = ({
         }
     }
     return (
-        <label>
-            {label}
+        <label className={classNames.wrapper}>
+            <span className={classNames.label}>{label}</span>
             <input type={type}
                    value={value}
                    multiple={multiple}
+                   className={classNames.input}
                    onChange={handleOnChange}/>
         </label>
 

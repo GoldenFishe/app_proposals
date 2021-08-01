@@ -1,8 +1,10 @@
 import React, {FC, MouseEvent} from 'react';
+
 import Like from "../../../../components/Like";
 import Dislike from "../../../../components/Dislike";
 import Title from "../../../../components/Title";
 import Paragraph from "../../../../components/Paragraph";
+import Comment from "../Comment/Comment";
 import classNames from "./style.module.css";
 
 interface IProposal {
@@ -14,6 +16,7 @@ interface IProposal {
     disliked: boolean;
     dislikes: number;
     dislike: (e: MouseEvent) => void;
+    commentsQuantity: number;
 }
 
 const Proposal: FC<IProposal> = ({
@@ -24,14 +27,22 @@ const Proposal: FC<IProposal> = ({
                                      like,
                                      disliked,
                                      dislikes,
-                                     dislike
+                                     dislike,
+                                     commentsQuantity
                                  }) => {
     return (
         <div className={classNames.proposal}>
-            <Title level={5}>{title}</Title>
+            <Title level={3}>{title}</Title>
             <Paragraph>{description}</Paragraph>
-            <Like liked={liked} quantity={likes} like={like}/>,
-            <Dislike disliked={disliked} quantity={dislikes} dislike={dislike}/>
+            <div className={classNames.actions}>
+                <Comment quantity={commentsQuantity}/>
+                <Like liked={liked}
+                      quantity={likes}
+                      like={like}/>
+                <Dislike disliked={disliked}
+                         quantity={dislikes}
+                         dislike={dislike}/>
+            </div>
         </div>
     );
 };

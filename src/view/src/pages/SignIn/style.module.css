@@ -10,6 +10,6 @@
     width: 340px;
 }
 
-.submitButton {
-    width: 100%;
+.form > * {
+    margin-bottom: 20px;
 }

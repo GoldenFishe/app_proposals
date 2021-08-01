@@ -1,0 +1,19 @@
+.wrapper {
+    display: flex;
+    flex-flow: column;
+}
+
+.label {
+    margin-bottom: 10px;
+}
+
+.input {
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color);
+    outline: unset;
+    background: #ffffff;
+    padding: 10px;
+    font-size: inherit;
+    font-family: inherit;
+}

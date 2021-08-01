@@ -44,7 +44,7 @@ const SignUp: FC = () => {
                 <Input label="Password"
                        value={password}
                        onChange={handleInput("password")}/>
-                <Button type="submit">Create account</Button>
+                <Button type="submit" fullWidth>Create account</Button>
             </form>
         </div>
     );

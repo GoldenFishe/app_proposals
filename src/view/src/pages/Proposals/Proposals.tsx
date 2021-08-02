@@ -4,8 +4,8 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {dislikeProposal, getProposals, likeProposal, resetProposals} from "./actions";
 import Proposal from "./component/Proposal/Proposal";
-import Title from "../../components/Title";
 import {routes} from "../../routes";
+import classNames from './style.module.css';
 
 const Proposals: FC = () => {
     const dispatch = useDispatch();
@@ -27,26 +27,23 @@ const Proposals: FC = () => {
         }
     }
     return (
-        <div>
-            <Title level={1}>Proposals</Title>
-            <ul>
-                {proposals.map(proposal => (
-                    <li>
-                        <Link to={routes.proposal.getLinkPath(proposal.id)} key={proposal.id}>
-                            <Proposal title={proposal.title}
-                                      description={proposal.description}
-                                      liked={proposal.isLiked}
-                                      likes={proposal.likes}
-                                      like={like(proposal.id)}
-                                      disliked={proposal.isDisliked}
-                                      dislikes={proposal.dislikes}
-                                      dislike={dislike(proposal.id)}
-                                      commentsQuantity={proposal.commentsQuantity}/>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <ul className={classNames.container}>
+            {proposals.map(proposal => (
+                <li className={classNames.proposalWrapper} key={proposal.id}>
+                    <Link to={routes.proposal.getLinkPath(proposal.id)}>
+                        <Proposal title={proposal.title}
+                                  description={proposal.description}
+                                  liked={proposal.isLiked}
+                                  likes={proposal.likes}
+                                  like={like(proposal.id)}
+                                  disliked={proposal.isDisliked}
+                                  dislikes={proposal.dislikes}
+                                  dislike={dislike(proposal.id)}
+                                  commentsQuantity={proposal.commentsQuantity}/>
+                    </Link>
+                </li>
+            ))}
+        </ul>
     );
 };
 

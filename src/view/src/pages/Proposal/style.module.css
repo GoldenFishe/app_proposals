@@ -1,4 +1,8 @@
 .container {
-    width: 75%;
+    width: 640px;
     margin: 0 auto;
+}
+
+.comment:not(:last-child) {
+    margin-bottom: 10px;
 }

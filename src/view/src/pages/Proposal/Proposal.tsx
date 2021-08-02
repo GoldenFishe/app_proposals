@@ -12,14 +12,13 @@ import {
     dislikeComment as dislikeCommentAction,
     resetProposal
 } from "./actions";
-import Title from "../../components/Title";
 import classNames from "./style.module.css";
 
 const Proposal: FC = () => {
+    const dispatch = useDispatch();
     const {id} = useParams<{ id: string }>();
     const [parentCommentId, setParentCommentId] = useState<number | null>(null);
     const proposal = useSelector((state: RootState) => state.proposal.data);
-    const dispatch = useDispatch();
     useEffect(() => {
         if (proposal === null) {
             dispatch(getProposal(Number(id)));
@@ -33,7 +32,6 @@ const Proposal: FC = () => {
     const likeComment = (commentId: number) => () => dispatch(likeCommentAction(commentId));
     const dislikeComment = (commentId: number) => () => dispatch(dislikeCommentAction(commentId));
     const replyTo = (commentId: number) => () => setParentCommentId(commentId);
-
     const onSubmitCreateCommentForm = (formData: FormData) => {
         formData.append("proposalId", id);
         if (parentCommentId !== null) formData.append("parentCommentId", parentCommentId.toString());
@@ -42,7 +40,6 @@ const Proposal: FC = () => {
     if (!proposal) return <p>...loading</p>;
     return (
         <div className={classNames.container}>
-            <Title level={3}>{proposal.title}</Title>
             <Comment author={proposal.author}
                      comment={proposal.description}
                      createDate={proposal.createDate}
@@ -58,7 +55,7 @@ const Proposal: FC = () => {
                      }}/>
             <ul>
                 {proposal.comments.map(comment => (
-                    <ul key={comment.id}>
+                    <li key={comment.id} className={classNames.comment}>
                         <Comment author={comment.author}
                                  comment={comment.comment}
                                  createDate={new Date(comment.createDate).toDateString()}
@@ -70,7 +67,7 @@ const Proposal: FC = () => {
                                  onDislikeComment={dislikeComment(comment.id)}
                                  onReplyTo={replyTo(comment.id)}/>
                         {comment.id === parentCommentId && <CreateCommentForm onCreate={onSubmitCreateCommentForm}/>}
-                    </ul>
+                    </li>
                 ))}
             </ul>
             <Protected>

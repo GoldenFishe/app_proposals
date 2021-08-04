@@ -6,6 +6,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {useForm} from "../../hooks/useForm";
 import classNames from "./style.module.css";
+import Uploader from "../../components/Uploader/Uploader";
 
 const CreateProposal: FC = () => {
     const dispatch = useDispatch();
@@ -46,11 +47,9 @@ const CreateProposal: FC = () => {
             <Input label="Topic"
                    value={topic}
                    onChange={handleInput("topic")}/>
-            <Input label="Attachments"
-                   type="file"
-                   value={""}
-                   multiple
-                   onChange={handleInput("attachments")}/>
+            <Uploader label="Attachments"
+                      multiple
+                      onChange={handleInput("attachments")}/>
             <Button type="submit">
                 Create proposal
             </Button>

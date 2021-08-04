@@ -7,7 +7,7 @@ interface IInput {
     type?: string;
     value: string;
     multiple?: boolean;
-    onChange: <T>(value: T extends "file" ? FileList : string) => void;
+    onChange: (value: string) => void;
 }
 
 const Input: FC<IInput> = ({
@@ -18,12 +18,8 @@ const Input: FC<IInput> = ({
                                onChange
                            }) => {
     const handleOnChange = (e: ChangeEvent) => {
-        const input = e.target as HTMLInputElement;
-        if (type === "file") {
-            onChange<typeof type>(input.files as FileList)
-        } else {
-            onChange<typeof type>(input.value);
-        }
+        const value = (e.target as HTMLInputElement).value;
+        onChange(value);
     }
     return (
         <label className={classNames.wrapper}>

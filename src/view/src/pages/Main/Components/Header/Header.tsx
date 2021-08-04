@@ -10,7 +10,7 @@ import classNames from "./style.module.css";
 const Header: FC = () => {
     const {pathname} = useLocation();
     const user = useSelector((state: RootState) => state.main.user);
-    if (pathname === "/sign-in") return null;
+    if (pathname === routes.signIn.path || pathname === routes.signUp.path) return null;
     const isUserAuthorized = user !== null;
     return (
         <header className={classNames.header}>
@@ -20,10 +20,11 @@ const Header: FC = () => {
                 </Link>
             </div>
             <div className={classNames.links}>
+                <Link to={routes.createProposal.path}>Create Proposal</Link>
                 {!isUserAuthorized && (
                     <Link to={routes.signIn.path}>Sign-In</Link>
                 )}
-                {(!isUserAuthorized && pathname !== routes.signUp.path) && (
+                {!isUserAuthorized && (
                     <Link to={routes.signUp.path}>Sign-Up</Link>
                 )}
                 <Protected>

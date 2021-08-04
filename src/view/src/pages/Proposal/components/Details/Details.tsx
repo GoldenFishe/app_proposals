@@ -1,13 +1,15 @@
-import React, {FC, MouseEvent} from "react";
+import React, {FC, MouseEvent} from 'react';
+import {Link} from "react-router-dom";
 
-import {IAuthor} from "../../../../types/IUser";
+import Paragraph from "../../../../components/Paragraph";
 import Like from "../../../../components/Like";
 import Dislike from "../../../../components/Dislike";
-import Paragraph from "../../../../components/Paragraph";
+import {IAuthor} from "../../../../types/IUser";
 import {formatDateTime} from "../../../../utils/dateTime";
-import classNames from "./style.module.css";
+import classNames from './style.module.css';
+import {routes} from "../../../../routes";
 
-interface IComment {
+interface IDetails {
     author: IAuthor;
     comment: string;
     createDate: string;
@@ -17,10 +19,9 @@ interface IComment {
     dislikes: number;
     onLikeComment: (e: MouseEvent) => void;
     onDislikeComment: (e: MouseEvent) => void;
-    onReplyTo: (e: MouseEvent) => void;
 }
 
-const Comment: FC<IComment> = ({
+const Details: FC<IDetails> = ({
                                    author,
                                    comment,
                                    createDate,
@@ -29,13 +30,14 @@ const Comment: FC<IComment> = ({
                                    likes,
                                    dislikes,
                                    onLikeComment,
-                                   onDislikeComment,
-                                   onReplyTo
+                                   onDislikeComment
                                }) => {
     return (
-        <li className={classNames.comment}>
+        <div className={classNames.details}>
             <div className={classNames.meta}>
-                <Paragraph>{author.username}</Paragraph>
+                <Link to={routes.profile.getLinkPath(author.id)}>
+                    <Paragraph>{author.username}</Paragraph>
+                </Link>
                 <Paragraph>{formatDateTime(createDate)}</Paragraph>
             </div>
             <div className={classNames.text}>
@@ -44,15 +46,9 @@ const Comment: FC<IComment> = ({
             <div className={classNames.actions}>
                 <Like quantity={likes} liked={isLiked} like={onLikeComment}/>
                 <Dislike quantity={dislikes} disliked={isDisliked} dislike={onDislikeComment}/>
-                <span onClick={onReplyTo}>Reply to</span>
             </div>
-        </li>
-        // <AntdComment avatar={author.avatar}
-        //              author={author.username}
-        //              content={comment}
-        //              datetime={createDate}
-        //              actions={actions}/>
+        </div>
     );
 };
 
-export default Comment;
+export default Details;

@@ -3,6 +3,10 @@
     flex-flow: column;
 }
 
+.wrapper:not(:last-child) {
+    margin-bottom: 10px;
+}
+
 .label {
     margin-bottom: 10px;
 }

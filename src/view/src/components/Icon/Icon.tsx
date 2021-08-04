@@ -1,22 +1,31 @@
 import React, {FC} from "react";
 
-type Icons = "like" | "dislike" | "comment";
+type Icons = "like" | "dislike" | "comment" | "inbox";
 
 interface IIcon {
-    icon: Icons
+    icon: Icons;
+    size?: number;
 }
 
-const Icon: FC<IIcon> = ({icon}) => {
+const Icon: FC<IIcon> = ({icon, size = 15}) => {
+    let i = null;
     switch (icon) {
         case "like":
-            return <>👍</>;
+            i = "👍";
+            break;
         case "dislike":
-            return <>👎</>;
+            i = "👎";
+            break;
         case "comment":
-            return <>💬</>
+            i = "💬";
+            break;
+        case "inbox":
+            i = "📥";
+            break;
         default:
             return null;
     }
+    return <span style={{fontSize: `${size}px`}}>{i}</span>
 };
 
 export default Icon;

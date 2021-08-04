@@ -5,6 +5,7 @@ import Comment from "./components/Comment/Comment";
 
 import CreateCommentForm from "./components/CreateCommentForm/CreateCommentForm";
 import Protected from "../../components/Protected";
+import Details from "./components/Details/Details";
 import {
     getProposal,
     leaveComment,
@@ -40,7 +41,7 @@ const Proposal: FC = () => {
     if (!proposal) return <p>...loading</p>;
     return (
         <div className={classNames.container}>
-            <Comment author={proposal.author}
+            <Details author={proposal.author}
                      comment={proposal.description}
                      createDate={proposal.createDate}
                      isLiked={proposal.isLiked}
@@ -50,8 +51,6 @@ const Proposal: FC = () => {
                      onLikeComment={() => {
                      }}
                      onDislikeComment={() => {
-                     }}
-                     onReplyTo={() => {
                      }}/>
             <ul>
                 {proposal.comments.map(comment => (

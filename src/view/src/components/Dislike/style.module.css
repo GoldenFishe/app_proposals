@@ -1,3 +1,7 @@
+.dislike {
+    cursor: pointer;
+}
+
 .quantity {
     transition: opacity 0.2s ease;
     display: inline-block;

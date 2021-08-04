@@ -3,9 +3,9 @@ import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
 import Header from "./Components/Header/Header";
+import Container from "../../components/Container/Container";
 import {getUser} from "./actions";
 import {routes, defaultRoute} from "../../routes";
-import classNames from "./style.module.css";
 
 const Main: FC = () => {
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const Main: FC = () => {
         }
     }, [user, dispatch]);
     return (
-        <div className={classNames.container}>
+        <Container>
             <BrowserRouter>
                 <Header/>
                 <Switch>
@@ -27,7 +27,7 @@ const Main: FC = () => {
                     <Redirect to={defaultRoute}/>
                 </Switch>
             </BrowserRouter>
-        </div>
+        </Container>
     );
 };
 

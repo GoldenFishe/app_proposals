@@ -1,0 +1,7 @@
+.previewItem {
+    position: relative;
+    height: 120px;
+    min-width: 120px;
+    border: 1px solid var(--accent-color);
+    animation: fadeIn 1s ease-in-out;
+}

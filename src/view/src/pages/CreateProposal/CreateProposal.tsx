@@ -2,11 +2,11 @@ import React, {FC, FormEvent, useState} from "react";
 import {useDispatch} from "react-redux";
 
 import {createProposal} from "../Proposal/actions";
+import {useForm} from "../../hooks/useForm";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-import {useForm} from "../../hooks/useForm";
-import classNames from "./style.module.css";
 import Uploader from "../../components/Uploader/Uploader";
+import classNames from "./style.module.css";
 
 const CreateProposal: FC = () => {
     const dispatch = useDispatch();

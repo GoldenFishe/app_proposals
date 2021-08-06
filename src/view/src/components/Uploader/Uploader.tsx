@@ -1,7 +1,8 @@
-import React, {ChangeEvent, FC} from 'react';
+import React, {ChangeEvent, FC, useState, ReactElement} from "react";
 
-import classNames from './style.module.css';
 import Icon from "../Icon";
+import PreviewItem from "./components/PreviewItem/PreviewItem";
+import classNames from "./style.module.css";
 
 interface IUploader {
     label: string;
@@ -10,9 +11,23 @@ interface IUploader {
 }
 
 const Uploader: FC<IUploader> = ({label, multiple, onChange}) => {
+    const [previewFiles, setPreviewFiles] = useState<FileList>();
     const handleOnChange = (e: ChangeEvent) => {
         const input = e.target as HTMLInputElement;
-        onChange(input.files as FileList);
+        const files = input.files as FileList;
+        setPreviewFiles(files);
+        onChange(files);
+    }
+    const renderPreview = () => {
+        const imgs: Array<ReactElement> = [];
+        if (previewFiles !== undefined) {
+            for (let i = 0; i < previewFiles.length; i++) {
+                const file = previewFiles[i];
+                const img = <PreviewItem file={file} key={file.name}/>
+                imgs.push(img);
+            }
+        }
+        return imgs;
     }
     return (
         <div className={classNames.uploader}>
@@ -24,6 +39,9 @@ const Uploader: FC<IUploader> = ({label, multiple, onChange}) => {
                        onChange={handleOnChange}/>
                 <Icon icon="inbox" size={45}/>
             </label>
+            <div className={classNames.preview}>
+                {renderPreview()}
+            </div>
         </div>
     );
 };

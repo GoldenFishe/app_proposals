@@ -21,9 +21,17 @@
     background: #ffffff;
     border-radius: 5px;
     border: 1px dashed var(--accent-color);
+    cursor: pointer;
 }
 
 .input {
     height: 0;
     visibility: hidden;
+}
+
+.preview {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 20px 0;
+    gap: 20px;
 }

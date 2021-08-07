@@ -21,15 +21,11 @@ const Proposal: FC = () => {
     const [parentCommentId, setParentCommentId] = useState<number | null>(null);
     const proposal = useSelector((state: RootState) => state.proposal.data);
     useEffect(() => {
-        if (proposal === null) {
-            dispatch(getProposal(Number(id)));
-        }
+        dispatch(getProposal(Number(id)));
         return () => {
-            if (proposal !== null) {
-                dispatch(resetProposal());
-            }
+            dispatch(resetProposal());
         }
-    }, [id, proposal, dispatch]);
+    }, [dispatch, id]);
     const likeComment = (commentId: number) => () => dispatch(likeCommentAction(commentId));
     const dislikeComment = (commentId: number) => () => dispatch(dislikeCommentAction(commentId));
     const replyTo = (commentId: number) => () => setParentCommentId(commentId);
@@ -41,27 +37,11 @@ const Proposal: FC = () => {
     if (!proposal) return <p>...loading</p>;
     return (
         <div className={classNames.container}>
-            <Details author={proposal.author}
-                     comment={proposal.description}
-                     createDate={proposal.createDate}
-                     isLiked={proposal.isLiked}
-                     isDisliked={proposal.isDisliked}
-                     likes={proposal.likes}
-                     dislikes={proposal.dislikes}
-                     onLikeComment={() => {
-                     }}
-                     onDislikeComment={() => {
-                     }}/>
+            <Details proposal={proposal}/>
             <ul>
                 {proposal.comments.map(comment => (
                     <li key={comment.id} className={classNames.comment}>
-                        <Comment author={comment.author}
-                                 comment={comment.comment}
-                                 createDate={new Date(comment.createDate).toDateString()}
-                                 isLiked={comment.isLiked}
-                                 isDisliked={comment.isDisliked}
-                                 likes={comment.likes}
-                                 dislikes={comment.dislikes}
+                        <Comment comment={comment}
                                  onLikeComment={likeComment(comment.id)}
                                  onDislikeComment={dislikeComment(comment.id)}
                                  onReplyTo={replyTo(comment.id)}/>

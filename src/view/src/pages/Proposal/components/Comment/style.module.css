@@ -17,6 +17,7 @@
 .meta, .actions {
     display: flex;
     flex-flow: row;
+    align-items: center;
 }
 
 .text {

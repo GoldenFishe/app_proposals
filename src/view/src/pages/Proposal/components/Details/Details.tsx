@@ -1,52 +1,36 @@
-import React, {FC, MouseEvent} from 'react';
+import React, {FC} from 'react';
 import {Link} from "react-router-dom";
 
 import Paragraph from "../../../../components/Paragraph";
-import Like from "../../../../components/Like";
-import Dislike from "../../../../components/Dislike";
-import {IAuthor} from "../../../../types/IUser";
+import Avatar from "../../../../components/Avatar/Avatar";
 import {formatDateTime} from "../../../../utils/dateTime";
-import classNames from './style.module.css';
 import {routes} from "../../../../constants/routes";
+import {IProposal} from "../../../../types/IProposal";
+import classNames from './style.module.css';
 
 interface IDetails {
-    author: IAuthor;
-    comment: string;
-    createDate: string;
-    isLiked: boolean;
-    isDisliked: boolean;
-    likes: number;
-    dislikes: number;
-    onLikeComment: (e: MouseEvent) => void;
-    onDislikeComment: (e: MouseEvent) => void;
+    proposal: IProposal;
 }
 
-const Details: FC<IDetails> = ({
-                                   author,
-                                   comment,
-                                   createDate,
-                                   isLiked,
-                                   isDisliked,
-                                   likes,
-                                   dislikes,
-                                   onLikeComment,
-                                   onDislikeComment
-                               }) => {
+const Details: FC<IDetails> = ({proposal}) => {
+    const {
+        author,
+        createDate,
+        description
+    } = proposal;
     return (
         <div className={classNames.details}>
             <div className={classNames.meta}>
+                <Avatar src={author.avatar} size="s"/>
                 <Link to={routes.profile.getLinkPath(author.id)}>
                     <Paragraph>{author.username}</Paragraph>
                 </Link>
                 <Paragraph>{formatDateTime(createDate)}</Paragraph>
             </div>
             <div className={classNames.text}>
-                <Paragraph>{comment}</Paragraph>
+                <Paragraph>{description}</Paragraph>
             </div>
-            <div className={classNames.actions}>
-                <Like quantity={likes} liked={isLiked} like={onLikeComment}/>
-                <Dislike quantity={dislikes} disliked={isDisliked} dislike={onDislikeComment}/>
-            </div>
+            <div className={classNames.actions}/>
         </div>
     );
 };

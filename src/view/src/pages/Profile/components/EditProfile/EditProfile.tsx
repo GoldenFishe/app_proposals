@@ -9,6 +9,7 @@ import Uploader from "../../../../components/Uploader/Uploader";
 import Button from "../../../../components/Button";
 import {IUser} from "../../../../types/IUser";
 import classNames from "../../style.module.css";
+import Avatar from "../../../../components/Avatar/Avatar";
 
 interface IEditProfile {
     userProfile: IUser
@@ -42,6 +43,7 @@ const EditProfile: FC<IEditProfile> = ({userProfile}) => {
     }
     return (
         <div className={classNames.container}>
+            <Avatar src={userProfile.avatar} size="m"/>
             <Form onSubmit={onSaveSettings}>
                 <Input label="Login"
                        value={login}
@@ -56,7 +58,6 @@ const EditProfile: FC<IEditProfile> = ({userProfile}) => {
                 <Uploader label="Avatar"
                           onChange={handleInput("avatar")}/>
                 <Button type="submit">Save new settings</Button>
-                {userProfile.avatar && <img src={userProfile.avatar} alt="User avatar"/>}
             </Form>
         </div>
     );

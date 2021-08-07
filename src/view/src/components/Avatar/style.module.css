@@ -1,0 +1,15 @@
+.avatar {
+    background: #898989;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.medium {
+    width: 200px;
+    height: 200px;
+}
+
+.small {
+    width: 40px;
+    height: 40px;
+}

@@ -2,14 +2,34 @@ import {Dispatch} from "redux";
 
 import {IUser} from "../../types/IUser";
 import HttpClient from "../../httpClient";
-import {GET_USER} from "../Main/actionTypes";
-import {GetUserAction} from "../Main/types";
+import {GET_USER_PROFILE, GET_VIEW_PROFILE, RESET_VIEW_PROFILE} from "./actionTypes";
+import {GetUserProfileAction, GetViewProfileAction} from "./types";
 
-export const updateSettings = (settings: FormData) => async (dispatch: Dispatch<GetUserAction>) => {
+export const updateProfile = (settings: FormData) => async (dispatch: Dispatch<GetUserProfileAction>) => {
     try {
-        const user = await HttpClient.post<IUser>('/api/user', settings);
-        dispatch({type: GET_USER, payload: user});
+        const user = await HttpClient.post<IUser>("/api/user", settings);
+        dispatch({type: GET_USER_PROFILE, payload: user});
     } catch (err) {
         console.error(err);
     }
 }
+
+export const getUserProfile = () => async (dispatch: Dispatch<GetUserProfileAction>) => {
+    try {
+        const data = await HttpClient.get<IUser>("/api/user");
+        dispatch({type: GET_USER_PROFILE, payload: data || null});
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const getViewProfile = (id: number) => async (dispatch: Dispatch<GetViewProfileAction>) => {
+    try {
+        const user = await HttpClient.get<IUser>(`/api/user/${id}`);
+        dispatch({type: GET_VIEW_PROFILE, payload: user});
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const resetViewProfile = () => ({type: RESET_VIEW_PROFILE})

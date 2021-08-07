@@ -9,7 +9,6 @@ import {
 } from './types';
 import HttpClient from "../../httpClient";
 import {DISLIKE_COMMENT, GET_PROPOSAL, LEAVE_COMMENT, LIKE_COMMENT, RESET_PROPOSAL, SET_PROPOSAL} from "./actionTypes";
-
 import {IProposal} from "../../types/IProposal";
 import {IComment} from "../../types/IComment";
 
@@ -33,7 +32,7 @@ export const createProposal = (proposalParams: FormData) => async (dispatch: Dis
 
 export const leaveComment = (commentParams: FormData) => async (dispatch: Dispatch<LeaveCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment[]>("/api/comments", commentParams);
+        const data = await HttpClient.post<IComment[]>("/api/comments", commentParams, true);
         dispatch({type: LEAVE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);
@@ -42,7 +41,7 @@ export const leaveComment = (commentParams: FormData) => async (dispatch: Dispat
 
 export const likeComment = (commentId: number) => async (dispatch: Dispatch<LikeCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment[]>("/api/comments/like", {commentId});
+        const data = await HttpClient.post<IComment[]>("/api/comments/like", {commentId}, true);
         dispatch({type: LIKE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);
@@ -51,7 +50,7 @@ export const likeComment = (commentId: number) => async (dispatch: Dispatch<Like
 
 export const dislikeComment = (commentId: number) => async (dispatch: Dispatch<DislikeCommentAction>) => {
     try {
-        const data = await HttpClient.post<IComment[]>("/api/comments/dislike", {commentId});
+        const data = await HttpClient.post<IComment[]>("/api/comments/dislike", {commentId}, true);
         dispatch({type: DISLIKE_COMMENT, payload: data});
     } catch (err) {
         console.error(err);

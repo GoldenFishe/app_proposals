@@ -1,4 +1,4 @@
-import React, {FC, FormEvent, useState} from "react";
+import React, {FC, useState} from "react";
 import {useDispatch} from "react-redux";
 
 import {createProposal} from "../Proposal/actions";
@@ -6,6 +6,9 @@ import {useForm} from "../../hooks/useForm";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Uploader from "../../components/Uploader/Uploader";
+import Form from "../../components/Form/Form";
+import Textarea from "../../components/Textarea/Textarea";
+import {proposal} from "../../constants/constraints";
 import classNames from "./style.module.css";
 
 const CreateProposal: FC = () => {
@@ -30,30 +33,37 @@ const CreateProposal: FC = () => {
             type: "file"
         }
     })
-    const onCreateProposal = (e: FormEvent) => {
-        e.preventDefault();
+    const onCreateProposal = () => {
         dispatch(createProposal(formData));
         reset();
     };
     return (
-        <form className={classNames.form}
-              onSubmit={onCreateProposal}>
-            <Input label="Title"
-                   value={title}
-                   onChange={handleInput("title")}/>
-            <Input label="Description"
-                   value={description}
-                   onChange={handleInput("description")}/>
-            <Input label="Topic"
-                   value={topic}
-                   onChange={handleInput("topic")}/>
-            <Uploader label="Attachments"
-                      multiple
-                      onChange={handleInput("attachments")}/>
-            <Button type="submit">
-                Create proposal
-            </Button>
-        </form>
+        <div className={classNames.container}>
+            <Form onSubmit={onCreateProposal}>
+                <Input label="Title"
+                       value={title}
+                       required
+                       minLength={proposal.title.minLength}
+                       maxLength={proposal.title.maxLength}
+                       onChange={handleInput("title")}/>
+                <Input label="Topic"
+                       value={topic}
+                       required
+                       onChange={handleInput("topic")}/>
+                <Textarea label="Description"
+                          value={description}
+                          required
+                          minLength={proposal.description.minLength}
+                          maxLength={proposal.description.maxLength}
+                          onChange={handleInput("description")}/>
+                <Uploader label="Attachments"
+                          multiple
+                          onChange={handleInput("attachments")}/>
+                <Button type="submit">
+                    Create proposal
+                </Button>
+            </Form>
+        </div>
     );
 };
 

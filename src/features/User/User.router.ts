@@ -42,6 +42,11 @@ userRouter.get(
     (req: Request, res: Response) => userController.getUserInfo(req, res)
 );
 
+userRouter.get(
+    UserRoutes.GET_USER,
+    (req: Request, res: Response) => userController.getUserInfoById(req, res)
+);
+
 userRouter.post(
     UserRoutes.UPDATE_INFO,
     validateAuthorization,

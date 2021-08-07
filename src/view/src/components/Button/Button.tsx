@@ -6,19 +6,25 @@ interface IButton {
     type?: "button" | "submit";
     fullWidth?: boolean;
     onClick?: (e: MouseEvent) => void;
+    disabled?: boolean;
+    className?: string;
 }
 
 const Button: FC<IButton> = ({
                                  type = "button",
                                  onClick,
                                  fullWidth,
+                                 disabled,
+                                 className,
                                  children
                              }) => {
-    let className = classNames.button;
-    if (fullWidth) className += ` ${classNames.fullWidth}`;
+    let combinedClassName = classNames.button;
+    if (fullWidth) combinedClassName += ` ${classNames.fullWidth}`;
+    if (className) combinedClassName += ` ${className}`;
     return (
         <button type={type}
-                className={className}
+                className={combinedClassName}
+                disabled={disabled}
                 onClick={onClick}>
             {children}
         </button>

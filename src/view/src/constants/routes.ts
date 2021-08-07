@@ -1,11 +1,11 @@
 import {FC} from "react";
 
-import SignIn from "./pages/SignIn/SignIn";
-import SignUp from "./pages/SignUp/SignUp";
-import Proposals from "./pages/Proposals/Proposals";
-import CreateProposal from "./pages/CreateProposal/CreateProposal";
-import Proposal from "./pages/Proposal/Proposal";
-import Profile from "./pages/Profile/Profile";
+import SignIn from "../pages/SignIn/SignIn";
+import SignUp from "../pages/SignUp/SignUp";
+import Proposals from "../pages/Proposals/Proposals";
+import CreateProposal from "../pages/CreateProposal/CreateProposal";
+import Proposal from "../pages/Proposal/Proposal";
+import Profile from "../pages/Profile/Profile";
 
 type Route = {
     path: string;

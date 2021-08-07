@@ -6,6 +6,8 @@ import Dislike from "../../../../components/Dislike";
 import Paragraph from "../../../../components/Paragraph";
 import {formatDateTime} from "../../../../utils/dateTime";
 import classNames from "./style.module.css";
+import {routes} from "../../../../constants/routes";
+import {Link} from "react-router-dom";
 
 interface IComment {
     author: IAuthor;
@@ -33,9 +35,11 @@ const Comment: FC<IComment> = ({
                                    onReplyTo
                                }) => {
     return (
-        <li className={classNames.comment}>
+        <div className={classNames.comment}>
             <div className={classNames.meta}>
-                <Paragraph>{author.username}</Paragraph>
+                <Link to={routes.profile.getLinkPath(author.id)}>
+                    <Paragraph>{author.username}</Paragraph>
+                </Link>
                 <Paragraph>{formatDateTime(createDate)}</Paragraph>
             </div>
             <div className={classNames.text}>
@@ -46,12 +50,7 @@ const Comment: FC<IComment> = ({
                 <Dislike quantity={dislikes} disliked={isDisliked} dislike={onDislikeComment}/>
                 <span onClick={onReplyTo}>Reply to</span>
             </div>
-        </li>
-        // <AntdComment avatar={author.avatar}
-        //              author={author.username}
-        //              content={comment}
-        //              datetime={createDate}
-        //              actions={actions}/>
+        </div>
     );
 };
 

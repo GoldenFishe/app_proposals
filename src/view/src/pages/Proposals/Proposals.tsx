@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {dislikeProposal, getProposals, likeProposal, resetProposals} from "./actions";
 import Proposal from "./component/Proposal/Proposal";
-import {routes} from "../../routes";
+import {routes} from "../../constants/routes";
 import classNames from './style.module.css';
 
 const Proposals: FC = () => {

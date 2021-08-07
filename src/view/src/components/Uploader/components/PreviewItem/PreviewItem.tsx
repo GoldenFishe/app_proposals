@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
+import React, {FC} from "react";
 
-import classNames from './style.module.css';
+import classNames from "./style.module.css";
 
 interface IPreviewItem {
     file: File;

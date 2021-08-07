@@ -1,58 +1,30 @@
-import React, {FC, FormEvent, useState} from "react";
+import React, {FC, useEffect} from "react";
+import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
-import {updateSettings} from "./actions";
-import {useForm} from "../../hooks/useForm";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import ViewProfile from "./components/ViewProfile/ViewProfile";
+import EditProfile from "./components/EditProfile/EditProfile";
+import {getViewProfile, resetViewProfile} from "./actions";
+import classNames from "./style.module.css";
 
 const Profile: FC = () => {
+    const {id} = useParams<{ id: string }>();
     const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.main.user);
-    const [login, setLogin] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const {formData, handleInput, reset} = useForm<"login" | "username" | "password" | "avatar">({
-        "login": {
-            type: "text",
-            setter: setLogin
-        },
-        "username": {
-            type: "text",
-            setter: setUsername
-        },
-        "password": {
-            type: "password",
-            setter: setPassword
-        },
-        "avatar": {
-            type: "file"
+    const {userProfile, viewProfile} = useSelector((state: RootState) => state.profile);
+    const isUserProfile = Number(id) === userProfile?.id;
+    useEffect(() => {
+        if (!isUserProfile) {
+            dispatch(getViewProfile(Number(id)));
         }
-    });
-    const onSaveSettings = (e: FormEvent) => {
-        e.preventDefault();
-        dispatch(updateSettings(formData));
-        reset();
-    }
+        return () => {
+            dispatch(resetViewProfile())
+        }
+    }, [dispatch, id, isUserProfile])
     return (
-        <form onSubmit={onSaveSettings}>
-            <Input label="Login"
-                   value={login}
-                   onChange={handleInput("login")}/>
-            <Input label="Username"
-                   value={username}
-                   onChange={handleInput("username")}/>
-            <Input label="Password"
-                   type="password"
-                   value={password}
-                   onChange={handleInput("password")}/>
-            <Input label="Avatar"
-                   type="file"
-                   value={""}
-                   onChange={handleInput("avatar")}/>
-            <Button type="submit">Save new settings</Button>
-            {user?.avatar && <img src={user.avatar} alt="User avatar"/>}
-        </form>
+        <div className={classNames.container}>
+            {(isUserProfile && userProfile !== null) && <EditProfile userProfile={userProfile}/>}
+            {(!isUserProfile && viewProfile !== null) && <ViewProfile viewProfile={viewProfile}/>}
+        </div>
     );
 };
 

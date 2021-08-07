@@ -1,7 +1,7 @@
-import axios, {AxiosResponse} from 'axios';
+import axios, {AxiosResponse} from "axios";
 
 export const accessTokenStore = (function () {
-    let accessToken = '';
+    let accessToken = "";
     let initialized = false;
     return {
         setToken: function (token: string) {
@@ -44,31 +44,33 @@ axios.interceptors.response.use(
     });
 
 export default class HttpClient {
-    static async get<T>(url: string) {
-        let accessToken = accessTokenStore.getToken();
+    private static async getHeaders(withAccessToken: boolean) {
         let headers = {};
-        if (!accessToken) accessToken = await this.getAccessToken();
-        headers = {...headers, 'Authorization': accessToken};
+        if (withAccessToken) {
+            let accessToken = accessTokenStore.getToken();
+            if (!accessToken) accessToken = await this.getAccessToken();
+            headers = {...headers, "Authorization": accessToken};
+        }
+        return headers;
+    }
+
+    static async get<T>(url: string, requiredAuthorization: boolean = false) {
+        const headers = await this.getHeaders(requiredAuthorization);
         return axios.get(url, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 
-    static async post<T>(url: string, body: object, withToken: boolean = false) {
-        let accessToken = accessTokenStore.getToken();
-        let headers = {};
-        if (!accessToken) accessToken = await this.getAccessToken();
-        headers = {...headers, 'Authorization': accessToken};
+    static async post<T>(url: string, body: object, requiredAuthorization: boolean = false) {
+        const headers = await this.getHeaders(requiredAuthorization);
         return axios.post(url, body, {headers}).then((res: AxiosResponse<T>) => res.data);
     }
 
     static async getAccessToken() {
         try {
-            const request: AxiosResponse<{ accessToken: string }> = await axios.get('/api/user/access-token');
+            const request: AxiosResponse<{ accessToken: string }> = await axios.get("/api/user/access-token");
             return request.data.accessToken;
         } catch (err) {
             console.error(err);
-            return '';
+            return "";
         }
     }
 }
-
-export type HttpClientResponse<Ok, Error> = Ok | Error;

@@ -8,14 +8,15 @@ import Paragraph from "../../components/Paragraph";
 import {useForm} from "../../hooks/useForm";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import {user as userConstraints} from "../../constants/constraints";
+import {routes} from "../../constants/routes";
 import classNames from "./style.module.css";
-import {routes} from "../../routes";
 
 const SignIn: FC = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.main.user);
-    const [login, setLogin] = useState("login");
-    const [password, setPassword] = useState("password");
+    const user = useSelector((state: RootState) => state.profile.userProfile);
+    const [login, setLogin] = useState("");
+    const [password, setPassword] = useState("");
     const {handleInput, formData, reset} = useForm<"login" | "password">({
         login: {
             type: "text",
@@ -42,9 +43,16 @@ const SignIn: FC = () => {
                   className={classNames.form}>
                 <Input label="Login"
                        value={login}
+                       required
+                       minLength={userConstraints.login.minLength}
+                       maxLength={userConstraints.login.maxLength}
                        onChange={handleInput("login")}/>
                 <Input label="Password"
+                       type="password"
                        value={password}
+                       required
+                       minLength={userConstraints.password.minLength}
+                       maxLength={userConstraints.password.maxLength}
                        onChange={handleInput("password")}/>
                 <Button type="submit" fullWidth>Sign In</Button>
             </form>

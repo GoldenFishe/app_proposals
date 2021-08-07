@@ -4,15 +4,15 @@ import {useDispatch, useSelector} from "react-redux";
 
 import Header from "./Components/Header/Header";
 import Container from "../../components/Container/Container";
-import {getUser} from "./actions";
-import {routes, defaultRoute} from "../../routes";
+import {getUserProfile} from '../Profile/actions';
+import {routes, defaultRoute} from "../../constants/routes";
 
 const Main: FC = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.main.user);
+    const user = useSelector((state: RootState) => state.profile.userProfile);
     useEffect(() => {
-        if (user !== null) {
-            dispatch(getUser());
+        if (user === null) {
+            dispatch(getUserProfile());
         }
     }, [user, dispatch]);
     return (

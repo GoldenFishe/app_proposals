@@ -29,7 +29,7 @@ export class ProposalController implements IProposalController {
     }
 
     async getById(req: Request, res: Response) {
-        const id: number = Number(req.params.id);
+        const id = Number(req.params.id);
         const userId: number = res.locals.userId;
         const proposal = await this.proposalRepository.selectById(id, userId);
         res.send(proposal);

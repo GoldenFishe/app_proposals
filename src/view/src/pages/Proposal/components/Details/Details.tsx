@@ -7,7 +7,7 @@ import Dislike from "../../../../components/Dislike";
 import {IAuthor} from "../../../../types/IUser";
 import {formatDateTime} from "../../../../utils/dateTime";
 import classNames from './style.module.css';
-import {routes} from "../../../../routes";
+import {routes} from "../../../../constants/routes";
 
 interface IDetails {
     author: IAuthor;

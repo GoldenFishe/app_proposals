@@ -15,6 +15,8 @@ export interface IUserController {
     getUserInfo(req: Request, res: Response): Promise<void>;
 
     setUserInfo(req: Request, res: Response): Promise<void>;
+
+    getUserInfoById(req: Request, res: Response): Promise<void>;
 }
 
 export class UserController implements IUserController {
@@ -60,6 +62,12 @@ export class UserController implements IUserController {
     async getUserInfo(req: Request, res: Response) {
         const {userId} = res.locals;
         const user = await this.userRepository.getById(userId);
+        res.status(200).send(user);
+    }
+
+    async getUserInfoById(req: Request, res: Response) {
+        const id = Number(req.params.id);
+        const user = await this.userRepository.getById(id);
         res.status(200).send(user);
     }
 

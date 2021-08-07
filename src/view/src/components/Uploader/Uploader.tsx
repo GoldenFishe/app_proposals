@@ -29,6 +29,7 @@ const Uploader: FC<IUploader> = ({label, multiple, onChange}) => {
         }
         return imgs;
     }
+    const previewItems = renderPreview();
     return (
         <div className={classNames.uploader}>
             <span className={classNames.label}>{label}</span>
@@ -37,11 +38,13 @@ const Uploader: FC<IUploader> = ({label, multiple, onChange}) => {
                        multiple={multiple}
                        className={classNames.input}
                        onChange={handleOnChange}/>
-                <Icon icon="inbox" size={45}/>
+                <Icon icon="inbox" size={40}/>
             </label>
-            <div className={classNames.preview}>
-                {renderPreview()}
-            </div>
+            {previewItems.length !== 0 && (
+                <div className={classNames.preview}>
+                    {previewItems}
+                </div>
+            )}
         </div>
     );
 };

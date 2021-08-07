@@ -4,12 +4,12 @@ import {useSelector} from "react-redux";
 
 import Protected from "../../../../components/Protected";
 import Title from "../../../../components/Title";
-import {routes} from "../../../../routes";
+import {routes} from "../../../../constants/routes";
 import classNames from "./style.module.css";
 
 const Header: FC = () => {
     const {pathname} = useLocation();
-    const user = useSelector((state: RootState) => state.main.user);
+    const user = useSelector((state: RootState) => state.profile.userProfile);
     if (pathname === routes.signIn.path || pathname === routes.signUp.path) return null;
     const isUserAuthorized = user !== null;
     return (

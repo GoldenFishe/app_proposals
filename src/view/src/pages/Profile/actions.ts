@@ -16,7 +16,7 @@ export const updateProfile = (settings: FormData) => async (dispatch: Dispatch<G
 
 export const getUserProfile = () => async (dispatch: Dispatch<GetUserProfileAction>) => {
     try {
-        const data = await HttpClient.get<IUser>("/api/user");
+        const data = await HttpClient.get<IUser>("/api/user", true);
         dispatch({type: GET_USER_PROFILE, payload: data || null});
     } catch (err) {
         console.error(err);

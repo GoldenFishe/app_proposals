@@ -7,7 +7,8 @@ import {
     IProposalAttachment,
     IProposalDTO,
     IProposalPreview,
-    IProposalPreviewDTO
+    IProposalPreviewDTO,
+    ITag
 } from "./Proposal.types";
 import {IComment, ICommentAttachment} from "../Comment/Comment.types";
 
@@ -27,6 +28,7 @@ export interface IProposalRepository {
 export class ProposalRepository implements IProposalRepository {
 
     async selectAll(userId: number) {
+        const tags = await this.getTags();
         const proposals = await query<IProposalPreview>(`
             SELECT p.id,
                    p.title,
@@ -34,9 +36,8 @@ export class ProposalRepository implements IProposalRepository {
                    p.author_id,
                    u.username                                                "author_username",
                    u.avatar_filename                                         "author_avatar",
-                   p.topic_id,
-                   t.topic,
                    p.create_date,
+                   p.tags_ids,
                    COUNT(pl)                                                 "likes",
                    COUNT(pd)                                                 "dislikes",
                    CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
@@ -44,7 +45,6 @@ export class ProposalRepository implements IProposalRepository {
                    COUNT(c)                                                  "comments_quantity"
             FROM proposals p
                      JOIN users u ON u.id = p.author_id
-                     JOIN topics t ON t.id = p.topic_id
                      LEFT OUTER JOIN proposals_likes pl ON p.id = pl.proposal_id
                      LEFT OUTER JOIN proposals_dislikes pd ON p.id = pd.proposal_id
                      LEFT OUTER JOIN comments c ON p.id = c.proposal_id
@@ -54,13 +54,11 @@ export class ProposalRepository implements IProposalRepository {
                      p.author_id,
                      u.username,
                      u.avatar_filename,
-                     p.topic_id,
-                     t.topic,
                      p.create_date,
                      pl.user_id,
                      pd.user_id
         `);
-        return proposals.map(proposal => ProposalMapper.toPreviewDTO(proposal));
+        return proposals.map(proposal => ProposalMapper.toPreviewDTO(proposal, tags));
     }
 
     async selectById(id: number, userId: number) {
@@ -71,9 +69,8 @@ export class ProposalRepository implements IProposalRepository {
                    p.author_id,
                    u.username                                                "author_username",
                    u.avatar_filename                                         "author_avatar",
-                   p.topic_id,
-                   t.topic,
                    p.create_date,
+                   p.tags_ids,
                    COUNT(pl)                                                 "likes",
                    COUNT(pd)                                                 "dislikes",
                    CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
@@ -81,7 +78,6 @@ export class ProposalRepository implements IProposalRepository {
                    COUNT(c)                                                  "comments_quantity"
             FROM proposals p
                      JOIN users u ON u.id = p.author_id
-                     JOIN topics t ON t.id = p.topic_id
                      LEFT OUTER JOIN proposals_likes pl ON p.id = pl.proposal_id
                      LEFT OUTER JOIN proposals_dislikes pd ON p.id = pd.proposal_id
                      LEFT OUTER JOIN comments c ON p.id = c.proposal_id
@@ -92,8 +88,6 @@ export class ProposalRepository implements IProposalRepository {
                      p.author_id,
                      u.username,
                      u.avatar_filename,
-                     p.topic_id,
-                     t.topic,
                      p.create_date,
                      pl.user_id,
                      pd.user_id
@@ -140,14 +134,16 @@ export class ProposalRepository implements IProposalRepository {
             const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
             return CommentMapper.toDTO(comment, attachments);
         });
-        return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments);
+        const tags = await this.getTags();
+        return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments, tags);
     }
 
     async insert(data: INewProposal) {
-        const {title, description, authorId, topicId, filenames} = data;
+        const {title, description, authorId, tagsIds, filenames} = data;
+        const formattedTagsIds = `{${tagsIds.join(', ')}}`;
         const [{id}] = await query<{ id: IProposal["id"] }>(`
-            INSERT INTO proposals (title, description, author_id, topic_id)
-            VALUES ('${title}', '${description}', ${authorId}, ${topicId})
+            INSERT INTO proposals (title, description, author_id, tags_ids)
+            VALUES ('${title}', '${description}', ${authorId}, '${formattedTagsIds}')
             RETURNING id;
         `);
         const attachmentsPromise: Array<Promise<IProposalAttachment[]>> = filenames.map(filename => {
@@ -217,5 +213,9 @@ export class ProposalRepository implements IProposalRepository {
               AND user_id = ${userId}
         `);
         return this.selectById(proposalId, userId);
+    }
+
+    private async getTags(): Promise<ITag[]> {
+        return await query<ITag>(`SELECT * FROM tags`);
     }
 }

@@ -1,9 +1,10 @@
 import {IComment} from "./IComment";
 import {IAuthor} from "./IUser";
 
-export interface ITopic {
+export interface ITag {
     id: number;
-    topic: string;
+    tag: string;
+    color: string;
 }
 
 export interface IProposal {
@@ -18,7 +19,7 @@ export interface IProposal {
     isLiked: boolean;
     likes: number;
     title: string;
-    topic: ITopic;
+    tags: Array<ITag>;
 }
 
 export interface IProposalPreview {
@@ -32,5 +33,5 @@ export interface IProposalPreview {
     isLiked: boolean;
     likes: number;
     title: string;
-    topic: ITopic;
+    tags: Array<ITag>;
 }

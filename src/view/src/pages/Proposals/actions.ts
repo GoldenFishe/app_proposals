@@ -16,7 +16,7 @@ export const getProposals = () => async (dispatch: Dispatch<GetProposalsAction>)
 
 export const likeProposal = (proposalId: number) => async (dispatch: Dispatch<LikeProposalAction>) => {
     try {
-        const data = await HttpClient.post<IProposalPreview>("/api/proposals/like", {proposalId});
+        const data = await HttpClient.post<IProposalPreview>("/api/proposals/like", {proposalId}, true);
         dispatch({type: LIKE_PROPOSAL, payload: data});
     } catch (err) {
         console.error(err);
@@ -25,7 +25,7 @@ export const likeProposal = (proposalId: number) => async (dispatch: Dispatch<Li
 
 export const dislikeProposal = (proposalId: number) => async (dispatch: Dispatch<DislikeProposalAction>) => {
     try {
-        const data = await HttpClient.post<IProposalPreview>("/api/proposals/dislike", {proposalId});
+        const data = await HttpClient.post<IProposalPreview>("/api/proposals/dislike", {proposalId}, true);
         dispatch({type: DISLIKE_PROPOSAL, payload: data});
     } catch (err) {
         console.error(err);

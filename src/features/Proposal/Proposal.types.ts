@@ -1,9 +1,10 @@
 import {IAuthor, IUser} from "../User/User.types";
 import {IComment, ICommentDTO} from "../Comment/Comment.types";
 
-export interface ITopic {
+export interface ITag {
     id: number;
-    topic: string;
+    tag: string;
+    color: string;
 }
 
 export interface IProposal {
@@ -13,8 +14,7 @@ export interface IProposal {
     author_id: IUser["id"];
     author_username: IUser["username"];
     author_avatar: IUser["avatar_filename"];
-    topic_id: ITopic["id"];
-    topic: ITopic["topic"];
+    tags_ids: Array<ITag["id"]>;
     create_date: string;
     likes: number;
     dislikes: number;
@@ -31,7 +31,7 @@ export interface IProposalDTO {
     title: IProposal["title"];
     description: IProposal["description"];
     author: IAuthor;
-    topic: ITopic;
+    tags: Array<ITag>;
     likes: IProposal["likes"];
     dislikes: IProposal["likes"];
     isLiked: IProposal["is_liked"];
@@ -55,6 +55,6 @@ export interface INewProposal {
     title: string;
     description: string;
     authorId: number;
-    topicId: number;
+    tagsIds: number[];
     filenames: string[]
 }

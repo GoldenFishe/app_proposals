@@ -36,11 +36,17 @@ export class ProposalController implements IProposalController {
     }
 
     async create(req: Request, res: Response) {
-        const {title, description, topicId}: { title: string, description: string, topicId: number } = req.body;
+        const {title, description, tagsIds}: { title: string, description: string, tagsIds: string } = req.body;
         const authorId: number = res.locals.userId;
         const attachments = req.files as Express.Multer.File[];
         const filenames = attachments.map(file => file.filename);
-        const proposal = await this.proposalRepository.insert({title, description, authorId, topicId, filenames});
+        const proposal = await this.proposalRepository.insert({
+            title,
+            description,
+            authorId,
+            tagsIds: JSON.parse(tagsIds),
+            filenames
+        });
         res.send(proposal);
     }
 

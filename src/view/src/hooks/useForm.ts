@@ -12,6 +12,7 @@ export function useForm<Field extends string>(params: Params<Field>) {
             setAttachmentsToFormData(fileListValue, formData.current);
         } else {
             setDataToFormData(field, stringValue, formData.current);
+            setDataToFormData("tagsIds", JSON.stringify([0, 1]), formData.current);
             if (param.setter) {
                 param.setter(stringValue);
             }

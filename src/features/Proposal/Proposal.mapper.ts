@@ -1,9 +1,16 @@
-import {IProposal, IProposalAttachment, IProposalDTO, IProposalPreview, IProposalPreviewDTO} from "./Proposal.types";
+import {
+    IProposal,
+    IProposalAttachment,
+    IProposalDTO,
+    IProposalPreview,
+    IProposalPreviewDTO,
+    ITag
+} from "./Proposal.types";
 import {ICommentDTO} from "../Comment/Comment.types";
 import {getAttachmentPath, getAvatarPath} from "../../utils/files";
 
 export class ProposalMapper {
-    public static toDTO(proposal: IProposal, comments: ICommentDTO[], attachments: IProposalAttachment[]): IProposalDTO {
+    public static toDTO(proposal: IProposal, comments: ICommentDTO[], attachments: IProposalAttachment[], tags: ITag[]): IProposalDTO {
         return {
             id: proposal.id,
             title: proposal.title,
@@ -13,10 +20,7 @@ export class ProposalMapper {
                 username: proposal.author_username,
                 avatar: proposal.author_avatar && getAvatarPath(proposal.author_avatar)
             },
-            topic: {
-                id: proposal.topic_id,
-                topic: proposal.topic
-            },
+            tags: tags.filter(tag => proposal.tags_ids.includes(tag.id)),
             likes: Number(proposal.likes),
             dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,
@@ -27,7 +31,7 @@ export class ProposalMapper {
         }
     }
 
-    public static toPreviewDTO(proposal: IProposalPreview): IProposalPreviewDTO {
+    public static toPreviewDTO(proposal: IProposalPreview, tags: ITag[]): IProposalPreviewDTO {
         return {
             id: proposal.id,
             title: proposal.title,
@@ -37,10 +41,7 @@ export class ProposalMapper {
                 username: proposal.author_username,
                 avatar: proposal.author_avatar && getAvatarPath(proposal.author_avatar)
             },
-            topic: {
-                id: proposal.topic_id,
-                topic: proposal.topic
-            },
+            tags: tags.filter(tag => proposal.tags_ids.includes(tag.id)),
             likes: Number(proposal.likes),
             dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,

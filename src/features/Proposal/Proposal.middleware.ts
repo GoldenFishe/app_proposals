@@ -7,13 +7,13 @@ export function validateProposalId(req: Request, res: Response, next: NextFuncti
 }
 
 type CreateProposalBody = {
-    title?: string,
-    description?: string,
-    topicId?: number
+    title: string,
+    description: string,
+    tagsIds: string;
 }
 
 export function validateCreateProposal(req: Request, res: Response, next: NextFunction) {
-    const {title, description, topicId}: CreateProposalBody = req.body;
-    if (Boolean(title) && Boolean(description) && Boolean(topicId) && !Number.isNaN(topicId) && Array.isArray(req.files)) next();
+    const {title, description, tagsIds}: CreateProposalBody = req.body;
+    if (Boolean(title) && Boolean(description) && Boolean(tagsIds) && Array.isArray(JSON.parse(tagsIds)) && Array.isArray(req.files)) next();
     else res.status(400).send({message: "Title and description are required"});
 }

@@ -16,7 +16,7 @@ const CreateProposal: FC = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [topic, setTopic] = useState("");
-    const {formData, handleInput, reset} = useForm<"title" | "description" | "topic" | "attachments">({
+    const {formData, handleInput, reset} = useForm<"title" | "description" | "tagsIds" | "attachments">({
         "title": {
             type: "text",
             setter: setTitle
@@ -25,7 +25,7 @@ const CreateProposal: FC = () => {
             type: "text",
             setter: setDescription
         },
-        "topic": {
+        "tagsIds": {
             type: "text",
             setter: setTopic
         },
@@ -46,10 +46,10 @@ const CreateProposal: FC = () => {
                        minLength={proposal.title.minLength}
                        maxLength={proposal.title.maxLength}
                        onChange={handleInput("title")}/>
-                <Input label="Topic"
-                       value={topic}
-                       required
-                       onChange={handleInput("topic")}/>
+                {/*<Input label="Topic"*/}
+                {/*       value={topic}*/}
+                {/*       required*/}
+                {/*       onChange={handleInput("topic")}/>*/}
                 <Textarea label="Description"
                           value={description}
                           required

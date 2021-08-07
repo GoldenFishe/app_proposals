@@ -20,7 +20,6 @@ const Header: FC = () => {
                 </Link>
             </div>
             <div className={classNames.links}>
-                <Link to={routes.createProposal.path}>Create Proposal</Link>
                 {!isUserAuthorized && (
                     <Link to={routes.signIn.path}>Sign-In</Link>
                 )}

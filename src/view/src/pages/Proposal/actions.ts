@@ -23,7 +23,7 @@ export const getProposal = (id: number) => async (dispatch: Dispatch<GetProposal
 
 export const createProposal = (proposalParams: FormData) => async (dispatch: Dispatch<SetProposalAction>) => {
     try {
-        const data = await HttpClient.post<IProposal>("/api/proposals", proposalParams);
+        const data = await HttpClient.post<IProposal>("/api/proposals", proposalParams, true);
         dispatch({type: SET_PROPOSAL, payload: data});
     } catch (err) {
         console.error(err);

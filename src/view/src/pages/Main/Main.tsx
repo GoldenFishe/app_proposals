@@ -2,7 +2,7 @@ import React, {FC, useEffect} from "react";
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
-import Header from "./Components/Header/Header";
+import Header from "./components/Header/Header";
 import Container from "../../components/Container/Container";
 import {getUserProfile} from '../Profile/actions';
 import {routes, defaultRoute} from "../../constants/routes";

@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 
-type Icons = "like" | "dislike" | "comment" | "inbox" | "cross";
+type Icons = "like" | "dislike" | "comment" | "inbox" | "cross" | "user";
 
 interface IIcon {
     icon: Icons;
@@ -24,6 +24,9 @@ const Icon: FC<IIcon> = ({icon, size = 15}) => {
             break;
         case "cross":
             i = "❌";
+            break;
+        case "user":
+            i = "👤";
             break;
         default:
             return null;

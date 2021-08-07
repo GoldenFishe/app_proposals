@@ -16,7 +16,7 @@ const CreateProposal: FC = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [topic, setTopic] = useState("");
-    const {formData, handleInput, reset} = useForm<"title" | "description" | "tagsIds" | "attachments">({
+    const {formData, handleInput, reset} = useForm<"title" | "description" | "tagsIds" | "attachments[]">({
         "title": {
             type: "text",
             setter: setTitle
@@ -29,7 +29,7 @@ const CreateProposal: FC = () => {
             type: "text",
             setter: setTopic
         },
-        "attachments": {
+        "attachments[]": {
             type: "file"
         }
     })
@@ -58,7 +58,7 @@ const CreateProposal: FC = () => {
                           onChange={handleInput("description")}/>
                 <Uploader label="Attachments"
                           multiple
-                          onChange={handleInput("attachments")}/>
+                          onChange={handleInput("attachments[]")}/>
                 <Button type="submit">
                     Create proposal
                 </Button>

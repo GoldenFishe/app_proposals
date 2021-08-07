@@ -16,7 +16,7 @@ export interface IProposalRepository {
 
     selectAll(userId: number): Promise<IProposalPreviewDTO[]>;
 
-    selectById(id: number, userId: number): Promise<IProposalDTO>;
+    selectById(id: number, userId: number): Promise<IProposalDTO | null>;
 
     insert(data: INewProposal): Promise<IProposalDTO>;
 
@@ -92,12 +92,13 @@ export class ProposalRepository implements IProposalRepository {
                      pl.user_id,
                      pd.user_id
         `);
-        const proposalAttachments = await query<IProposalAttachment>(`
+        if (proposal !== undefined) {
+            const proposalAttachments = await query<IProposalAttachment>(`
             SELECT *
             FROM proposal_attachments
             WHERE proposal_id = ${proposal.id}
         `);
-        const comments = await query<IComment>(`
+            const comments = await query<IComment>(`
             SELECT c.id,
                    c.comment,
                    c.author_id,
@@ -126,16 +127,18 @@ export class ProposalRepository implements IProposalRepository {
                      cd.user_id,
                      c.parent_comment_id
         `);
-        const commentAttachments = await query<ICommentAttachment>(`
+            const commentAttachments = await query<ICommentAttachment>(`
             SELECT *
             FROM comment_attachments
         `);
-        const commentsDTO = comments.map(comment => {
-            const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
-            return CommentMapper.toDTO(comment, attachments);
-        });
-        const tags = await this.getTags();
-        return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments, tags);
+            const commentsDTO = comments.map(comment => {
+                const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
+                return CommentMapper.toDTO(comment, attachments);
+            });
+            const tags = await this.getTags();
+            return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments, tags);
+        }
+        return null;
     }
 
     async insert(data: INewProposal) {
@@ -154,7 +157,7 @@ export class ProposalRepository implements IProposalRepository {
             `);
         });
         await Promise.all(attachmentsPromise);
-        return this.selectById(id, authorId);
+        return await this.selectById(id, authorId) as IProposalDTO;
     }
 
     async toggleLike(proposalId: number, userId: number) {
@@ -183,7 +186,7 @@ export class ProposalRepository implements IProposalRepository {
             VALUES (${proposalId}, ${userId})
         `);
         await this.unsetDislike(proposalId, userId);
-        return this.selectById(proposalId, userId);
+        return await this.selectById(proposalId, userId) as IProposalDTO;
     }
 
     private async setDislike(proposalId: number, userId: number) {
@@ -192,7 +195,7 @@ export class ProposalRepository implements IProposalRepository {
             VALUES (${proposalId}, ${userId})
         `);
         await this.unsetLike(proposalId, userId);
-        return this.selectById(proposalId, userId);
+        return await this.selectById(proposalId, userId) as IProposalDTO;
     }
 
     private async unsetLike(proposalId: number, userId: number) {
@@ -202,7 +205,7 @@ export class ProposalRepository implements IProposalRepository {
             WHERE proposal_id = ${proposalId}
               AND user_id = ${userId}
         `);
-        return this.selectById(proposalId, userId);
+        return await this.selectById(proposalId, userId) as IProposalDTO;
     }
 
     private async unsetDislike(proposalId: number, userId: number) {
@@ -212,7 +215,7 @@ export class ProposalRepository implements IProposalRepository {
             WHERE proposal_id = ${proposalId}
               AND user_id = ${userId}
         `);
-        return this.selectById(proposalId, userId);
+        return await this.selectById(proposalId, userId) as IProposalDTO;
     }
 
     private async getTags(): Promise<ITag[]> {

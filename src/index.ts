@@ -5,11 +5,13 @@ import cookieParser from "cookie-parser";
 import userRouter from "./features/User/User.router";
 import proposalRouter from "./features/Proposal/Proposal.router";
 import commentRouter from "./features/Comment/Comment.router";
-import {getAttachmentFile, getAvatarFile} from "./utils/files";
+import {createResourcesFolder, getAttachmentFile, getAvatarFile} from "./utils/files";
 import {getDataFromEnvironment} from "./utils/env";
 
 const PORT: number = Number(getDataFromEnvironment("APP_PORT", false)) || 8080;
 const app: Express = express();
+
+createResourcesFolder();
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));

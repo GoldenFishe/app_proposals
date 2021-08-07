@@ -9,7 +9,7 @@ export function useForm<Field extends string>(params: Params<Field>) {
         const fileListValue = value as FileList;
         const param = params[field];
         if (param.type === "file") {
-            setAttachmentsToFormData(fileListValue, formData.current);
+            setAttachmentsToFormData(fileListValue, field, formData.current);
         } else {
             setDataToFormData(field, stringValue, formData.current);
             setDataToFormData("tagsIds", JSON.stringify([0, 1]), formData.current);
@@ -34,9 +34,9 @@ function setDataToFormData(title: string, value: string, formData: FormData) {
     formData.has(title) ? formData.set(title, value) : formData.append(title, value);
 }
 
-function setAttachmentsToFormData(fileList: FileList, formData: FormData) {
+function setAttachmentsToFormData(fileList: FileList, field: string, formData: FormData) {
     for (let i = 0; i < fileList.length; i++) {
         const file = fileList.item(i) as File;
-        formData.append("attachments[]", file);
+        formData.append(field, file);
     }
 }

@@ -10,12 +10,12 @@ interface ICreateCommentForm {
 
 const CreateCommentForm: FC<ICreateCommentForm> = ({onCreate}) => {
     const [comment, setComment] = useState("");
-    const {formData, handleInput, reset} = useForm<"commentText" | "attachments">({
+    const {formData, handleInput, reset} = useForm<"commentText" | "attachments[]">({
         commentText: {
             type: "text",
             setter: setComment
         },
-        attachments: {
+        "attachments[]": {
             type: "file"
         }
     });
@@ -29,9 +29,6 @@ const CreateCommentForm: FC<ICreateCommentForm> = ({onCreate}) => {
             <Input label="Comment"
                    value={comment}
                    onChange={handleInput("commentText")}/>
-            <Input label="Attachments"
-                   value={""}
-                   onChange={handleInput("attachments")}/>
             <Button type="submit">Leave comment</Button>
         </form>
     )

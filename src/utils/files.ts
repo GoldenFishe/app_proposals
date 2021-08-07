@@ -1,7 +1,7 @@
 import {join} from "path";
-import {accessSync, rmSync} from "fs";
+import {accessSync, rmSync, mkdirSync, existsSync} from "fs";
 
-const resourcesPath = join(__dirname, 'resources');
+const resourcesPath = join(__dirname, '..', 'resources');
 const avatarsPath = join(resourcesPath, 'avatars');
 const attachmentsPath = join(resourcesPath, 'attachments');
 
@@ -36,4 +36,12 @@ export function getAvatarPath(avatarFilename: string) {
 
 export function getAttachmentPath(attachmentFilename: string) {
     return `/resources/attachments/${attachmentFilename}`;
+}
+
+export function createResourcesFolder() {
+    [resourcesPath, avatarsPath, attachmentsPath].forEach(folderPath => {
+        if (!existsSync(folderPath)) {
+            mkdirSync(folderPath);
+        }
+    });
 }

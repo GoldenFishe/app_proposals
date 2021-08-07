@@ -7,7 +7,7 @@ import {GetUserProfileAction, GetViewProfileAction} from "./types";
 
 export const updateProfile = (settings: FormData) => async (dispatch: Dispatch<GetUserProfileAction>) => {
     try {
-        const user = await HttpClient.post<IUser>("/api/user", settings);
+        const user = await HttpClient.post<IUser>("/api/user", settings, true);
         dispatch({type: GET_USER_PROFILE, payload: user});
     } catch (err) {
         console.error(err);

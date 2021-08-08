@@ -56,7 +56,7 @@ const SignIn: FC = () => {
                        onChange={handleInput("password")}/>
                 <Button type="submit" fullWidth>Sign In</Button>
             </form>
-            <Paragraph>New to Proposals? <Link to={routes.signUp.path}>Create an account.</Link></Paragraph>
+            <Paragraph size="m">New to Proposals? <Link to={routes.signUp.path}>Create an account.</Link></Paragraph>
         </div>
     )
 };

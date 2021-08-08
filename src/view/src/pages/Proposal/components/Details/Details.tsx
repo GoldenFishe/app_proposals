@@ -23,12 +23,12 @@ const Details: FC<IDetails> = ({proposal}) => {
             <div className={classNames.meta}>
                 <Avatar src={author.avatar} size="s"/>
                 <Link to={routes.profile.getLinkPath(author.id)}>
-                    <Paragraph>{author.username}</Paragraph>
+                    <Paragraph size="m">{author.username}</Paragraph>
                 </Link>
-                <Paragraph>{formatDateTime(createDate)}</Paragraph>
+                <Paragraph size="m">{formatDateTime(createDate)}</Paragraph>
             </div>
             <div className={classNames.text}>
-                <Paragraph>{description}</Paragraph>
+                <Paragraph size="m">{description}</Paragraph>
             </div>
             <div className={classNames.actions}/>
         </div>

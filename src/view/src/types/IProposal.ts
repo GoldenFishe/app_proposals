@@ -22,16 +22,4 @@ export interface IProposal {
     tags: Array<ITag>;
 }
 
-export interface IProposalPreview {
-    author: IAuthor;
-    commentsQuantity: number;
-    createDate: string;
-    description: string;
-    dislikes: number;
-    id: number;
-    isDisliked: boolean;
-    isLiked: boolean;
-    likes: number;
-    title: string;
-    tags: Array<ITag>;
-}
+export type IProposalPreview = Omit<IProposal, "comments" | "attachments"> & { commentsQuantity: number };

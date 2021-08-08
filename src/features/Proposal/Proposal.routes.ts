@@ -4,6 +4,7 @@ enum ProposalRoutes {
     CREATE_PROPOSAL = '/',
     LIKE_PROPOSAL = '/like',
     DISLIKE_PROPOSAL = '/dislike',
+    GET_TAGS = '/tags',
 }
 
 export default ProposalRoutes;

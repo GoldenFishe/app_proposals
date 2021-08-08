@@ -20,3 +20,13 @@
 .actions > *:not(:last-child) {
     margin-right: 20px;
 }
+
+.tags {
+    display: flex;
+    flex-flow: row;
+    margin-left: auto;
+}
+
+.tags > *:not(:last-child) {
+    margin-right: 10px;
+}

@@ -14,8 +14,8 @@ const ViewProfile: FC<IViewProfile> = ({viewProfile}) => {
         <div className={classNames.container}>
             <Avatar src={"https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380"} size="m"/>
             <div className={classNames.item}>
-                <Paragraph>Username</Paragraph>
-                <Paragraph>{viewProfile.username}</Paragraph>
+                <Paragraph size="m">Username</Paragraph>
+                <Paragraph size="m">{viewProfile.username}</Paragraph>
             </div>
         </div>
     );

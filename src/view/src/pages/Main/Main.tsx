@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Header from "./components/Header/Header";
 import Container from "../../components/Container/Container";
 import {getUserProfile} from '../Profile/actions';
+import {getTags} from "./actions";
 import {routes, defaultRoute} from "../../constants/routes";
 
 const Main: FC = () => {
@@ -15,6 +16,9 @@ const Main: FC = () => {
             dispatch(getUserProfile());
         }
     }, [user, dispatch]);
+    useEffect(() => {
+        dispatch(getTags());
+    }, [dispatch])
     return (
         <Container>
             <BrowserRouter>

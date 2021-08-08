@@ -31,15 +31,9 @@ const Proposals: FC = () => {
             {proposals.map(proposal => (
                 <li className={classNames.proposalWrapper} key={proposal.id}>
                     <Link to={routes.proposal.getLinkPath(proposal.id)}>
-                        <Proposal title={proposal.title}
-                                  description={proposal.description}
-                                  liked={proposal.isLiked}
-                                  likes={proposal.likes}
+                        <Proposal proposal={proposal}
                                   like={like(proposal.id)}
-                                  disliked={proposal.isDisliked}
-                                  dislikes={proposal.dislikes}
-                                  dislike={dislike(proposal.id)}
-                                  commentsQuantity={proposal.commentsQuantity}/>
+                                  dislike={dislike(proposal.id)}/>
                     </Link>
                 </li>
             ))}

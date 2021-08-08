@@ -32,12 +32,12 @@ const Comment: FC<IComment> = ({comment, onLikeComment, onDislikeComment, onRepl
             <div className={classNames.meta}>
                 <Avatar src={author.avatar} size="s"/>
                 <Link to={routes.profile.getLinkPath(author.id)}>
-                    <Paragraph>{author.username}</Paragraph>
+                    <Paragraph size="m">{author.username}</Paragraph>
                 </Link>
-                <Paragraph>{formatDateTime(createDate)}</Paragraph>
+                <Paragraph size="m">{formatDateTime(createDate)}</Paragraph>
             </div>
             <div className={classNames.text}>
-                <Paragraph>{text}</Paragraph>
+                <Paragraph size="m">{text}</Paragraph>
             </div>
             <div className={classNames.actions}>
                 <Like quantity={likes} liked={isLiked} like={onLikeComment}/>

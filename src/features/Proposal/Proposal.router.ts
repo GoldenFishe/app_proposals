@@ -25,6 +25,11 @@ proposalRouter.get(
 );
 
 proposalRouter.get(
+    ProposalRoutes.GET_TAGS,
+    (req: Request, res: Response) => proposalController.getTags(req, res)
+);
+
+proposalRouter.get(
     ProposalRoutes.GET_PROPOSAL,
     validateProposalId,
     addUserInfo,

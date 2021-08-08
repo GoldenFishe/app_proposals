@@ -1,5 +1,5 @@
 import {query} from "../../utils/db";
-import {ProposalMapper} from "./Proposal.mapper";
+import {ProposalMapper, TagMapper} from "./Proposal.mapper";
 import {CommentMapper} from "../Comment/Comment.mapper";
 import {
     INewProposal,
@@ -8,7 +8,8 @@ import {
     IProposalDTO,
     IProposalPreview,
     IProposalPreviewDTO,
-    ITag
+    ITag,
+    ITagDTO
 } from "./Proposal.types";
 import {IComment, ICommentAttachment} from "../Comment/Comment.types";
 
@@ -23,6 +24,8 @@ export interface IProposalRepository {
     toggleLike(proposalId: number, userId: number): Promise<IProposalDTO>;
 
     toggleDislike(proposalId: number, userId: number): Promise<IProposalDTO>;
+
+    getTags(): Promise<ITagDTO[]>;
 }
 
 export class ProposalRepository implements IProposalRepository {
@@ -180,6 +183,11 @@ export class ProposalRepository implements IProposalRepository {
         return Boolean(id) ? this.unsetDislike(proposalId, userId) : this.setDislike(proposalId, userId);
     }
 
+    async getTags() {
+        const tags = await query<ITag>(`SELECT * FROM tags`);
+        return tags.map(TagMapper.toDTO);
+    }
+
     private async setLike(proposalId: number, userId: number) {
         await query<IProposal>(`
             INSERT INTO proposals_likes (proposal_id, user_id)
@@ -216,9 +224,5 @@ export class ProposalRepository implements IProposalRepository {
               AND user_id = ${userId}
         `);
         return await this.selectById(proposalId, userId) as IProposalDTO;
-    }
-
-    private async getTags(): Promise<ITag[]> {
-        return await query<ITag>(`SELECT * FROM tags`);
     }
 }

@@ -13,7 +13,8 @@ interface ILike {
 const Like: FC<ILike> = ({liked, quantity, like}) => {
     return (
         <span onClick={like} className={classNames.like}>
-            <Paragraph style={{opacity: quantity > 0 ? 1 : 0}}
+            <Paragraph size="m"
+                       style={{opacity: quantity > 0 ? 1 : 0}}
                        className={classNames.quantity}>
                 {quantity || null}
             </Paragraph>

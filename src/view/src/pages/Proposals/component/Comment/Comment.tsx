@@ -10,7 +10,8 @@ interface IComment {
 const Comment: FC<IComment> = ({quantity}) => {
     return (
         <span>
-            <Paragraph style={{opacity: quantity > 0 ? 1 : 0}}
+            <Paragraph size="m"
+                       style={{opacity: quantity > 0 ? 1 : 0}}
                        className={classNames.quantity}>
                 {quantity || null}
             </Paragraph>

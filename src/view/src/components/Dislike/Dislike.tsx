@@ -13,7 +13,8 @@ interface IDislike {
 const Dislike: FC<IDislike> = ({disliked, quantity, dislike}) => {
     return (
         <span onClick={dislike} className={classNames.dislike}>
-            <Paragraph style={{opacity: quantity > 0 ? 1 : 0}}
+            <Paragraph size="m"
+                       style={{opacity: quantity > 0 ? 1 : 0}}
                        className={classNames.quantity}>
                 {quantity || null}
             </Paragraph>

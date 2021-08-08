@@ -7,6 +7,12 @@ export interface ITag {
     color: string;
 }
 
+export interface ITagDTO {
+    id: number;
+    tag: string;
+    color: string;
+}
+
 export interface IProposal {
     id: number;
     title: string;
@@ -42,8 +48,8 @@ export interface IProposalDTO {
 }
 
 export type IProposalPreviewDTO =
-    Omit<IProposalDTO, "comments" | "attachments"> &
-    { commentsQuantity: IProposalPreview["comments_quantity"] };
+    Omit<IProposalDTO, "comments" | "attachments">
+    & { commentsQuantity: IProposalPreview["comments_quantity"] };
 
 export interface IProposalAttachment {
     id: number;

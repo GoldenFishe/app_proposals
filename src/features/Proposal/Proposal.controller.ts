@@ -13,6 +13,8 @@ export interface IProposalController {
     like(req: Request, res: Response): Promise<void>;
 
     dislike(req: Request, res: Response): Promise<void>;
+
+    getTags(req: Request, res: Response): Promise<void>;
 }
 
 export class ProposalController implements IProposalController {
@@ -62,5 +64,10 @@ export class ProposalController implements IProposalController {
         const userId: number = res.locals.userId;
         const proposal = await this.proposalRepository.toggleDislike(proposalId, userId);
         res.send(proposal);
+    }
+
+    async getTags(req: Request, res: Response) {
+        const tags = await this.proposalRepository.getTags();
+        res.send(tags);
     }
 }

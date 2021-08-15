@@ -10,8 +10,8 @@ interface ITag {
 
 const Tag: FC<ITag> = ({tag}) => {
     return (
-        <div className={classNames.tag} style={{background: tag.color}}>
-            <Paragraph size="s">{tag.tag}</Paragraph>
+        <div className={classNames.tag}>
+            <Paragraph size="s">{`#${tag.tag}`}</Paragraph>
         </div>
     );
 };

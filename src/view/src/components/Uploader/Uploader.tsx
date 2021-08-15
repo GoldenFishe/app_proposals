@@ -38,7 +38,7 @@ const Uploader: FC<IUploader> = ({label, multiple, onChange}) => {
                        multiple={multiple}
                        className={classNames.input}
                        onChange={handleOnChange}/>
-                <Icon icon="inbox" size={40}/>
+                <Icon icon="inbox" size={30}/>
             </label>
             {previewItems.length !== 0 && (
                 <div className={classNames.preview}>

@@ -4,13 +4,12 @@ import {IComment, ICommentDTO} from "../Comment/Comment.types";
 export interface ITag {
     id: number;
     tag: string;
-    color: string;
+    proposal_id: IProposal["id"];
 }
 
 export interface ITagDTO {
-    id: number;
     tag: string;
-    color: string;
+    proposalId: IProposalDTO["id"]
 }
 
 export interface IProposal {
@@ -20,7 +19,6 @@ export interface IProposal {
     author_id: IUser["id"];
     author_username: IUser["username"];
     author_avatar: IUser["avatar_filename"];
-    tags_ids: Array<ITag["id"]>;
     create_date: string;
     likes: number;
     dislikes: number;
@@ -37,7 +35,7 @@ export interface IProposalDTO {
     title: IProposal["title"];
     description: IProposal["description"];
     author: IAuthor;
-    tags: Array<ITag>;
+    tags: Array<ITagDTO>;
     likes: IProposal["likes"];
     dislikes: IProposal["likes"];
     isLiked: IProposal["is_liked"];
@@ -61,6 +59,6 @@ export interface INewProposal {
     title: string;
     description: string;
     authorId: number;
-    tagsIds: number[];
+    tags: Array<string>;
     filenames: string[]
 }

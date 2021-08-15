@@ -10,13 +10,14 @@ import Form from "../../components/Form/Form";
 import Textarea from "../../components/Textarea/Textarea";
 import {proposal} from "../../constants/constraints";
 import classNames from "./style.module.css";
+import TagInput from "../../components/TagInput/TagInput";
 
 const CreateProposal: FC = () => {
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [topic, setTopic] = useState("");
-    const {formData, handleInput, reset} = useForm<"title" | "description" | "tagsIds" | "attachments[]">({
+    const [tags, setTags] = useState<string[]>([]);
+    const {formData, handleInput, reset} = useForm<"title" | "description" | "attachments[]">({
         "title": {
             type: "text",
             setter: setTitle
@@ -25,15 +26,12 @@ const CreateProposal: FC = () => {
             type: "text",
             setter: setDescription
         },
-        "tagsIds": {
-            type: "text",
-            setter: setTopic
-        },
         "attachments[]": {
             type: "file"
         }
     })
     const onCreateProposal = () => {
+        formData.set('tags', JSON.stringify(tags));
         dispatch(createProposal(formData));
         reset();
     };
@@ -46,6 +44,9 @@ const CreateProposal: FC = () => {
                        minLength={proposal.title.minLength}
                        maxLength={proposal.title.maxLength}
                        onChange={handleInput("title")}/>
+                <TagInput label="Tags"
+                          value={tags}
+                          onChange={setTags}/>
                 {/*<Input label="Topic"*/}
                 {/*       value={topic}*/}
                 {/*       required*/}

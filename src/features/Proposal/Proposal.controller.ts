@@ -38,7 +38,7 @@ export class ProposalController implements IProposalController {
     }
 
     async create(req: Request, res: Response) {
-        const {title, description, tagsIds}: { title: string, description: string, tagsIds: string } = req.body;
+        const {title, description, tags}: { title: string, description: string, tags: string } = req.body;
         const authorId: number = res.locals.userId;
         const attachments = req.files as Express.Multer.File[];
         const filenames = attachments.map(file => file.filename);
@@ -46,7 +46,7 @@ export class ProposalController implements IProposalController {
             title,
             description,
             authorId,
-            tagsIds: JSON.parse(tagsIds),
+            tags: JSON.parse(tags),
             filenames
         });
         res.send(proposal);

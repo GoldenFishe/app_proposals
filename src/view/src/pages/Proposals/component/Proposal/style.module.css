@@ -24,6 +24,7 @@
 .tags {
     display: flex;
     flex-flow: row;
+    align-items: flex-end;
     margin-left: auto;
 }
 

@@ -1,13 +1,15 @@
-import React, {FC} from "react";
+import React, {FC, MouseEvent} from "react";
 
 type Icons = "like" | "dislike" | "comment" | "inbox" | "cross" | "user";
 
 interface IIcon {
     icon: Icons;
     size?: number;
+    className?: string;
+    onClick?: (e: MouseEvent) => void;
 }
 
-const Icon: FC<IIcon> = ({icon, size = 15}) => {
+const Icon: FC<IIcon> = ({icon, size = 15, className, onClick}) => {
     let i = null;
     switch (icon) {
         case "like":
@@ -31,7 +33,9 @@ const Icon: FC<IIcon> = ({icon, size = 15}) => {
         default:
             return null;
     }
-    return <span style={{fontSize: `${size}px`}}>{i}</span>
+    return <span className={className}
+                 onClick={onClick}
+                 style={{fontSize: `${size}px`}}>{i}</span>
 };
 
 export default Icon;

@@ -20,7 +20,7 @@ export class ProposalMapper {
                 username: proposal.author_username,
                 avatar: proposal.author_avatar && getAvatarPath(proposal.author_avatar)
             },
-            tags: tags.filter(tag => proposal.tags_ids.includes(tag.id)),
+            tags: tags,
             likes: Number(proposal.likes),
             dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,
@@ -41,7 +41,7 @@ export class ProposalMapper {
                 username: proposal.author_username,
                 avatar: proposal.author_avatar && getAvatarPath(proposal.author_avatar)
             },
-            tags: tags.filter(tag => proposal.tags_ids.includes(tag.id)),
+            tags: tags,
             likes: Number(proposal.likes),
             dislikes: Number(proposal.dislikes),
             isLiked: proposal.is_liked,
@@ -55,9 +55,8 @@ export class ProposalMapper {
 export class TagMapper {
     public static toDTO(tag: ITag): ITagDTO {
         return {
-            id: tag.id,
             tag: tag.tag,
-            color: tag.color
+            proposalId: tag.proposal_id
         }
     }
 }

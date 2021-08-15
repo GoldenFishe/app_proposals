@@ -40,7 +40,6 @@ export class ProposalRepository implements IProposalRepository {
                    u.username                                                "author_username",
                    u.avatar_filename                                         "author_avatar",
                    p.create_date,
-                   p.tags_ids,
                    COUNT(pl)                                                 "likes",
                    COUNT(pd)                                                 "dislikes",
                    CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
@@ -61,7 +60,8 @@ export class ProposalRepository implements IProposalRepository {
                      pl.user_id,
                      pd.user_id
         `);
-        return proposals.map(proposal => ProposalMapper.toPreviewDTO(proposal, tags));
+        const getTagsByProposalId = (proposalId: number) => tags.filter(tag => tag.proposalId === proposalId);
+        return proposals.map(proposal => ProposalMapper.toPreviewDTO(proposal, getTagsByProposalId(proposal.id)));
     }
 
     async selectById(id: number, userId: number) {
@@ -73,7 +73,6 @@ export class ProposalRepository implements IProposalRepository {
                    u.username                                                "author_username",
                    u.avatar_filename                                         "author_avatar",
                    p.create_date,
-                   p.tags_ids,
                    COUNT(pl)                                                 "likes",
                    COUNT(pd)                                                 "dislikes",
                    CASE WHEN pl.user_id = ${userId} THEN TRUE ELSE FALSE END is_liked,
@@ -138,18 +137,17 @@ export class ProposalRepository implements IProposalRepository {
                 const attachments = commentAttachments.filter(attachment => attachment.comment_id === comment.id);
                 return CommentMapper.toDTO(comment, attachments);
             });
-            const tags = await this.getTags();
+            const tags = await this.getTags(id);
             return ProposalMapper.toDTO(proposal, commentsDTO, proposalAttachments, tags);
         }
         return null;
     }
 
     async insert(data: INewProposal) {
-        const {title, description, authorId, tagsIds, filenames} = data;
-        const formattedTagsIds = `{${tagsIds.join(', ')}}`;
+        const {title, description, authorId, tags, filenames} = data;
         const [{id}] = await query<{ id: IProposal["id"] }>(`
-            INSERT INTO proposals (title, description, author_id, tags_ids)
-            VALUES ('${title}', '${description}', ${authorId}, '${formattedTagsIds}')
+            INSERT INTO proposals (title, description, author_id)
+            VALUES ('${title}', '${description}', ${authorId})
             RETURNING id;
         `);
         const attachmentsPromise: Array<Promise<IProposalAttachment[]>> = filenames.map(filename => {
@@ -159,7 +157,14 @@ export class ProposalRepository implements IProposalRepository {
                 RETURNING *
             `);
         });
-        await Promise.all(attachmentsPromise);
+        const tagsPromise = tags.map(tag => {
+            return query(`
+            INSERT INTO tags (tag, proposal_id)
+            VALUES ('${tag}', ${id})
+            RETURNING *
+            `)
+        })
+        await Promise.all([...attachmentsPromise, ...tagsPromise]);
         return await this.selectById(id, authorId) as IProposalDTO;
     }
 
@@ -183,8 +188,10 @@ export class ProposalRepository implements IProposalRepository {
         return Boolean(id) ? this.unsetDislike(proposalId, userId) : this.setDislike(proposalId, userId);
     }
 
-    async getTags() {
-        const tags = await query<ITag>(`SELECT * FROM tags`);
+    async getTags(proposalId?: IProposal["id"]) {
+        const tags = proposalId ?
+            await query<ITag>(`SELECT * FROM tags WHERE proposal_id=${proposalId}`) :
+            await query<ITag>(`SELECT * FROM tags`);
         return tags.map(TagMapper.toDTO);
     }
 

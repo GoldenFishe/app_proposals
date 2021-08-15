@@ -37,7 +37,7 @@ const Proposal: FC<IProposal> = ({proposal, like, dislike}) => {
                 <Dislike disliked={isDisliked}
                          quantity={dislikes}
                          dislike={dislike}/>
-                <div className={classNames.tags}>{proposal.tags.map(tag => <Tag tag={tag} key={tag.id}/>)}</div>
+                <div className={classNames.tags}>{proposal.tags.slice(0, 5).map(tag => <Tag tag={tag} key={tag.tag}/>)}</div>
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import React, {FC, FormEvent, useState} from "react";
 import {useForm} from "../../../../hooks/useForm";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
+import TextareaWithFormatting from "../../../../components/TextareaWithFormatting/TextareaWithFormatting";
 
 interface ICreateCommentForm {
     onCreate: (formData: FormData) => void;
@@ -21,15 +22,16 @@ const CreateCommentForm: FC<ICreateCommentForm> = ({onCreate}) => {
     });
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        onCreate(formData);
-        reset();
+        console.log(e);
+        // onCreate(formData);
+        // reset();
     }
     return (
         <form onSubmit={handleSubmit}>
-            <Input label="Comment"
-                   value={comment}
-                   onChange={handleInput("commentText")}/>
-            <Button type="submit">Leave comment</Button>
+            <TextareaWithFormatting label="Comment"
+                                    value={comment}
+                                    onChange={handleInput("commentText")}/>
+            {/*<Button type="submit">Leave comment</Button>*/}
         </form>
     )
 };

@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-flow: column;
+}
+
+.label {
+    margin-bottom: 10px;
+}
+
+.textarea {
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color);
+    background: #ffffff;
+    padding: 10px;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.textarea:focus {
+    outline: unset;
+}

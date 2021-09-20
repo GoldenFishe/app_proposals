@@ -1,5 +1,5 @@
-FROM node:14.15.4
+FROM node:16.9.1
 WORKDIR /app
 COPY . .
 RUN npm install
-CMD ["npm", "run", "start"]
+CMD npm run start:dev

@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 import Paragraph from "../../../../components/Paragraph";
 import Avatar from "../../../../components/Avatar/Avatar";
-import {formatDateTime} from "../../../../utils/dateTime";
+import {formatDateTime} from "../../../../utils";
 import {routes} from "../../../../constants/routes";
 import {IProposal} from "../../../../types/IProposal";
 import classNames from './style.module.css';

@@ -6,7 +6,7 @@ import Like from "../../../../components/Like";
 import Dislike from "../../../../components/Dislike";
 import Paragraph from "../../../../components/Paragraph";
 import Avatar from "../../../../components/Avatar/Avatar";
-import {formatDateTime} from "../../../../utils/dateTime";
+import {formatDateTime} from "../../../../utils";
 import {routes} from "../../../../constants/routes";
 import classNames from "./style.module.css";
 

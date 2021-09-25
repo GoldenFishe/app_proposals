@@ -1,6 +1,7 @@
 import React, {FC} from "react";
 
 import classNames from './style.module.css';
+import {classNamesCombiner} from "../../utils";
 
 interface IParagraph {
     className?: string;
@@ -9,10 +10,12 @@ interface IParagraph {
 }
 
 const Paragraph: FC<IParagraph> = ({className, style, size, children}) => {
-    let combinedClassName = classNames.paragraph;
-    if (size === "m") combinedClassName += ` ${classNames.medium}`;
-    if (size === "s") combinedClassName += ` ${classNames.small}`;
-    if (className) combinedClassName += ` ${className}`;
+    const combinedClassName = classNamesCombiner({
+        [classNames.paragraph]: true,
+        [classNames.medium]: size === "m",
+        [classNames.small]: size === "s",
+        [className || '']: Boolean(className),
+    })
     return (
         <p className={combinedClassName} style={style}>
             {children}

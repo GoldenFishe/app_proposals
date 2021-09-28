@@ -1,15 +1,19 @@
-import React, {FC} from "react";
+import React, {FC, useCallback} from "react";
 import {Link, useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
+import {routes} from "../../../../constants/routes";
+import {signOut} from "../../actions";
 import Protected from "../../../../components/Protected";
 import Title from "../../../../components/Title";
-import {routes} from "../../../../constants/routes";
+import Paragraph from "../../../../components/Paragraph";
 import classNames from "./style.module.css";
 
 const Header: FC = () => {
     const {pathname} = useLocation();
     const user = useSelector((state: RootState) => state.profile.userProfile);
+    const dispatch = useDispatch();
+    const onSignOut = useCallback(() => dispatch(signOut()), [dispatch])
     if (pathname === routes.signIn.path || pathname === routes.signUp.path) return null;
     const isUserAuthorized = user !== null;
     return (
@@ -21,16 +25,35 @@ const Header: FC = () => {
             </div>
             <div className={classNames.links}>
                 {!isUserAuthorized && (
-                    <Link to={routes.signIn.path}>Sign-In</Link>
+                    <Link to={routes.signIn.path}
+                          className={classNames.link}>
+                        Sign-In
+                    </Link>
                 )}
                 {!isUserAuthorized && (
-                    <Link to={routes.signUp.path}>Sign-Up</Link>
+                    <Link to={routes.signUp.path}
+                          className={classNames.link}>
+                        Sign-Up
+                    </Link>
                 )}
                 <Protected>
-                    <Link to={routes.createProposal.path}>Create Proposal</Link>
+                    <Link to={routes.createProposal.path}
+                          className={classNames.link}>
+                        Create Proposal
+                    </Link>
                 </Protected>
                 <Protected>
-                    <Link to={routes.profile.getLinkPath(user?.id || '')}>Profile</Link>
+                    <Link to={routes.profile.getLinkPath(user?.id || '')}
+                          className={classNames.link}>
+                        Profile
+                    </Link>
+                </Protected>
+                <Protected>
+                    <Paragraph size="m"
+                               onClick={onSignOut}
+                               className={classNames.link}>
+                        Sign Out
+                    </Paragraph>
                 </Protected>
             </div>
         </header>

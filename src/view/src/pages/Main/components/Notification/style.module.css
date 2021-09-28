@@ -1,0 +1,46 @@
+.notification {
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    width: 400px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    animation: appear 0.25s ease-out forwards;
+}
+
+.disappear {
+    animation: disappear 0.25s ease-in forwards;
+}
+
+.notification:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.error {
+    background: red;
+}
+
+.message {
+    background: green;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}

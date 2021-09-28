@@ -5,7 +5,6 @@ import {useForm} from "../../../../hooks/useForm";
 import {updateProfile} from "../../actions";
 import Form from "../../../../components/Form/Form";
 import Input from "../../../../components/Input";
-import Uploader from "../../../../components/Uploader/Uploader";
 import Button from "../../../../components/Button";
 import {IUser} from "../../../../types/IUser";
 import classNames from "../../style.module.css";
@@ -43,7 +42,7 @@ const EditProfile: FC<IEditProfile> = ({userProfile}) => {
     }
     return (
         <div className={classNames.container}>
-            <Avatar src={userProfile.avatar} size="m"/>
+            <Avatar src={userProfile.avatar} size="m" onEdit={handleInput("avatar")}/>
             <Form onSubmit={onSaveSettings}>
                 <Input label="Login"
                        value={login}
@@ -51,12 +50,10 @@ const EditProfile: FC<IEditProfile> = ({userProfile}) => {
                 <Input label="Username"
                        value={username}
                        onChange={handleInput("username")}/>
-                <Input label="Password"
+                <Input label="New password"
                        type="password"
                        value={password}
                        onChange={handleInput("password")}/>
-                <Uploader label="Avatar"
-                          onChange={handleInput("avatar")}/>
                 <Button type="submit">Save new settings</Button>
             </Form>
         </div>

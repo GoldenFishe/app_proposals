@@ -9,17 +9,15 @@ const initialState: ProfileState = {
 const profileReducer = (state = initialState, action: ProfileActionTypes): ProfileState => {
     switch (action.type) {
         case GET_USER_PROFILE: {
-            const {id, login, username, avatar} = action.payload;
             return {
                 ...state,
-                userProfile: {id, login, username, avatar}
+                userProfile: action.payload !== null ? {...action.payload} : null
             }
         }
         case GET_VIEW_PROFILE: {
-            const {id, login, username, avatar} = action.payload;
             return {
                 ...state,
-                viewProfile: {id, login, username, avatar}
+                viewProfile: action.payload !== null ? {...action.payload} : null
             }
         }
         case RESET_VIEW_PROFILE: {

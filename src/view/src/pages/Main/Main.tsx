@@ -2,10 +2,11 @@ import React, {FC, useEffect} from "react";
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
-import Header from "./components/Header/Header";
 import Container from "../../components/Container/Container";
+import Notifications from "./components/Notifications/Notifications";
+import Header from "./components/Header/Header";
 import {getUserProfile} from '../Profile/actions';
-import {getTags} from "./actions";
+import {addNotification, getTags} from "./actions";
 import {routes, defaultRoute} from "../../constants/routes";
 
 const Main: FC = () => {
@@ -21,6 +22,8 @@ const Main: FC = () => {
     }, [dispatch])
     return (
         <Container>
+            <Notifications/>
+            <button onClick={() => dispatch(addNotification({type: 'message', text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit'}))}>Add notification</button>
             <BrowserRouter>
                 <Header/>
                 <Switch>

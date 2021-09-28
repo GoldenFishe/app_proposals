@@ -2,12 +2,13 @@ import React, {FC, FormEvent, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect, Link} from "react-router-dom";
 
-import {signIn} from "./actions";
 import Title from "../../components/Title";
 import Paragraph from "../../components/Paragraph";
-import {useForm} from "../../hooks/useForm";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import Google from "./components/google/Google";
+import {signIn} from "./actions";
+import {useForm} from "../../hooks/useForm";
 import {user as userConstraints} from "../../constants/constraints";
 import {routes} from "../../constants/routes";
 import classNames from "./style.module.css";
@@ -57,6 +58,7 @@ const SignIn: FC = () => {
                 <Button type="submit" fullWidth>Sign In</Button>
             </form>
             <Paragraph size="m">New to Proposals? <Link to={routes.signUp.path}>Create an account.</Link></Paragraph>
+            <Google/>
         </div>
     )
 };

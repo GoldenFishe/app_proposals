@@ -1,6 +1,6 @@
 import React, {FC, MouseEvent} from "react";
 
-type Icons = "like" | "dislike" | "comment" | "inbox" | "cross" | "user";
+type Icons = "like" | "dislike" | "comment" | "inbox" | "cross" | "user" | "pen";
 
 interface IIcon {
     icon: Icons;
@@ -29,6 +29,9 @@ const Icon: FC<IIcon> = ({icon, size = 15, className, onClick}) => {
             break;
         case "user":
             i = "👤";
+            break;
+        case "pen":
+            i = "🖊️";
             break;
         default:
             return null;

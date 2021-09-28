@@ -23,6 +23,10 @@
     flex-flow: row;
 }
 
-.links > a:not(:last-child) {
+.link {
+    cursor: pointer;
+}
+
+.link:not(:last-child) {
     margin-right: 10px;
 }

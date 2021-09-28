@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   app:
+    image: europe-docker.pkg.dev/innate-shape-326616/app-proposals-repo/app-proposals:v1
     build:
       context: .
     ports:

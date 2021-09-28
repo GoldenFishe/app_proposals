@@ -1,3 +1,7 @@
+import {AxiosError} from "axios";
+import {addNotification} from "../pages/Main/actions";
+import {store} from "../store";
+
 export function formatDateTime(dateTime: string) {
     const dateTimeFormat: Record<string, "numeric"> = {
         year: "numeric",
@@ -19,4 +23,8 @@ export function classNamesCombiner(combiner: Combiner) {
         if (active) combinedClassName += ` ${className}`;
         return combinedClassName;
     }, '');
+}
+
+export function handleNetworkError(err: AxiosError) {
+    store.dispatch(addNotification({type: 'error', text: err.message}))
 }

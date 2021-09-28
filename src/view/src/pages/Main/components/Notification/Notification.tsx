@@ -18,13 +18,13 @@ const Notification: FC<INotification> = ({id, type, text}) => {
     const dispatch = useDispatch();
     const onRemove = useCallback(() => {
         dispatch(removeNotification(id));
-    }, [dispatch]);
+    }, [dispatch, id]);
     useEffect(() => {
         setTimeout(() => {
             ref.current.classList.add(classNames.disappear);
             ref.current.addEventListener('animationend', onRemove, {once: true});
         }, TIMEOUT);
-    }, [dispatch])
+    }, [dispatch, onRemove])
     return (
         <div className={className} ref={ref}>
             {text}

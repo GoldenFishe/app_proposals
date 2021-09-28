@@ -1,4 +1,5 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import {handleNetworkError} from "./utils";
 
 export const accessTokenStore = (function () {
     let accessToken = "";
@@ -34,7 +35,8 @@ axios.interceptors.response.use(
         if (response.data.accessToken) accessTokenStore.setToken(response.data.accessToken);
         return response;
     },
-    async (error) => {
+    async (error: AxiosError) => {
+        handleNetworkError(error);
         // if (error.response && error.response.status === 401 && !accessTokenStore.isInitialized()) {
         //     accessTokenStore.init();
         //     await HttpClient.getAccessToken();

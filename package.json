@@ -6,13 +6,18 @@
   "scripts": {
     "build:server": "tsc",
     "build:docker": "docker build --tag privetanton/app-proposals .",
-    "start": "npm run build:server && node -r dotenv/config build/index.js dotenv_config_path=.env",
+    "start": "npm run build:server && npm run start:server",
     "start:dev": "nodemon",
-    "start:container": "docker-compose up -d"
+    "start:container": "docker-compose up -d",
+    "start:client": "cd ./src/view && npm run start",
+    "start:server": "node -r dotenv/config build/index.js dotenv_config_path=.env"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "16.9.1"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",

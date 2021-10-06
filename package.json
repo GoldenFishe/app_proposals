@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "build:server": "tsc",
+    "build:server": "npx tsc",
     "build:docker": "docker build --tag privetanton/app-proposals .",
     "start": "npm run build:server && npm run start:server",
     "start:dev": "nodemon",

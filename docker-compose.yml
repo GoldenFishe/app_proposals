@@ -15,7 +15,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_PORT=${DB_PORT}
-      - APP_PORT=${APP_PORT}
+      - PORT=${PORT}
     volumes:
       - ./:/app
     depends_on:

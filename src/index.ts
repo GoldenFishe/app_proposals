@@ -8,7 +8,7 @@ import commentRouter from "./features/Comment/Comment.router";
 import {createResourcesFolder, getAttachmentFile, getAvatarFile} from "./utils/files";
 import {getDataFromEnvironment} from "./utils/env";
 
-const PORT: number = Number(getDataFromEnvironment("APP_PORT", false)) || 8080;
+const PORT: number = Number(getDataFromEnvironment("PORT", false)) || 8080;
 const app: Express = express();
 
 createResourcesFolder();

@@ -16,6 +16,7 @@ createResourcesFolder();
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(express.static(`${__dirname}/view/build`));
 
 app.use('/api/user', userRouter);
 app.use('/api/proposals', proposalRouter);
@@ -39,6 +40,10 @@ app.get('/resources/attachments/:filename', (req: Request, res: Response) => {
     } else {
         res.sendStatus(404);
     }
+})
+
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(`${__dirname}/view/build/index.html`)
 })
 
 app.listen(PORT, () => console.log(`Server is listening port ${PORT}`));

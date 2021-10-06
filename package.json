@@ -9,7 +9,7 @@
     "start": "npm run build:server && npm run start:server",
     "start:dev": "nodemon",
     "start:container": "docker-compose up -d",
-    "start:client": "cd ./src/view && npm run start",
+    "start:client": "cd ./src/view && npm run build",
     "start:server": "node -r dotenv/config build/index.js dotenv_config_path=.env"
   },
   "keywords": [],

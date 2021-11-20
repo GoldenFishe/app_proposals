@@ -16,7 +16,7 @@ createResourcesFolder();
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(express.static(`${__dirname}/view/build`));
+app.use(express.static(`${__dirname}/view`));
 
 app.use('/api/user', userRouter);
 app.use('/api/proposals', proposalRouter);

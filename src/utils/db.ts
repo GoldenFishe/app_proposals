@@ -4,7 +4,7 @@ import {getDataFromEnvironment} from "./env";
 
 const pool = new Pool({
     user: getDataFromEnvironment("DB_USER"),
-    host: getDataFromEnvironment("DB_HOST"),
+    host: process.env["DATABASE_URL"] || getDataFromEnvironment("DB_HOST"),
     database: getDataFromEnvironment("DB_NAME"),
     password: getDataFromEnvironment("DB_PASSWORD"),
     port: Number(getDataFromEnvironment("DB_PORT"))

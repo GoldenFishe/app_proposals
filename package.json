@@ -6,7 +6,7 @@
   "scripts": {
     "build:server": "tsc",
     "build:docker": "docker build --tag privetanton/app-proposals .",
-    "start": "npm run build:server && npm run start:server",
+    "start": "npm run build:server && npm run start:container",
     "start:dev": "nodemon",
     "start:container": "docker-compose up -d",
     "start:client": "cd ./src/view && npm run build",

@@ -2,7 +2,6 @@ version: "3.8"
 
 services:
   app:
-    image: europe-docker.pkg.dev/innate-shape-326616/app-proposals-repo/app-proposals:v2
     build:
       context: .
     ports:
@@ -29,7 +28,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      #    - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
       - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
-#volumes:
-#  db_data:
+volumes:
+  db_data:
